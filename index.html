@@ -290,6 +290,8 @@
             background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
             position: relative;
             overflow: hidden;
+            /* Added padding top so header doesn't cover content */
+            padding-top: 80px; 
         }
 
         .auth-container::before {
@@ -507,92 +509,56 @@
 
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- ==================== NAVBAR (FIXED ACROSS ALL PAGES) ==================== -->
-    <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="mainNavbar">
+    <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-reverse space-x-4">
-                <div class="text-3xl font-black text-white cursor-pointer" onclick="showPage('homePage')">
+            <div class="flex items-center space-x-reverse space-x-4 cursor-pointer" onclick="showPage('homePage')">
+                <div class="text-3xl font-black text-white">
                     <i class="fas fa-water"></i>
                     Aqua<span>Vue</span>
                 </div>
             </div>
 
-            <!-- Desktop Menu -->
-            <ul class="hidden md:flex space-x-reverse space-x-8 text-white font-bold px-10 py-4 rounded-full" id="desktopNav">
-                <li><a href="#" onclick="scrollToSection('home')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                <li><a href="#" onclick="scrollToSection('tech')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
-                <li><a href="#" onclick="scrollToSection('about')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
-                <li><a href="#" onclick="scrollToSection('services')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
-                <li><a href="#" onclick="scrollToSection('contact')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+            <ul class="hidden md:flex space-x-reverse space-x-8 text-white font-bold px-10 py-4 rounded-full">
+                <li><a href="#home" onclick="showPage('homePage')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                <li><a href="#tech" onclick="showPage('homePage')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                <li><a href="#about" onclick="showPage('homePage')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                <li><a href="#services" onclick="showPage('homePage')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                <li><a href="#contact" onclick="showPage('homePage')" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
             </ul>
 
-            <!-- Auth Buttons (when logged out) -->
-            <div class="hidden md:flex items-center gap-4" id="authButtons">
-                <button onclick="showPage('loginPage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
-                    <i class="fas fa-sign-in-alt ml-2"></i>
-                    تسجيل الدخول
-                </button>
-                <button onclick="showPage('registerPage')" class="bg-white text-cyan-700 hover:bg-cyan-50 px-6 py-2 rounded-full font-bold transition">
-                    <i class="fas fa-user-plus ml-2"></i>
-                    إنشاء حساب
-                </button>
-            </div>
-
-            <!-- Logout Button (when logged in) -->
-            <div class="hidden md:flex items-center gap-4" id="logoutButton" style="display: none;">
+            <div class="hidden md:flex items-center gap-4">
                 <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
                     <i class="fas fa-sign-out-alt ml-2"></i>
                     تسجيل الخروج
                 </button>
             </div>
 
-            <!-- Mobile Menu Button -->
             <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="menuBtn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
 
-        <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden mt-4 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
             <button class="absolute top-4 left-4 text-cyan-600 text-2xl" id="closeMenuBtn">
                 <i class="fas fa-times"></i>
             </button>
-            <ul class="space-y-5 text-slate-700 font-bold pt-8 text-center" id="mobileNavLinks">
-                <li><a href="#" onclick="scrollToSection('home'); toggleMenu();" class="block py-3 hover:text-cyan-600"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                <li><a href="#" onclick="scrollToSection('tech'); toggleMenu();" class="block py-3 hover:text-cyan-600"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
-                <li><a href="#" onclick="scrollToSection('about'); toggleMenu();" class="block py-3 hover:text-cyan-600"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
-                <li><a href="#" onclick="scrollToSection('services'); toggleMenu();" class="block py-3 hover:text-cyan-600"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
-                <li><a href="#" onclick="scrollToSection('contact'); toggleMenu();" class="block py-3 hover:text-cyan-600"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+            <ul class="space-y-5 text-slate-700 font-bold pt-8 text-center">
+                <li><a href="#home" onclick="showPage('homePage')" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                <li><a href="#tech" onclick="showPage('homePage')" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                <li><a href="#about" onclick="showPage('homePage')" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                <li><a href="#services" onclick="showPage('homePage')" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                <li><a href="#contact" onclick="showPage('homePage')" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+                <li><button onclick="logout()" class="block w-full py-3 text-red-600 hover:text-red-700"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</button></li>
             </ul>
-
-            <!-- Mobile Auth Buttons -->
-            <div class="mt-6 space-y-3" id="mobileAuthButtons">
-                <button onclick="showPage('loginPage'); toggleMenu();" class="block w-full py-3 bg-cyan-500 text-white rounded-xl font-bold hover:bg-cyan-600 transition">
-                    <i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول
-                </button>
-                <button onclick="showPage('registerPage'); toggleMenu();" class="block w-full py-3 border-2 border-cyan-500 text-cyan-700 rounded-xl font-bold hover:bg-cyan-50 transition">
-                    <i class="fas fa-user-plus ml-2"></i>إنشاء حساب
-                </button>
-            </div>
-
-            <!-- Mobile Logout Button -->
-            <div class="mt-6" id="mobileLogoutButton" style="display: none;">
-                <button onclick="logout(); toggleMenu();" class="block w-full py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition">
-                    <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
-                </button>
-            </div>
         </div>
     </nav>
 
-    <!-- ==================== LOGIN PAGE ==================== -->
     <div id="loginPage" class="page">
         <div class="auth-container">
-            <!-- Decorative Elements -->
             <div class="auth-decoration"></div>
             <div class="auth-decoration"></div>
             <div class="auth-decoration"></div>
 
-            <!-- Water Droplets -->
             <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
             <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
             <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
@@ -601,10 +567,8 @@
             <div class="container mx-auto px-4 py-12 relative z-10">
                 <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
 
-                    <!-- LEFT SIDE: Form -->
                     <div class="order-2 md:order-1 slide-in-right">
                         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
-                            <!-- Logo -->
                             <div class="text-center mb-8">
                                 <div class="inline-block bg-gradient-to-br from-cyan-500 to-teal-500 p-4 rounded-2xl mb-4">
                                     <i class="fas fa-water text-white text-5xl"></i>
@@ -613,7 +577,6 @@
                                 <p class="text-slate-600 text-lg font-tajawal">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
                             </div>
 
-                            <!-- Login Form -->
                             <form id="loginForm" class="space-y-6">
                                 <div>
                                     <label class="block text-slate-700 font-bold mb-3 text-lg">
@@ -670,7 +633,6 @@
                                 </button>
                             </form>
 
-                            <!-- Divider -->
                             <div class="relative my-8">
                                 <div class="absolute inset-0 flex items-center">
                                     <div class="w-full border-t border-slate-200"></div>
@@ -680,7 +642,6 @@
                                 </div>
                             </div>
 
-                            <!-- Social Login -->
                             <div class="grid grid-cols-2 gap-4 mb-8">
                                 <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition font-bold">
                                     <i class="fab fa-google text-red-500 text-xl"></i>
@@ -692,7 +653,6 @@
                                 </button>
                             </div>
 
-                            <!-- Register Link -->
                             <div class="text-center">
                                 <p class="text-slate-600 text-lg">
                                     ليس لديك حساب؟
@@ -704,12 +664,10 @@
                         </div>
                     </div>
 
-                    <!-- RIGHT SIDE: Illustration -->
                     <div class="order-1 md:order-2 slide-in-left">
                         <div class="auth-illustration relative">
                             <div class="illustration-glow"></div>
 
-                            <!-- Circular Background -->
                             <div class="relative">
                                 <div class="w-full aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center">
                                     <div class="w-5/6 aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center">
@@ -721,7 +679,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Floating Icons -->
                                 <div class="absolute top-10 right-10 text-white text-4xl animate-bounce" style="animation-delay: 0s;">
                                     <i class="fas fa-flask"></i>
                                 </div>
@@ -743,15 +700,12 @@
         </div>
     </div>
 
-    <!-- ==================== REGISTER PAGE ==================== -->
     <div id="registerPage" class="page">
         <div class="auth-container">
-            <!-- Decorative Elements -->
             <div class="auth-decoration"></div>
             <div class="auth-decoration"></div>
             <div class="auth-decoration"></div>
 
-            <!-- Water Droplets -->
             <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
             <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
             <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
@@ -760,35 +714,28 @@
             <div class="container mx-auto px-4 py-12 relative z-10">
                 <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
 
-                    <!-- LEFT SIDE: Illustration -->
                     <div class="order-1 slide-in-right">
                         <div class="auth-illustration relative">
                             <div class="illustration-glow"></div>
 
-                            <!-- Hexagon Shape -->
                             <div class="relative">
                                 <div class="w-full aspect-square flex items-center justify-center">
-                                    <!-- Hexagonal Design -->
                                     <div class="relative w-full h-full">
                                         <svg viewBox="0 0 400 400" class="w-full h-full">
-                                            <!-- Outer Hexagon -->
                                             <polygon points="200,20 350,110 350,290 200,380 50,290 50,110"
                                                 fill="rgba(255,255,255,0.1)"
                                                 stroke="rgba(255,255,255,0.3)"
                                                 stroke-width="3"/>
-                                            <!-- Middle Hexagon -->
                                             <polygon points="200,60 310,130 310,270 200,340 90,270 90,130"
                                                 fill="rgba(255,255,255,0.1)"
                                                 stroke="rgba(255,255,255,0.3)"
                                                 stroke-width="3"/>
-                                            <!-- Inner Hexagon -->
                                             <polygon points="200,100 270,150 270,250 200,300 130,250 130,150"
                                                 fill="rgba(255,255,255,0.1)"
                                                 stroke="rgba(255,255,255,0.3)"
                                                 stroke-width="3"/>
                                         </svg>
 
-                                        <!-- Center Content -->
                                         <div class="absolute inset-0 flex items-center justify-center">
                                             <div class="text-center">
                                                 <i class="fas fa-user-plus text-white text-9xl mb-8 drop-shadow-2xl"></i>
@@ -797,7 +744,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Floating Icons Around -->
                                         <div class="absolute top-0 left-1/2 -translate-x-1/2 text-white text-3xl animate-pulse">
                                             <i class="fas fa-droplet"></i>
                                         </div>
@@ -822,10 +768,8 @@
                         </div>
                     </div>
 
-                    <!-- RIGHT SIDE: Form -->
                     <div class="order-2 slide-in-left">
                         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
-                            <!-- Logo -->
                             <div class="text-center mb-8">
                                 <div class="inline-block bg-gradient-to-br from-teal-500 to-cyan-500 p-4 rounded-2xl mb-4">
                                     <i class="fas fa-water text-white text-5xl"></i>
@@ -834,7 +778,6 @@
                                 <p class="text-slate-600 text-lg font-tajawal">انضم لمجتمع أكوا فيو الذكي</p>
                             </div>
 
-                            <!-- Register Form -->
                             <form id="registerForm" class="space-y-5">
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <div>
@@ -955,7 +898,6 @@
                                 </button>
                             </form>
 
-                            <!-- Login Link -->
                             <div class="text-center mt-6">
                                 <p class="text-slate-600 text-base">
                                     لديك حساب بالفعل؟
@@ -972,7 +914,6 @@
         </div>
     </div>
 
-    <!-- ==================== HOME PAGE ==================== -->
     <div id="homePage" class="page">
         <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden pt-24">
             <div class="floating-element">
@@ -1217,7 +1158,7 @@
                                     <h3 class="text-3xl font-bold mb-3">تطبيق المستهلك</h3>
                                     <p class="text-purple-100 text-lg mb-4">راقب مياه منزلك من هاتفك مباشرة</p>
                                     <button class="mt-4 bg-white text-purple-700 px-6 py-3 rounded-full font-bold self-start hover:bg-purple-100 transition">
-                                        <i class="fas fa-info-circle ml-2"></i>التف��صيل
+                                        <i class="fas fa-info-circle ml-2"></i>التفاصيل
                                     </button>
                                 </div>
                             </div>
@@ -1632,8 +1573,7 @@
 
     <script>
         // Page Navigation System
-        let currentPage = 'homePage';
-        let isLoggedIn = false;
+        let currentPage = 'loginPage';
 
         function showPage(pageId) {
             // Hide all pages
@@ -1646,9 +1586,6 @@
                 document.getElementById(pageId).classList.add('active');
                 currentPage = pageId;
 
-                // Update navbar based on page and login status
-                updateNavbar();
-
                 // Start typing animation on home page
                 if(pageId === 'homePage') {
                     setTimeout(startTyping, 300);
@@ -1658,45 +1595,6 @@
                     initializeRevealAnimations();
                 }
             }, 100);
-        }
-
-        function updateNavbar() {
-            const authButtons = document.getElementById('authButtons');
-            const logoutButton = document.getElementById('logoutButton');
-            const mobileAuthButtons = document.getElementById('mobileAuthButtons');
-            const mobileLogoutButton = document.getElementById('mobileLogoutButton');
-
-            if(isLoggedIn) {
-                // Show logout buttons
-                authButtons.style.display = 'none';
-                logoutButton.style.display = 'flex';
-                mobileAuthButtons.style.display = 'none';
-                mobileLogoutButton.style.display = 'block';
-            } else {
-                // Show auth buttons
-                authButtons.style.display = 'flex';
-                logoutButton.style.display = 'none';
-                mobileAuthButtons.style.display = 'block';
-                mobileLogoutButton.style.display = 'none';
-            }
-        }
-
-        function scrollToSection(sectionId) {
-            // First, ensure we're on the home page
-            if(currentPage !== 'homePage') {
-                showPage('homePage');
-                setTimeout(() => {
-                    const section = document.getElementById(sectionId);
-                    if(section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 500);
-            } else {
-                const section = document.getElementById(sectionId);
-                if(section) {
-                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
         }
 
         // Toggle Password Visibility
