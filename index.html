@@ -32,6 +32,29 @@
         .font-tajawal { font-family: 'Tajawal', sans-serif; }
         .font-naskh { font-family: 'Noto Naskh Arabic', serif; }
 
+        /* Page Transition */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeInPage 0.6s ease forwards;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Transparent Cards */
         .glass-card {
             background: rgba(255, 255, 255, 0.4);
@@ -238,24 +261,86 @@
             background: #0e7490;
         }
 
-        /* AUTH FORMS IN HEADER */
-        .auth-form-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 9998;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        /* Loading Screen */
+        .loading-wave {
+            display: flex;
+            gap: 8px;
+        }
+        .loading-wave span {
+            width: 12px;
+            height: 40px;
+            background: linear-gradient(180deg, #0891b2, #14b8a6);
+            border-radius: 8px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        .loading-wave span:nth-child(1) { animation-delay: 0s; }
+        .loading-wave span:nth-child(2) { animation-delay: 0.1s; }
+        .loading-wave span:nth-child(3) { animation-delay: 0.2s; }
+        .loading-wave span:nth-child(4) { animation-delay: 0.3s; }
+        .loading-wave span:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 40%, 100% { transform: scaleY(0.4); }
+            20% { transform: scaleY(1); }
         }
 
-        .auth-form-container.active {
-            display: flex;
+        /* AUTH PAGES STYLES */
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Auth Decorative Elements */
+        .auth-decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: floatSlow 20s infinite ease-in-out;
+        }
+
+        .auth-decoration:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .auth-decoration:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: 3s;
+        }
+
+        .auth-decoration:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 6s;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
         }
 
         /* Water Droplet Animation */
@@ -312,6 +397,45 @@
         .btn-ripple:active::before {
             width: 300px;
             height: 300px;
+        }
+
+        /* Slide Animation for Auth Forms */
+        .slide-in-right {
+            animation: slideInRight 0.6s ease forwards;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Particle System */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         /* Custom Checkbox */
@@ -377,106 +501,31 @@
                 transform: scale(1.1);
             }
         }
-
-        /* Auth Form Decorations */
-        .auth-decoration {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: floatSlow 20s infinite ease-in-out;
-        }
-
-        .auth-decoration:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .auth-decoration:nth-child(2) {
-            width: 300px;
-            height: 300px;
-            bottom: -80px;
-            right: -80px;
-            animation-delay: 3s;
-        }
-
-        .auth-decoration:nth-child(3) {
-            width: 200px;
-            height: 200px;
-            top: 50%;
-            left: 10%;
-            animation-delay: 6s;
-        }
-
-        @keyframes floatSlow {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(30px, -30px) scale(1.1);
-            }
-            66% {
-                transform: translate(-30px, 30px) scale(0.9);
-            }
-        }
-
-        /* Hide content initially */
-        .logged-in-content {
-            display: none;
-        }
-
-        .logged-in .logged-in-content {
-            display: block;
-        }
-
-        .not-logged-in .logged-out-nav {
-            display: flex !important;
-        }
-
-        .logged-in .logged-out-nav {
-            display: none !important;
-        }
-
-        .logged-in .logged-in-nav {
-            display: flex !important;
-        }
-
-        .not-logged-in .logged-in-nav {
-            display: none !important;
-        }
     </style>
 </head>
-<body class="bg-slate-50 not-logged-in">
+<body class="bg-slate-50">
 
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- ==================== AUTH FORM CONTAINERS ==================== -->
+    <!-- ==================== LOGIN PAGE ==================== -->
+    <div id="loginPage" class="page">
+        <div class="auth-container">
+            <!-- Decorative Elements -->
+            <div class="auth-decoration"></div>
+            <div class="auth-decoration"></div>
+            <div class="auth-decoration"></div>
 
-    <!-- Login Form Modal -->
-    <div id="loginFormContainer" class="auth-form-container">
-        <div class="w-full max-w-6xl mx-auto overflow-y-auto max-h-screen">
-            <div class="hero-gradient min-h-screen relative overflow-hidden py-12 px-4">
-                <!-- Decorative Elements -->
-                <div class="auth-decoration"></div>
-                <div class="auth-decoration"></div>
-                <div class="auth-decoration"></div>
+            <!-- Water Droplets -->
+            <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
+            <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
+            <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
+            <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
 
-                <!-- Water Droplets -->
-                <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
-                <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
-                <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
-                <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
+            <div class="container mx-auto px-4 py-12 relative z-10">
+                <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
 
-                <!-- Close Button -->
-                <button onclick="closeAuthForm()" class="absolute top-6 left-6 z-50 bg-white/20 hover:bg-white/30 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl transition backdrop-blur-sm">
-                    <i class="fas fa-times"></i>
-                </button>
-
-                <div class="grid md:grid-cols-2 gap-12 items-center relative z-10">
                     <!-- LEFT SIDE: Form -->
-                    <div class="order-2 md:order-1">
+                    <div class="order-2 md:order-1 slide-in-right">
                         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
                             <!-- Logo -->
                             <div class="text-center mb-8">
@@ -570,7 +619,7 @@
                             <div class="text-center">
                                 <p class="text-slate-600 text-lg">
                                     ليس لديك حساب؟
-                                    <button onclick="switchToRegister()" class="text-cyan-600 hover:text-cyan-700 font-black transition">
+                                    <button onclick="showPage('registerPage')" class="text-cyan-600 hover:text-cyan-700 font-black transition">
                                         إنشاء حساب جديد
                                     </button>
                                 </p>
@@ -579,7 +628,7 @@
                     </div>
 
                     <!-- RIGHT SIDE: Illustration -->
-                    <div class="order-1 md:order-2">
+                    <div class="order-1 md:order-2 slide-in-left">
                         <div class="auth-illustration relative">
                             <div class="illustration-glow"></div>
 
@@ -611,34 +660,31 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Register Form Modal -->
-    <div id="registerFormContainer" class="auth-form-container">
-        <div class="w-full max-w-6xl mx-auto overflow-y-auto max-h-screen">
-            <div class="hero-gradient min-h-screen relative overflow-hidden py-12 px-4">
-                <!-- Decorative Elements -->
-                <div class="auth-decoration"></div>
-                <div class="auth-decoration"></div>
-                <div class="auth-decoration"></div>
+    <!-- ==================== REGISTER PAGE ==================== -->
+    <div id="registerPage" class="page">
+        <div class="auth-container">
+            <!-- Decorative Elements -->
+            <div class="auth-decoration"></div>
+            <div class="auth-decoration"></div>
+            <div class="auth-decoration"></div>
 
-                <!-- Water Droplets -->
-                <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
-                <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
-                <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
-                <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
+            <!-- Water Droplets -->
+            <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
+            <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
+            <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
+            <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
 
-                <!-- Close Button -->
-                <button onclick="closeAuthForm()" class="absolute top-6 left-6 z-50 bg-white/20 hover:bg-white/30 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl transition backdrop-blur-sm">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="container mx-auto px-4 py-12 relative z-10">
+                <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
 
-                <div class="grid md:grid-cols-2 gap-12 items-center relative z-10">
                     <!-- LEFT SIDE: Illustration -->
-                    <div class="order-1">
+                    <div class="order-1 slide-in-right">
                         <div class="auth-illustration relative">
                             <div class="illustration-glow"></div>
 
@@ -700,7 +746,7 @@
                     </div>
 
                     <!-- RIGHT SIDE: Form -->
-                    <div class="order-2">
+                    <div class="order-2 slide-in-left">
                         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
                             <!-- Logo -->
                             <div class="text-center mb-8">
@@ -836,20 +882,21 @@
                             <div class="text-center mt-6">
                                 <p class="text-slate-600 text-base">
                                     لديك حساب بالفعل؟
-                                    <button onclick="switchToLogin()" class="text-teal-600 hover:text-teal-700 font-black transition">
+                                    <button onclick="showPage('loginPage')" class="text-teal-600 hover:text-teal-700 font-black transition">
                                         تسجيل الدخول
                                     </button>
                                 </p>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ==================== HOME PAGE ==================== -->
-    <div id="homePage">
+    <div id="homePage" class="page">
         <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-reverse space-x-4">
@@ -860,33 +907,22 @@
                 </div>
 
                 <ul class="hidden md:flex space-x-reverse space-x-8 text-white font-bold px-10 py-4 rounded-full">
-                    <li><a href="#home" class="nav-link hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                    <li><a href="#tech" class="nav-link hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
-                    <li><a href="#about" class="nav-link hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
-                    <li><a href="#services" class="nav-link hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
-                    <li><a href="#contact" class="nav-link hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+                    <li><a href="#home" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                    <li><a href="#tech" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                    <li><a href="#about" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                    <li><a href="#services" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                    <li><a href="#contact" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
                 </ul>
 
                 <div class="hidden md:flex items-center gap-4">
-                    <!-- Logged Out Nav -->
-                    <div class="logged-out-nav hidden items-center gap-4">
-                        <button onclick="openLoginForm()" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
-                            <i class="fas fa-sign-in-alt ml-2"></i>
-                            تسجيل الدخول
-                        </button>
-                        <button onclick="openRegisterForm()" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
-                            <i class="fas fa-user-plus ml-2"></i>
-                            إنشاء حساب
-                        </button>
-                    </div>
-
-                    <!-- Logged In Nav -->
-                    <div class="logged-in-nav hidden items-center gap-4">
-                        <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
-                            <i class="fas fa-sign-out-alt ml-2"></i>
-                            تسجيل الخروج
-                        </button>
-                    </div>
+                    <button onclick="showPage('loginPage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
+                        <i class="fas fa-sign-in-alt ml-2"></i>
+                        تسجيل الدخول
+                    </button>
+                    <button onclick="showPage('registerPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
+                        <i class="fas fa-user-plus ml-2"></i>
+                        إنشاء حساب
+                    </button>
                 </div>
 
                 <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="menuBtn">
@@ -899,30 +935,13 @@
                     <i class="fas fa-times"></i>
                 </button>
                 <ul class="space-y-5 text-slate-700 font-bold pt-8 text-center">
-                    <li><a href="#home" class="block py-3 hover:text-cyan-600 mobile-menu-link nav-link"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                    <li><a href="#tech" class="block py-3 hover:text-cyan-600 mobile-menu-link nav-link"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
-                    <li><a href="#about" class="block py-3 hover:text-cyan-600 mobile-menu-link nav-link"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
-                    <li><a href="#services" class="block py-3 hover:text-cyan-600 mobile-menu-link nav-link"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
-                    <li><a href="#contact" class="block py-3 hover:text-cyan-600 mobile-menu-link nav-link"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
-
-                    <!-- Logged Out Mobile Nav -->
-                    <li class="logged-out-nav hidden">
-                        <button onclick="openLoginForm(); toggleMenu();" class="block w-full py-3 text-cyan-600 hover:text-cyan-700">
-                            <i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول
-                        </button>
-                    </li>
-                    <li class="logged-out-nav hidden">
-                        <button onclick="openRegisterForm(); toggleMenu();" class="block w-full py-3 text-teal-600 hover:text-teal-700">
-                            <i class="fas fa-user-plus ml-2"></i>إنشاء حساب
-                        </button>
-                    </li>
-
-                    <!-- Logged In Mobile Nav -->
-                    <li class="logged-in-nav hidden">
-                        <button onclick="logout()" class="block w-full py-3 text-red-600 hover:text-red-700">
-                            <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
-                        </button>
-                    </li>
+                    <li><a href="#home" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                    <li><a href="#tech" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                    <li><a href="#about" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                    <li><a href="#services" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                    <li><a href="#contact" class="block py-3 hover:text-cyan-600 mobile-menu-link"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+                    <li><button onclick="showPage('loginPage'); toggleMenu();" class="block w-full py-3 text-cyan-600 hover:text-cyan-700"><i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول</button></li>
+                    <li><button onclick="showPage('registerPage'); toggleMenu();" class="block w-full py-3 text-teal-600 hover:text-teal-700"><i class="fas fa-user-plus ml-2"></i>إنشاء حساب</button></li>
                 </ul>
             </div>
         </nav>
@@ -985,7 +1004,7 @@
             </div>
         </section>
 
-        <section id="about" class="py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden logged-in-content">
+        <section id="about" class="py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-20 reveal">
                     <h2 class="text-6xl font-black gradient-text mb-6 font-amiri">
@@ -1093,7 +1112,7 @@
             </div>
         </section>
 
-        <section id="tech" class="py-24 bg-gradient-to-br from-cyan-50 via-teal-50 to-cyan-50 relative overflow-hidden logged-in-content">
+        <section id="tech" class="py-24 bg-gradient-to-br from-cyan-50 via-teal-50 to-cyan-50 relative overflow-hidden">
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-20 reveal">
                     <h2 class="text-6xl font-black text-slate-800 mb-6 font-amiri">
@@ -1142,7 +1161,7 @@
                                     <h3 class="text-3xl font-bold mb-3">لوحة التحكم AI</h3>
                                     <p class="text-teal-100 text-lg mb-4">تحليل البيانات الضخمة والتنبؤ بالجودة</p>
                                     <button class="mt-4 bg-white text-teal-700 px-6 py-3 rounded-full font-bold self-start hover:bg-teal-100 transition">
-                                        <i class="fas fa-info-circle ml-2"></i>ا��تفاصيل
+                                        <i class="fas fa-info-circle ml-2"></i>التفاصيل
                                     </button>
                                 </div>
                             </div>
@@ -1192,7 +1211,7 @@
             </div>
         </section>
 
-        <section id="gallery" class="py-24 bg-white relative overflow-hidden logged-in-content">
+        <section id="gallery" class="py-24 bg-white relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center mb-20 reveal">
                     <h2 class="text-6xl font-black text-slate-800 mb-6 font-amiri">
@@ -1258,7 +1277,7 @@
             </div>
         </section>
 
-        <section id="services" class="py-24 bg-gradient-to-b from-white to-cyan-50 logged-in-content">
+        <section id="services" class="py-24 bg-gradient-to-b from-white to-cyan-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-20 reveal">
                     <h2 class="text-6xl font-black gradient-text mb-6 font-amiri">
@@ -1315,7 +1334,7 @@
             </div>
         </section>
 
-        <section id="contact" class="py-24 bg-gradient-to-b from-cyan-50 to-white logged-in-content">
+        <section id="contact" class="py-24 bg-gradient-to-b from-cyan-50 to-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-20 reveal">
                     <h2 class="text-6xl font-black gradient-text mb-6 font-amiri">
@@ -1536,6 +1555,9 @@
                                 <i class="fas fa-clock ml-3 text-cyan-600 text-xl"></i>
                                 <span>24/7 خدمة متواصلة</span>
                             </li>
+                            <li class="flex items-center">
+                                <i class="fab fa-whatsapp ml-3 text-cyan-600 text-xl"></i>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -1581,57 +1603,29 @@
     </div>
 
     <script>
-        // Auth State Management
-        let isLoggedIn = false;
+        // Page Navigation System
+        let currentPage = 'loginPage';
 
-        // Check if user is logged in on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateAuthState();
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
 
-            // Initialize typing animation
-            setTimeout(startTyping, 300);
-            initializeRevealAnimations();
-        });
+            // Show requested page
+            setTimeout(() => {
+                document.getElementById(pageId).classList.add('active');
+                currentPage = pageId;
 
-        function updateAuthState() {
-            const body = document.body;
-            if (isLoggedIn) {
-                body.classList.remove('not-logged-in');
-                body.classList.add('logged-in');
-            } else {
-                body.classList.remove('logged-in');
-                body.classList.add('not-logged-in');
-            }
-        }
-
-        // Open Login Form
-        function openLoginForm() {
-            document.getElementById('loginFormContainer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Open Register Form
-        function openRegisterForm() {
-            document.getElementById('registerFormContainer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close Auth Forms
-        function closeAuthForm() {
-            document.getElementById('loginFormContainer').classList.remove('active');
-            document.getElementById('registerFormContainer').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Switch between forms
-        function switchToRegister() {
-            document.getElementById('loginFormContainer').classList.remove('active');
-            document.getElementById('registerFormContainer').classList.add('active');
-        }
-
-        function switchToLogin() {
-            document.getElementById('registerFormContainer').classList.remove('active');
-            document.getElementById('loginFormContainer').classList.add('active');
+                // Start typing animation on home page
+                if(pageId === 'homePage') {
+                    setTimeout(startTyping, 300);
+                    // Reset scroll position
+                    window.scrollTo(0, 0);
+                    // Initialize reveal animations
+                    initializeRevealAnimations();
+                }
+            }, 100);
         }
 
         // Toggle Password Visibility
@@ -1651,112 +1645,98 @@
         }
 
         // Login Form Handler
-        const loginForm = document.getElementById('loginForm');
-        if(loginForm) {
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show login page by default
+            showPage('loginPage');
 
-                // Set logged in state
-                isLoggedIn = true;
-                localStorage.setItem('isLoggedIn', 'true');
-                updateAuthState();
+            const loginForm = document.getElementById('loginForm');
+            if(loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
 
-                // Close form
-                closeAuthForm();
+                    // Create success modal
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
+                            <div class="text-7xl text-cyan-500 mb-6">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">مرحباً بك!</h3>
+                            <p class="text-slate-600 text-lg mb-8">تم تسجيل دخولك بنجاح</p>
+                            <button onclick="this.closest('.fixed').remove(); showPage('homePage')" class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
+                                <i class="fas fa-home ml-2"></i>
+                                الذهاب للرئيسية
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                });
+            }
 
-                // Show success message
-                showModal(
-                    '<i class="fas fa-check-circle text-7xl text-cyan-500 mb-6"></i>',
-                    'مرحباً بك!',
-                    'تم تسجيل دخولك بنجاح',
-                    'bg-gradient-to-r from-cyan-500 to-teal-500',
-                    '<i class="fas fa-times ml-2"></i> إغلاق'
-                );
-            });
-        }
+            // Register Form Handler
+            const registerForm = document.getElementById('registerForm');
+            if(registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
 
-        // Register Form Handler
-        const registerForm = document.getElementById('registerForm');
-        if(registerForm) {
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+                    const password = document.getElementById('registerPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
 
-                const password = document.getElementById('registerPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
+                    if(password !== confirmPassword) {
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
+                        modal.innerHTML = `
+                            <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
+                                <div class="text-7xl text-red-500 mb-6">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">خطأ</h3>
+                                <p class="text-slate-600 text-lg mb-8">كلمات المرور غير متطابقة</p>
+                                <button onclick="this.closest('.fixed').remove()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
+                                    <i class="fas fa-times ml-2"></i>
+                                    إغلاق
+                                </button>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        return;
+                    }
 
-                if(password !== confirmPassword) {
-                    showModal(
-                        '<i class="fas fa-exclamation-circle text-7xl text-red-500 mb-6"></i>',
-                        'خطأ',
-                        'كلمات المرور غير متطابقة',
-                        'bg-gradient-to-r from-red-500 to-red-600',
-                        '<i class="fas fa-times ml-2"></i> إغلاق'
-                    );
-                    return;
-                }
-
-                // Set logged in state
-                isLoggedIn = true;
-                localStorage.setItem('isLoggedIn', 'true');
-                updateAuthState();
-
-                // Close form
-                closeAuthForm();
-
-                // Show success message
-                showModal(
-                    '<i class="fas fa-check-circle text-7xl text-teal-500 mb-6"></i>',
-                    'مرحباً بك في أكوا فيو!',
-                    'تم إنشاء حسابك بنجاح',
-                    'bg-gradient-to-r from-teal-500 to-cyan-500',
-                    '<i class="fas fa-times ml-2"></i> إغلاق'
-                );
-            });
-        }
+                    // Success
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
+                            <div class="text-7xl text-teal-500 mb-6">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">مرحباً بك في أكوا فيو!</h3>
+                            <p class="text-slate-600 text-lg mb-8">تم إنشاء حسابك بنجاح</p>
+                            <button onclick="this.closest('.fixed').remove(); showPage('homePage')" class="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
+                                <i class="fas fa-home ml-2"></i>
+                                الذهاب للرئيسية
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                });
+            }
+        });
 
         // Logout Function
         function logout() {
-            showConfirmModal(
-                '<i class="fas fa-sign-out-alt text-7xl text-cyan-500 mb-6"></i>',
-                'هل تريد تسجيل الخروج؟',
-                'سنكون سعداء بعودتك قريباً',
-                function() {
-                    isLoggedIn = false;
-                    localStorage.setItem('isLoggedIn', 'false');
-                    updateAuthState();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            );
-        }
-
-        // Generic Modal Function
-        function showModal(icon, title, message, buttonClass, buttonText) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000]';
+            modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
             modal.innerHTML = `
                 <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                    ${icon}
-                    <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">${title}</h3>
-                    <p class="text-slate-600 text-lg mb-8">${message}</p>
-                    <button onclick="this.closest('.fixed').remove()" class="${buttonClass} text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
-                        ${buttonText}
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        // Confirm Modal Function
-        function showConfirmModal(icon, title, message, onConfirm) {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000]';
-            modal.innerHTML = `
-                <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                    ${icon}
-                    <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">${title}</h3>
-                    <p class="text-slate-600 text-lg mb-8">${message}</p>
+                    <div class="text-7xl text-cyan-500 mb-6">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">هل تريد تسجيل الخروج؟</h3>
+                    <p class="text-slate-600 text-lg mb-8">سنكون سعداء بعودتك قريباً</p>
                     <div class="flex gap-4 justify-center">
-                        <button onclick="confirmAction()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
+                        <button onclick="this.closest('.fixed').remove(); showPage('loginPage')" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
                             <i class="fas fa-check ml-2"></i>
                             نعم
                         </button>
@@ -1768,37 +1748,7 @@
                 </div>
             `;
             document.body.appendChild(modal);
-
-            window.confirmAction = function() {
-                onConfirm();
-                modal.remove();
-            };
         }
-
-        // Protected Links - Show login prompt if not logged in
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('nav-link')) {
-                const href = e.target.getAttribute('href');
-
-                // Allow home section always
-                if (href === '#home') {
-                    return;
-                }
-
-                // Check if user is logged in for other sections
-                if (!isLoggedIn) {
-                    e.preventDefault();
-                    showConfirmModal(
-                        '<i class="fas fa-lock text-7xl text-cyan-500 mb-6"></i>',
-                        'يرجى تسجيل الدخول',
-                        'يجب عليك تسجيل الدخول للوصول إلى هذا القسم',
-                        function() {
-                            openLoginForm();
-                        }
-                    );
-                }
-            }
-        });
 
         // Typewriter Effect Logic (The Pen Icon)
         function startTyping() {
@@ -1829,8 +1779,10 @@
             setTimeout(typeChar, 500);
         }
 
-        // Scroll Progress Bar
+        // Scroll Progress Bar (for home page only)
         window.addEventListener('scroll', () => {
+            if(currentPage !== 'homePage') return;
+
             const scrollProgress = document.getElementById('scrollProgress');
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.scrollY / windowHeight) * 100;
@@ -1908,13 +1860,7 @@
 
         // Close menu on link click
         document.querySelectorAll('.mobile-menu-link').forEach(link => {
-            link.addEventListener('click', function() {
-                // Only close menu if link is allowed (logged in or home)
-                const href = this.getAttribute('href');
-                if (isLoggedIn || href === '#home') {
-                    toggleMenu();
-                }
-            });
+            link.addEventListener('click', toggleMenu);
         });
 
         // Gallery Image Switcher
@@ -1942,18 +1888,13 @@
         // Smooth Scroll for Links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-
-                // Allow smooth scroll if logged in or going to home
-                if (isLoggedIn || href === '#home') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if(target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         });
@@ -1963,13 +1904,23 @@
         if(contactFormEl) {
             contactFormEl.addEventListener('submit', function(e) {
                 e.preventDefault();
-                showModal(
-                    '<i class="fas fa-check-circle text-7xl text-teal-500 mb-6"></i>',
-                    'تم إرسال رسالتك بنجاح!',
-                    'سنتواصل معك في أقرب وقت ممكن',
-                    'bg-gradient-to-r from-cyan-500 to-teal-500',
-                    '<i class="fas fa-times ml-2"></i> إغلاق'
-                );
+
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
+                        <div class="text-7xl text-teal-500 mb-6">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">تم إرسال رسالتك بنجاح!</h3>
+                        <p class="text-slate-600 text-lg mb-8">سنتواصل معك في أقرب وقت ممكن</p>
+                        <button onclick="this.closest('.fixed').remove()" class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
+                            <i class="fas fa-times ml-2"></i>
+                            إغلاق
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
                 this.reset();
             });
         }
