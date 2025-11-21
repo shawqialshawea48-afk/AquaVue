@@ -2052,13 +2052,22 @@
             </footer>
         </div> </div> <script>
         // ==================== LOADING SCREEN ====================
-        window.addEventListener('load', () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                initTypewriter(); // Start typewriter after loading
-            }, 1500);
-        });
+       window.addEventListener('load', () => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    
+    setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        
+        // حذف شاشة التحميل بالكامل بعد انتهاء الانتقال
+        setTimeout(() => {
+            loadingScreen.remove();
+        }, 1000);
+        
+        init3DBackground();
+        startTypingEffect();
+        createParticles();
+    }, 2500);
+});
 
         // ==================== NAVIGATION ====================
         function showPage(pageId) {
