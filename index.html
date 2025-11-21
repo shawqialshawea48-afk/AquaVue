@@ -2050,28 +2050,34 @@
                     </div>
                 </div>
             </footer>
-        </div> </div> <script>
-        // ==================== LOADING SCREEN ====================
-       window.addEventListener('load', () => {
-    const loadingScreen = document.getElementById('loadingScreen');
-    
-    setTimeout(() => {
-        loadingScreen.classList.add('hidden');
-        
-        // حذف شاشة التحميل بالكامل بعد انتهاء الانتقال
-        setTimeout(() => {
-            loadingScreen.remove();
-        }, 1000);
-        
-        init3DBackground();
-        startTypingEffect();
-        createParticles();
-    }, 2500);
-});
+        </div> </div><script>
+        // ==================== LOADING SCREEN FIX ====================
+        // دالة لإخفاء شاشة التحميل وتشغيل التأثيرات
+        function hideLoader() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+                loadingScreen.classList.add('hidden');
+                initTypewriter(); // تشغيل تأثير الكتابة
+            }
+        }
+
+        // المحاولة الأولى: بمجرد جاهزية العناصر الأساسية (سريع)
+        document.addEventListener('DOMContentLoaded', () => {
+            // تهيئة الصفحة الرئيسية
+            document.getElementById('homePage').style.display = 'block';
+            setTimeout(() => document.getElementById('homePage').classList.add('active'), 100);
+            
+            // إخفاء التحميل بعد ثانية ونصف
+            setTimeout(hideLoader, 1500);
+        });
+
+        // المحاولة الثانية (احتياطية): في حال تأخر التحميل، اجبره على الفتح بعد 4 ثواني كحد أقصى
+        window.addEventListener('load', hideLoader);
+        setTimeout(hideLoader, 4000); 
 
         // ==================== NAVIGATION ====================
         function showPage(pageId) {
-            // Hide all pages
+            // إخفاء جميع الصفحات
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
                 setTimeout(() => {
@@ -2079,24 +2085,16 @@
                 }, 500);
             });
 
-            // Show selected page
+            // إظهار الصفحة المطلوبة
             const targetPage = document.getElementById(pageId);
-            targetPage.style.display = 'block';
-            
-            // Small delay to allow display:block to apply before opacity transition
-            setTimeout(() => {
-                targetPage.classList.add('active');
-            }, 50);
-
-            // Scroll to top
+            if(targetPage) {
+                targetPage.style.display = 'block';
+                setTimeout(() => {
+                    targetPage.classList.add('active');
+                }, 50);
+            }
             window.scrollTo(0, 0);
         }
-
-        // Initialize Home Page
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('homePage').style.display = 'block';
-            setTimeout(() => document.getElementById('homePage').classList.add('active'), 100);
-        });
 
         // ==================== MOBILE MENUS ====================
         // Home Menu
@@ -2105,15 +2103,17 @@
         const mobileMenu = document.getElementById('mobileMenu');
 
         function toggleMenu() {
-            mobileMenu.classList.toggle('hidden');
-            setTimeout(() => {
-                mobileMenu.classList.toggle('opacity-0');
-                mobileMenu.classList.toggle('scale-95');
-            }, 10);
+            if(mobileMenu) {
+                mobileMenu.classList.toggle('hidden');
+                setTimeout(() => {
+                    mobileMenu.classList.toggle('opacity-0');
+                    mobileMenu.classList.toggle('scale-95');
+                }, 10);
+            }
         }
 
-        menuBtn.addEventListener('click', toggleMenu);
-        closeMenuBtn.addEventListener('click', toggleMenu);
+        if(menuBtn) menuBtn.addEventListener('click', toggleMenu);
+        if(closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
 
         // Login Menu
         const loginMenuBtn = document.getElementById('loginMenuBtn');
@@ -2121,11 +2121,13 @@
         const loginMobileMenu = document.getElementById('loginMobileMenu');
 
         function toggleLoginMenu() {
-            loginMobileMenu.classList.toggle('hidden');
-            setTimeout(() => {
-                loginMobileMenu.classList.toggle('opacity-0');
-                loginMobileMenu.classList.toggle('scale-95');
-            }, 10);
+            if(loginMobileMenu) {
+                loginMobileMenu.classList.toggle('hidden');
+                setTimeout(() => {
+                    loginMobileMenu.classList.toggle('opacity-0');
+                    loginMobileMenu.classList.toggle('scale-95');
+                }, 10);
+            }
         }
 
         if(loginMenuBtn) loginMenuBtn.addEventListener('click', toggleLoginMenu);
@@ -2137,11 +2139,13 @@
         const registerMobileMenu = document.getElementById('registerMobileMenu');
 
         function toggleRegisterMenu() {
-            registerMobileMenu.classList.toggle('hidden');
-            setTimeout(() => {
-                registerMobileMenu.classList.toggle('opacity-0');
-                registerMobileMenu.classList.toggle('scale-95');
-            }, 10);
+            if(registerMobileMenu) {
+                registerMobileMenu.classList.toggle('hidden');
+                setTimeout(() => {
+                    registerMobileMenu.classList.toggle('opacity-0');
+                    registerMobileMenu.classList.toggle('scale-95');
+                }, 10);
+            }
         }
 
         if(registerMenuBtn) registerMenuBtn.addEventListener('click', toggleRegisterMenu);
@@ -2154,20 +2158,24 @@
 
         // ==================== SCROLL PROGRESS ====================
         window.addEventListener('scroll', () => {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (scrollTop / scrollHeight) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + '%';
+            const scrollProgress = document.getElementById('scrollProgress');
+            if(scrollProgress) {
+                const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (scrollTop / scrollHeight) * 100;
+                scrollProgress.style.width = scrolled + '%';
+            }
         });
 
         // ==================== TYPEWRITER EFFECT ====================
         function initTypewriter() {
             const textElement = document.getElementById('mainTitle');
             const penElement = document.getElementById('writingPen');
+            
+            if(!textElement || !penElement) return;
+
             const text = "مستقبل نقاء المياه";
             let index = 0;
-
-            if(!textElement) return;
 
             textElement.innerHTML = '';
             penElement.style.opacity = '1';
@@ -2176,12 +2184,9 @@
             function type() {
                 if (index < text.length) {
                     textElement.innerHTML += text.charAt(index);
-                    
-                    // Move pen logic (approximate calculation based on font size)
-                    // For a real app, you'd measure the width of the rendered text
-                    const currentWidth = index * 25; // Approximate pixel width per char for this font size
+                    // تحريك القلم بشكل تقريبي
+                    const currentWidth = index * 25; 
                     penElement.style.left = (60 + currentWidth) + 'px'; 
-
                     index++;
                     setTimeout(type, 150);
                 } else {
@@ -2195,19 +2200,14 @@
         }
 
         // ==================== REVEAL ON SCROLL & COUNTERS ====================
-        const observerOptions = {
-            threshold: 0.1
-        };
+        const observerOptions = { threshold: 0.1 };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    
-                    // Start counters if inside the revealed element
                     const counters = entry.target.querySelectorAll('.counter');
                     counters.forEach(counter => startCounter(counter));
-                    
                     observer.unobserve(entry.target);
                 }
             });
@@ -2219,11 +2219,9 @@
 
         function startCounter(counter) {
             const target = +counter.getAttribute('data-target');
-            const duration = 2000; // 2 seconds
-            const step = target / (duration / 16); // 60fps
-            
+            const duration = 2000;
+            const step = target / (duration / 16);
             let current = 0;
-            
             const updateCounter = () => {
                 current += step;
                 if (current < target) {
@@ -2231,25 +2229,23 @@
                     requestAnimationFrame(updateCounter);
                 } else {
                     counter.innerText = target;
-                    // Add + sign for some counters if needed
                     if(target > 90) counter.innerText += "%";
                     else if(target > 1000) counter.innerText = "+5000";
                 }
             };
-            
             updateCounter();
         }
 
         // ==================== GALLERY ====================
         function updateMainImage(src) {
             const mainImage = document.getElementById('mainGalleryImage');
-            mainImage.style.opacity = '0';
-            setTimeout(() => {
-                mainImage.src = src;
-                mainImage.style.opacity = '1';
-            }, 300);
-
-            // Update active thumb
+            if(mainImage) {
+                mainImage.style.opacity = '0';
+                setTimeout(() => {
+                    mainImage.src = src;
+                    mainImage.style.opacity = '1';
+                }, 300);
+            }
             document.querySelectorAll('.gallery-thumb').forEach(thumb => {
                 thumb.classList.remove('active');
                 if(thumb.src === src) thumb.classList.add('active');
@@ -2260,7 +2256,6 @@
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             const icon = btn.querySelector('i');
-            
             if (input.type === "password") {
                 input.type = "text";
                 icon.classList.remove('fa-eye');
@@ -2273,81 +2268,69 @@
         }
 
         // ==================== THREE.JS BACKGROUND ====================
-        // Simple particle system representing water molecules/bubbles
-        const canvas = document.getElementById('canvas3d');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        // وضعنا الكود داخل try-catch لتجنب توقف الموقع في حال فشل تحميل المكتبة
+        try {
+            const canvas = document.getElementById('canvas3d');
+            if (typeof THREE !== 'undefined' && canvas) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+                
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
 
-        // Particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 700;
-        const posArray = new Float32Array(particlesCount * 3);
+                const particlesGeometry = new THREE.BufferGeometry();
+                const particlesCount = 700;
+                const posArray = new Float32Array(particlesCount * 3);
 
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 15; // Spread
-        }
+                for(let i = 0; i < particlesCount * 3; i++) {
+                    posArray[i] = (Math.random() - 0.5) * 15;
+                }
 
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
-        // Material
-        const material = new THREE.PointsMaterial({
-            size: 0.02,
-            color: 0x06b6d4, // Cyan
-            transparent: true,
-            opacity: 0.8,
-        });
+                const material = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0x06b6d4,
+                    transparent: true,
+                    opacity: 0.8,
+                });
 
-        // Mesh
-        const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
+                const particlesMesh = new THREE.Points(particlesGeometry, material);
+                scene.add(particlesMesh);
 
-        camera.position.z = 3;
+                camera.position.z = 3;
 
-        // Mouse interaction
-        let mouseX = 0;
-        let mouseY = 0;
+                let mouseX = 0;
+                let mouseY = 0;
 
-        document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX / window.innerWidth - 0.5;
-            mouseY = event.clientY / window.innerHeight - 0.5;
-        });
+                document.addEventListener('mousemove', (event) => {
+                    mouseX = event.clientX / window.innerWidth - 0.5;
+                    mouseY = event.clientY / window.innerHeight - 0.5;
+                });
 
-        // Animation Loop
-        const clock = new THREE.Clock();
+                const clock = new THREE.Clock();
 
-        function animate() {
-            const elapsedTime = clock.getElapsedTime();
+                function animate() {
+                    const elapsedTime = clock.getElapsedTime();
+                    particlesMesh.rotation.y = elapsedTime * 0.05;
+                    particlesMesh.rotation.x = mouseY * 0.5;
+                    particlesMesh.rotation.y += mouseX * 0.5;
+                    particlesGeometry.attributes.position.needsUpdate = true;
+                    renderer.render(scene, camera);
+                    window.requestAnimationFrame(animate);
+                }
+                animate();
 
-            // Rotate entire system slowly
-            particlesMesh.rotation.y = elapsedTime * 0.05;
-            particlesMesh.rotation.x = mouseY * 0.5;
-            particlesMesh.rotation.y += mouseX * 0.5;
-
-            // Wave effect
-            for (let i = 0; i < particlesCount; i++) {
-                const i3 = i * 3;
-                const x = particlesGeometry.attributes.position.array[i3];
-                // particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x) * 0.5; // Simple wave
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
             }
-            particlesGeometry.attributes.position.needsUpdate = true;
-
-            renderer.render(scene, camera);
-            window.requestAnimationFrame(animate);
+        } catch (e) {
+            console.log("Three.js failed to load or initialize", e);
         }
-
-        animate();
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
     </script>
 </body>
 </html>
