@@ -2038,399 +2038,307 @@
                         </div>
                     </div>
 
-
-
-
-
-
-
-
-
-                    
-                    <div class="border
-
-
-
-                            
-                            <li class="flex items-center">
-                                <i class="fab fa-whatsapp ml-3 text-cyan-600 text-xl"></i>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="border-t border-slate-200 my-8"></div>
-
-                <div class="grid md:grid-cols-3 gap-6 items-center text-center md:text-right">
-                    <div class="text-slate-500 text-lg">
-                        <a
-                            href="https://wa.me/message/J524XB4MO5VCA1"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="hover:text-cyan-700 transition flex items-center"
-                            aria-label="فتح محادثة واتساب مع Ishaq Shawqi"
-                        >
-                            <i class="fas fa-copyright ml-1"></i>
-                            2025 أكوا فيو - جميع الحقوق محفوظة
-                        </a>
-                    </div>
-
-                    <div class="text-center">
-                        <p class="text-slate-500 text-lg">
-                            بـرمج <i class="fas fa-heart text-red-500 animate-pulse"></i> في اليمن
+<div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-cyan-200/60 text-sm mb-4 md:mb-0">
+                            &copy; 2024 أكوا فيو | AquaVue. جميع الحقوق محفوظة.
                         </p>
-                    </div>
-                    <div class="flex justify-center md:justify-start space-x-reverse space-x-6 text-slate-500 text-lg">
-                        <a href="#" class="hover:text-cyan-600 transition">
-                            <i class="fas fa-file-contract ml-1"></i>
-                            الشروط والأحكام
-                        </a>
-                        <a href="#" class="hover:text-cyan-600 transition">
-                            <i class="fas fa-shield-alt ml-1"></i>
-                            الخصوصية
-                        </a>
+                        <div class="flex space-x-reverse space-x-6 text-sm text-cyan-200/60">
+                            <a href="#" class="hover:text-cyan-400 transition">سياسة الخصوصية</a>
+                            <a href="#" class="hover:text-cyan-400 transition">شروط الاستخدام</a>
+                            <a href="#" class="hover:text-cyan-400 transition">خريطة الموقع</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div> </div> <script>
+        // ==================== LOADING SCREEN ====================
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                initTypewriter(); // Start typewriter after loading
+            }, 1500);
+        });
 
-        <button id="scrollTop" class="fixed bottom-8 left-8 bg-gradient-to-r from-cyan-500 to-teal-500 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl opacity-0 pointer-events-none transition-all hover:scale-110 z-40">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-    </div>
-
-    <script>
-        // Page Navigation System
-        let currentPage = 'loginPage';
-
+        // ==================== NAVIGATION ====================
         function showPage(pageId) {
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                setTimeout(() => {
+                    if(!page.classList.contains('active')) page.style.display = 'none';
+                }, 500);
             });
 
-            // Show requested page
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            targetPage.style.display = 'block';
+            
+            // Small delay to allow display:block to apply before opacity transition
             setTimeout(() => {
-                document.getElementById(pageId).classList.add('active');
-                currentPage = pageId;
+                targetPage.classList.add('active');
+            }, 50);
 
-                // Start typing animation on home page
-                if(pageId === 'homePage') {
-                    setTimeout(startTyping, 300);
-                    // Reset scroll position
-                    window.scrollTo(0, 0);
-                    // Initialize reveal animations
-                    initializeRevealAnimations();
-                }
-            }, 100);
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
 
-        // Toggle Password Visibility
-        function togglePassword(inputId, button) {
-            const input = document.getElementById(inputId);
-            const icon = button.querySelector('i');
-
-            if(input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        // Login Form Handler
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show login page by default
-            showPage('loginPage');
-
-            const loginForm = document.getElementById('loginForm');
-            if(loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    // Create success modal
-                    const modal = document.createElement('div');
-                    modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
-                    modal.innerHTML = `
-                        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                            <div class="text-7xl text-cyan-500 mb-6">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">مرحباً بك!</h3>
-                            <p class="text-slate-600 text-lg mb-8">تم تسجيل دخولك بنجاح</p>
-                            <button onclick="this.closest('.fixed').remove(); showPage('homePage')" class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
-                                <i class="fas fa-home ml-2"></i>
-                                الذهاب للرئيسية
-                            </button>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
-                });
-            }
-
-            // Register Form Handler
-            const registerForm = document.getElementById('registerForm');
-            if(registerForm) {
-                registerForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    const password = document.getElementById('registerPassword').value;
-                    const confirmPassword = document.getElementById('confirmPassword').value;
-
-                    if(password !== confirmPassword) {
-                        const modal = document.createElement('div');
-                        modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
-                        modal.innerHTML = `
-                            <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                                <div class="text-7xl text-red-500 mb-6">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                </div>
-                                <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">خطأ</h3>
-                                <p class="text-slate-600 text-lg mb-8">كلمات المرور غير متطابقة</p>
-                                <button onclick="this.closest('.fixed').remove()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
-                                    <i class="fas fa-times ml-2"></i>
-                                    إغلاق
-                                </button>
-                            </div>
-                        `;
-                        document.body.appendChild(modal);
-                        return;
-                    }
-
-                    // Success
-                    const modal = document.createElement('div');
-                    modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
-                    modal.innerHTML = `
-                        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                            <div class="text-7xl text-teal-500 mb-6">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h3 class="text-3xl font-bold text-slate-800 mb-4 font-amiri">مرحباً بك في أكوا فيو!</h3>
-                            <p class="text-slate-600 text-lg mb-8">تم إنشاء حسابك بنجاح</p>
-                            <button onclick="this.closest('.fixed').remove(); showPage('homePage')" class="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
-                                <i class="fas fa-home ml-2"></i>
-                                الذهاب للرئيسية
-                            </button>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
-                });
-            }
+        // Initialize Home Page
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('homePage').style.display = 'block';
+            setTimeout(() => document.getElementById('homePage').classList.add('active'), 100);
         });
 
-        // Mobile Menu Functions for different pages
+        // ==================== MOBILE MENUS ====================
+        // Home Menu
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
         function toggleMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('hidden');
             setTimeout(() => {
                 mobileMenu.classList.toggle('opacity-0');
                 mobileMenu.classList.toggle('scale-95');
             }, 10);
         }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+
+        // Login Menu
+        const loginMenuBtn = document.getElementById('loginMenuBtn');
+        const loginCloseMenuBtn = document.getElementById('loginCloseMenuBtn');
+        const loginMobileMenu = document.getElementById('loginMobileMenu');
 
         function toggleLoginMenu() {
-            const mobileMenu = document.getElementById('loginMobileMenu');
-            mobileMenu.classList.toggle('hidden');
+            loginMobileMenu.classList.toggle('hidden');
             setTimeout(() => {
-                mobileMenu.classList.toggle('opacity-0');
-                mobileMenu.classList.toggle('scale-95');
+                loginMobileMenu.classList.toggle('opacity-0');
+                loginMobileMenu.classList.toggle('scale-95');
             }, 10);
         }
+
+        if(loginMenuBtn) loginMenuBtn.addEventListener('click', toggleLoginMenu);
+        if(loginCloseMenuBtn) loginCloseMenuBtn.addEventListener('click', toggleLoginMenu);
+
+        // Register Menu
+        const registerMenuBtn = document.getElementById('registerMenuBtn');
+        const registerCloseMenuBtn = document.getElementById('registerCloseMenuBtn');
+        const registerMobileMenu = document.getElementById('registerMobileMenu');
 
         function toggleRegisterMenu() {
-            const mobileMenu = document.getElementById('registerMobileMenu');
-            mobileMenu.classList.toggle('hidden');
+            registerMobileMenu.classList.toggle('hidden');
             setTimeout(() => {
-                mobileMenu.classList.toggle('opacity-0');
-                mobileMenu.classList.toggle('scale-95');
+                registerMobileMenu.classList.toggle('opacity-0');
+                registerMobileMenu.classList.toggle('scale-95');
             }, 10);
         }
 
-        // Initialize event listeners for mobile menus
-        document.addEventListener('DOMContentLoaded', function() {
-            // Home page menu
-            const menuBtn = document.getElementById('menuBtn');
-            const closeMenuBtn = document.getElementById('closeMenuBtn');
-            
-            if(menuBtn) menuBtn.addEventListener('click', toggleMenu);
-            if(closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+        if(registerMenuBtn) registerMenuBtn.addEventListener('click', toggleRegisterMenu);
+        if(registerCloseMenuBtn) registerCloseMenuBtn.addEventListener('click', toggleRegisterMenu);
 
-            // Login page menu
-            const loginMenuBtn = document.getElementById('loginMenuBtn');
-            const loginCloseMenuBtn = document.getElementById('loginCloseMenuBtn');
-            
-            if(loginMenuBtn) loginMenuBtn.addEventListener('click', toggleLoginMenu);
-            if(loginCloseMenuBtn) loginCloseMenuBtn.addEventListener('click', toggleLoginMenu);
-
-            // Register page menu
-            const registerMenuBtn = document.getElementById('registerMenuBtn');
-            const registerCloseMenuBtn = document.getElementById('registerCloseMenuBtn');
-            
-            if(registerMenuBtn) registerMenuBtn.addEventListener('click', toggleRegisterMenu);
-            if(registerCloseMenuBtn) registerCloseMenuBtn.addEventListener('click', toggleRegisterMenu);
-
-            // Close menu on link click
-            document.querySelectorAll('.mobile-menu-link').forEach(link => {
-                link.addEventListener('click', toggleMenu);
-            });
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-menu-link').forEach(link => {
+            link.addEventListener('click', toggleMenu);
         });
 
-        // Typewriter Effect Logic (The Pen Icon)
-        function startTyping() {
-            const text = "أكوا فيو.. تكنولوجيا الحياة";
-            const titleElement = document.getElementById('mainTitle');
+        // ==================== SCROLL PROGRESS ====================
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // ==================== TYPEWRITER EFFECT ====================
+        function initTypewriter() {
+            const textElement = document.getElementById('mainTitle');
             const penElement = document.getElementById('writingPen');
-
-            if(!titleElement || !penElement) return;
-
-            titleElement.innerHTML = '';
+            const text = "مستقبل نقاء المياه";
             let index = 0;
+
+            if(!textElement) return;
+
+            textElement.innerHTML = '';
             penElement.style.opacity = '1';
-            penElement.style.transform = 'translateY(0) rotate(-45deg)';
             penElement.classList.add('pen-writing-anim');
 
-            function typeChar() {
+            function type() {
                 if (index < text.length) {
-                    titleElement.innerHTML += text.charAt(index);
+                    textElement.innerHTML += text.charAt(index);
+                    
+                    // Move pen logic (approximate calculation based on font size)
+                    // For a real app, you'd measure the width of the rendered text
+                    const currentWidth = index * 25; // Approximate pixel width per char for this font size
+                    penElement.style.left = (60 + currentWidth) + 'px'; 
+
                     index++;
-                    setTimeout(typeChar, 100);
+                    setTimeout(type, 150);
                 } else {
                     penElement.classList.remove('pen-writing-anim');
-                    penElement.style.opacity = '0';
-                    penElement.style.transition = 'opacity 1s ease, transform 1s ease';
-                    penElement.style.transform = 'translateY(-50px) rotate(-90deg)';
+                    setTimeout(() => {
+                        penElement.style.opacity = '0';
+                    }, 1000);
                 }
             }
-            setTimeout(typeChar, 500);
+            type();
         }
 
-        // Scroll Progress Bar (for home page only)
-        window.addEventListener('scroll', () => {
-            if(currentPage !== 'homePage') return;
+        // ==================== REVEAL ON SCROLL & COUNTERS ====================
+        const observerOptions = {
+            threshold: 0.1
+        };
 
-            const scrollProgress = document.getElementById('scrollProgress');
-            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.scrollY / windowHeight) * 100;
-            scrollProgress.style.width = scrolled + '%';
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Start counters if inside the revealed element
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => startCounter(counter));
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
 
-            const scrollTop = document.getElementById('scrollTop');
-            if (window.scrollY > 500) {
-                scrollTop.classList.remove('opacity-0', 'pointer-events-none');
-            } else {
-                scrollTop.classList.add('opacity-0', 'pointer-events-none');
-            }
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
         });
 
-        // Scroll to Top
-        const scrollTopBtn = document.getElementById('scrollTop');
-        if(scrollTopBtn) {
-            scrollTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+        function startCounter(counter) {
+            const target = +counter.getAttribute('data-target');
+            const duration = 2000; // 2 seconds
+            const step = target / (duration / 16); // 60fps
+            
+            let current = 0;
+            
+            const updateCounter = () => {
+                current += step;
+                if (current < target) {
+                    counter.innerText = Math.ceil(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.innerText = target;
+                    // Add + sign for some counters if needed
+                    if(target > 90) counter.innerText += "%";
+                    else if(target > 1000) counter.innerText = "+5000";
+                }
+            };
+            
+            updateCounter();
         }
 
-        // Initialize Reveal Animations
-        function initializeRevealAnimations() {
-            const revealElements = document.querySelectorAll('.reveal');
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            revealElements.forEach(el => revealObserver.observe(el));
-
-            // Counters
-            const counters = document.querySelectorAll('.counter');
-            const counterObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        const counter = entry.target;
-                        const target = +counter.getAttribute('data-target');
-                        let count = 0;
-                        const increment = target / 60;
-                        const update = () => {
-                            count += increment;
-                            if(count < target) {
-                                counter.innerText = Math.ceil(count);
-                                requestAnimationFrame(update);
-                            } else {
-                                counter.innerText = target + "+";
-                            }
-                        };
-                        update();
-                        counterObserver.unobserve(counter);
-                    }
-                });
-            }, { threshold: 0.5 });
-            counters.forEach(c => counterObserver.observe(c));
-        }
-
-        // Gallery Image Switcher
+        // ==================== GALLERY ====================
         function updateMainImage(src) {
             const mainImage = document.getElementById('mainGalleryImage');
-            if(!mainImage) return;
-
             mainImage.style.opacity = '0';
             setTimeout(() => {
                 mainImage.src = src;
                 mainImage.style.opacity = '1';
             }, 300);
 
-            document.querySelectorAll('.gallery-thumb').forEach(img => img.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        // Card Flip
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.classList.toggle('flipped');
-            });
-        });
-
-        // Smooth Scroll for Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if(target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Contact Form Submission
-        const contactFormEl = document.getElementById('contactForm');
-        if(contactFormEl) {
-            contactFormEl.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl">
-                        <div class="text-7xl text-teal-500 mb-6">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h3 class="text-3xl font-bold text-slate-800 mb-4">تم إرسال رسالتك بنجاح!</h3>
-                        <p class="text-slate-600 text-lg mb-8">سنتواصل معك في أقرب وقت ممكن</p>
-                        <button onclick="this.closest('.fixed').remove()" class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition">
-                            <i class="fas fa-times ml-2"></i>
-                            إغلاق
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                this.reset();
+            // Update active thumb
+            document.querySelectorAll('.gallery-thumb').forEach(thumb => {
+                thumb.classList.remove('active');
+                if(thumb.src === src) thumb.classList.add('active');
             });
         }
+
+        // ==================== PASSWORD TOGGLE ====================
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // ==================== THREE.JS BACKGROUND ====================
+        // Simple particle system representing water molecules/bubbles
+        const canvas = document.getElementById('canvas3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 700;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15; // Spread
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Material
+        const material = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x06b6d4, // Cyan
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        // Mesh
+        const particlesMesh = new THREE.Points(particlesGeometry, material);
+        scene.add(particlesMesh);
+
+        camera.position.z = 3;
+
+        // Mouse interaction
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotate entire system slowly
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = mouseY * 0.5;
+            particlesMesh.rotation.y += mouseX * 0.5;
+
+            // Wave effect
+            for (let i = 0; i < particlesCount; i++) {
+                const i3 = i * 3;
+                const x = particlesGeometry.attributes.position.array[i3];
+                // particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x) * 0.5; // Simple wave
+            }
+            particlesGeometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
     </script>
 </body>
-</html
+</html>
