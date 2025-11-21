@@ -7,8 +7,8 @@
     <meta name="description" content="أكوا فيو - تقنية ذكية لمراقبة وتحليل جودة المياه">
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,7 @@
             font-family: 'Cairo', sans-serif;
             overflow-x: hidden;
             background: var(--light);
-            margin: 0;
+            margin: 0; /* إزالة الهوامش الافتراضية */
         }
 
         /* ==================== 3D INTRO LAYER STYLES ==================== */
@@ -39,7 +39,7 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at center, #0e7490 0%, #082f49 100%);
-            z-index: 99999;
+            z-index: 99999; /* أعلى طبقة */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -70,7 +70,7 @@
             font-weight: bold;
             text-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
             animation: pulseText 2s infinite;
-            margin-top: 200px; /* Push text down below the sphere */
+            margin-top: 200px; /* لإنزال النص تحت الشكل */
         }
 
         @keyframes pulseText {
@@ -78,28 +78,46 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* ==================== GENERAL STYLES ==================== */
+        /* ==================== ORIGINAL STYLES ==================== */
         .font-amiri { font-family: 'Amiri', serif; }
         .font-tajawal { font-family: 'Tajawal', sans-serif; }
         .font-naskh { font-family: 'Noto Naskh Arabic', serif; }
 
-        .page { display: none; opacity: 0; transition: opacity 0.6s ease; }
-        .page.active { display: block; animation: fadeInPage 0.6s ease forwards; }
-        @keyframes fadeInPage { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px 0 rgba(8, 145, 178, 0.1);
+        /* Page Transition */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
         }
 
+        .page.active {
+            display: block;
+            animation: fadeInPage 0.6s ease forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Transparent Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(8, 145, 178, 0.2);
+            box-shadow: 0 4px 20px 0 rgba(8, 145, 178, 0.1);
+        }
+
+        /* Premium Gradient */
         .hero-gradient {
             background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
             position: relative;
         }
+
         .hero-gradient::before {
-            content: ''; position: absolute; inset: 0;
+            content: '';
+            position: absolute;
+            inset: 0;
             background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
@@ -110,10 +128,18 @@
             background-size: 200% 200%;
             animation: gradientShift 4s ease infinite;
         }
-        @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-        /* Animations */
-        .floating-element { position: absolute; animation: floatAdvanced 8s infinite ease-in-out; }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Advanced Floating Elements */
+        .floating-element {
+            position: absolute;
+            animation: floatAdvanced 8s infinite ease-in-out;
+        }
+
         .floating-element:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
         .floating-element:nth-child(2) { top: 25%; right: 15%; animation-delay: 1.5s; }
         .floating-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 3s; }
@@ -126,76 +152,140 @@
             75% { transform: translateY(-25px) rotate(3deg); opacity: 0.5; }
         }
 
-        .typewriter-container { position: relative; display: inline-block; min-height: 120px; padding-left: 60px; }
-        .typewriter-text { position: relative; display: inline-block; white-space: nowrap; }
-        .writing-pen {
-            position: absolute; font-size: 3.5rem; color: #ffffff; z-index: 20;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform-origin: bottom left;
-            transition: left 0.1s linear; top: -10px;
+        /* Advanced Typewriter with Pen */
+        .typewriter-container {
+            position: relative;
+            display: inline-block;
+            min-height: 120px;
+            padding-left: 60px;
         }
-        .pen-writing-anim { animation: penWiggle 0.2s infinite; }
-        @keyframes penWiggle { 0% { transform: translateY(0) rotate(-45deg); } 50% { transform: translateY(-5px) rotate(-35deg); } 100% { transform: translateY(0) rotate(-45deg); } }
 
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .typewriter-text {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .writing-pen {
+            position: absolute;
+            font-size: 3.5rem;
+            color: #ffffff;
+            z-index: 20;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+            transform-origin: bottom left;
+            transition: left 0.1s linear;
+            top: -10px;
+        }
+
+        .pen-writing-anim { animation: penWiggle 0.2s infinite; }
+
+        @keyframes penWiggle {
+            0% { transform: translateY(0) rotate(-45deg); }
+            50% { transform: translateY(-5px) rotate(-35deg); }
+            100% { transform: translateY(0) rotate(-45deg); }
+        }
+
+        /* Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        /* Enhanced Card Hover */
         .hover-lift { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-lift:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
 
-        /* Navbar */
-        .navbar-gradient { background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); }
-
-        /* Auth Styles */
-        .auth-container { min-height: 100vh; background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); position: relative; overflow: hidden; }
-        .auth-container::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-
-        .auth-decoration { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); animation: floatSlow 20s infinite ease-in-out; }
-        .auth-decoration:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s; }
-        .auth-decoration:nth-child(2) { width: 300px; height: 300px; bottom: -80px; right: -80px; animation-delay: 3s; }
-        .auth-decoration:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 10%; animation-delay: 6s; }
-        @keyframes floatSlow { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -30px) scale(1.1); } 66% { transform: translate(-30px, 30px) scale(0.9); } }
-
-        .water-droplet { position: absolute; background: rgba(255, 255, 255, 0.2); border-radius: 50% 50% 50% 0; animation: dropFall 3s infinite ease-in; }
-        @keyframes dropFall { 0% { transform: translateY(-100vh) rotate(45deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(100vh) rotate(45deg); opacity: 0; } }
-
-        .auth-input { transition: all 0.3s ease; }
-        .auth-input:focus { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3); }
-
-        .btn-ripple { position: relative; overflow: hidden; }
-        .btn-ripple::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.5); transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s; }
-        .btn-ripple:active::before { width: 300px; height: 300px; }
-
-        .slide-in-right { animation: slideInRight 0.6s ease forwards; }
-        .slide-in-left { animation: slideInLeft 0.6s ease forwards; }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        .custom-checkbox { appearance: none; width: 20px; height: 20px; border: 2px solid #0891b2; border-radius: 4px; cursor: pointer; position: relative; transition: all 0.3s ease; }
-        .custom-checkbox:checked { background: linear-gradient(135deg, #0891b2, #14b8a6); border-color: #0891b2; }
-        .custom-checkbox:checked::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; }
-
-        .auth-illustration { position: relative; animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        .illustration-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%); filter: blur(40px); animation: pulse 3s ease-in-out infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
-
-        .mobile-card { display: flex; align-items: center; background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-right: 4px solid #0891b2; }
-        .mobile-card-icon { font-size: 2.5rem; margin-left: 16px; min-width: 60px; text-align: center; }
-        .mobile-card-content { flex: 1; }
-        .mobile-card-value { font-size: 2rem; font-weight: 900; margin-bottom: 4px; }
-        .mobile-card-label { font-size: 1rem; color: #64748b; font-weight: bold; }
-        
-        .scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #0891b2, #14b8a6); z-index: 9999; transition: width 0.1s ease; }
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0891b2, #14b8a6); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0e7490; }
-
+        /* Product Card Flip */
         .product-card { perspective: 1200px; cursor: pointer; }
         .product-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
         .product-card.flipped .product-inner { transform: rotateY(180deg); }
         .product-front, .product-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 1.5rem; overflow: hidden; }
         .product-back { transform: rotateY(180deg); }
+
+        /* Gallery */
+        .gallery-thumb { cursor: pointer; transition: all 0.3s; opacity: 0.5; width: 70px; height: 70px; object-fit: cover; border-radius: 12px; }
+        .gallery-thumb.active, .gallery-thumb:hover { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 3px #0891b2; }
+
+        /* Navbar with Hero Gradient */
+        .navbar-gradient { background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); }
+
+        /* Scroll Progress Bar */
+        .scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #0891b2, #14b8a6); z-index: 9999; transition: width 0.1s ease; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0891b2, #14b8a6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0e7490; }
+
+        /* AUTH PAGES STYLES */
+        .auth-container { min-height: 100vh; background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); position: relative; overflow: hidden; }
+        .auth-container::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+
+        /* Auth Decorative Elements */
+        .auth-decoration { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); animation: floatSlow 20s infinite ease-in-out; }
+        .auth-decoration:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s; }
+        .auth-decoration:nth-child(2) { width: 300px; height: 300px; bottom: -80px; right: -80px; animation-delay: 3s; }
+        .auth-decoration:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 10%; animation-delay: 6s; }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        /* Water Droplet Animation */
+        .water-droplet { position: absolute; background: rgba(255, 255, 255, 0.2); border-radius: 50% 50% 50% 0; animation: dropFall 3s infinite ease-in; }
+        @keyframes dropFall {
+            0% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+        }
+
+        /* Input Focus Effects */
+        .auth-input { transition: all 0.3s ease; }
+        .auth-input:focus { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3); }
+
+        /* Button Ripple Effect */
+        .btn-ripple { position: relative; overflow: hidden; }
+        .btn-ripple::before {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
+        }
+        .btn-ripple:active::before { width: 300px; height: 300px; }
+
+        /* Slide Animation for Auth Forms */
+        .slide-in-right { animation: slideInRight 0.6s ease forwards; }
+        .slide-in-left { animation: slideInLeft 0.6s ease forwards; }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Custom Checkbox */
+        .custom-checkbox { appearance: none; width: 20px; height: 20px; border: 2px solid #0891b2; border-radius: 4px; cursor: pointer; position: relative; transition: all 0.3s ease; }
+        .custom-checkbox:checked { background: linear-gradient(135deg, #0891b2, #14b8a6); border-color: #0891b2; }
+        .custom-checkbox:checked::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; }
+
+        /* Illustration Styles */
+        .auth-illustration { position: relative; animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .illustration-glow {
+            position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%);
+            filter: blur(40px); animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+
+        /* Mobile Cards */
+        .mobile-card {
+            display: flex; align-items: center; background: white; border-radius: 16px; padding: 20px;
+            margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-right: 4px solid #0891b2;
+        }
+        .mobile-card-icon { font-size: 2.5rem; margin-left: 16px; min-width: 60px; text-align: center; }
+        .mobile-card-content { flex: 1; }
+        .mobile-card-value { font-size: 2rem; font-weight: 900; margin-bottom: 4px; }
+        .mobile-card-label { font-size: 1rem; color: #64748b; font-weight: bold; }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -216,16 +306,10 @@
                     </div>
                 </div>
                 <div class="hidden md:flex items-center gap-4">
-                    <button onclick="showPage('homePage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
-                        <i class="fas fa-home ml-2"></i> العودة للرئيسية
-                    </button>
-                    <button onclick="showPage('registerPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
-                        <i class="fas fa-user-plus ml-2"></i> إنشاء حساب
-                    </button>
+                    <button onclick="showPage('homePage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition"><i class="fas fa-home ml-2"></i> العودة للرئيسية</button>
+                    <button onclick="showPage('registerPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition"><i class="fas fa-user-plus ml-2"></i> إنشاء حساب</button>
                 </div>
-                <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="loginMenuBtn">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="loginMenuBtn"><i class="fas fa-bars"></i></button>
             </div>
             <div id="loginMobileMenu" class="hidden md:hidden mt-4 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
                 <button class="absolute top-4 left-4 text-cyan-600 text-2xl" id="loginCloseMenuBtn"><i class="fas fa-times"></i></button>
@@ -253,34 +337,17 @@
                                 <p class="text-slate-600 text-lg font-tajawal">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
                             </div>
                             <form id="loginForm" class="space-y-6">
-                                <div>
-                                    <label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-envelope ml-2 text-cyan-600"></i> البريد الإلكتروني</label>
-                                    <input type="email" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="example@aquavue.ye">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-lock ml-2 text-cyan-600"></i> كلمة المرور</label>
-                                    <div class="relative">
-                                        <input type="password" id="loginPassword" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="••••••••">
-                                        <button type="button" onclick="togglePassword('loginPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-600 transition text-xl"><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" class="custom-checkbox"><span class="text-slate-600 text-lg">تذكرني</span></label>
-                                    <a href="#" class="text-cyan-600 hover:text-cyan-700 font-bold text-lg transition">نسيت كلمة المرور؟</a>
-                                </div>
+                                <div><label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-envelope ml-2 text-cyan-600"></i> البريد الإلكتروني</label><input type="email" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="example@aquavue.ye"></div>
+                                <div><label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-lock ml-2 text-cyan-600"></i> كلمة المرور</label><div class="relative"><input type="password" id="loginPassword" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="••••••••"><button type="button" onclick="togglePassword('loginPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-600 transition text-xl"><i class="fas fa-eye"></i></button></div></div>
+                                <div class="flex items-center justify-between"><label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" class="custom-checkbox"><span class="text-slate-600 text-lg">تذكرني</span></label><a href="#" class="text-cyan-600 hover:text-cyan-700 font-bold text-lg transition">نسيت كلمة المرور؟</a></div>
                                 <button type="submit" class="btn-ripple w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all hover:scale-105"><i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول</button>
                             </form>
-                            <div class="relative my-8">
-                                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
-                                <div class="relative flex justify-center text-lg"><span class="bg-white px-4 text-slate-500">أو</span></div>
-                            </div>
+                            <div class="relative my-8"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div><div class="relative flex justify-center text-lg"><span class="bg-white px-4 text-slate-500">أو</span></div></div>
                             <div class="grid grid-cols-2 gap-4 mb-8">
                                 <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition font-bold"><i class="fab fa-google text-red-500 text-xl"></i> <span class="text-slate-700">Google</span></button>
                                 <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition font-bold"><i class="fab fa-facebook-f text-blue-600 text-xl"></i> <span class="text-slate-700">Facebook</span></button>
                             </div>
-                            <div class="text-center">
-                                <p class="text-slate-600 text-lg">ليس لديك حساب؟ <button onclick="showPage('registerPage')" class="text-cyan-600 hover:text-cyan-700 font-black transition">إنشاء حساب جديد</button></p>
-                            </div>
+                            <div class="text-center"><p class="text-slate-600 text-lg">ليس لديك حساب؟ <button onclick="showPage('registerPage')" class="text-cyan-600 hover:text-cyan-700 font-black transition">إنشاء حساب جديد</button></p></div>
                         </div>
                     </div>
                     <div class="order-1 md:order-2 slide-in-left">
@@ -311,9 +378,7 @@
     <div id="registerPage" class="page">
         <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
             <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center space-x-reverse space-x-4">
-                    <div class="text-3xl font-black text-white"><i class="fas fa-water"></i> Aqua<span>Vue</span></div>
-                </div>
+                <div class="flex items-center space-x-reverse space-x-4"><div class="text-3xl font-black text-white"><i class="fas fa-water"></i> Aqua<span>Vue</span></div></div>
                 <div class="hidden md:flex items-center gap-4">
                     <button onclick="showPage('homePage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition"><i class="fas fa-home ml-2"></i> العودة للرئيسية</button>
                     <button onclick="showPage('loginPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition"><i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول</button>
@@ -328,8 +393,14 @@
                 </ul>
             </div>
         </nav>
+
         <div class="auth-container pt-24">
             <div class="auth-decoration"></div><div class="auth-decoration"></div><div class="auth-decoration"></div>
+            <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
+            <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
+            <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
+            <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
+
             <div class="container mx-auto px-4 py-12 relative z-10">
                 <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
                     <div class="order-1 slide-in-right">
@@ -357,7 +428,7 @@
                     </div>
                     <div class="order-2 slide-in-left">
                         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
-                            <div class="text-center mb-8"><h1 class="text-4xl font-black gradient-text font-amiri mb-2">إنشاء حساب جديد</h1></div>
+                            <div class="text-center mb-8"><h1 class="text-4xl font-black gradient-text font-amiri mb-2">إنشاء حساب جديد</h1><p class="text-slate-600 text-lg font-tajawal">انضم لمجتمع أكوا فيو الذكي</p></div>
                             <form id="registerForm" class="space-y-5">
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-user ml-2 text-teal-600"></i> الاسم الأول</label><input type="text" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="أحمد"></div>
@@ -408,6 +479,7 @@
                 </ul>
             </div>
         </nav>
+
         <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden pt-24">
             <div class="floating-element"><i class="fas fa-flask text-white/20 text-6xl"></i></div>
             <div class="floating-element"><i class="fas fa-microscope text-white/20 text-5xl"></i></div>
@@ -455,11 +527,7 @@
 
         <section id="tech" class="py-24 bg-gradient-to-br from-cyan-50 via-teal-50 to-cyan-50 relative overflow-hidden">
             <div class="container mx-auto px-6 relative z-10">
-                <div class="text-center mb-20 reveal">
-                    <h2 class="text-6xl font-black text-slate-800 mb-6 font-amiri"><i class="fas fa-cogs text-cyan-600 ml-3"></i> تقنياتنا <span class="gradient-text">المبتكرة</span></h2>
-                    <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                    <p class="text-2xl text-slate-700 max-w-3xl mx-auto font-tajawal">حلول تقنية متكاملة تغطي كافة مراحل رحلة المياه</p>
-                </div>
+                <div class="text-center mb-20 reveal"><h2 class="text-6xl font-black text-slate-800 mb-6 font-amiri"><i class="fas fa-cogs text-cyan-600 ml-3"></i> تقنياتنا <span class="gradient-text">المبتكرة</span></h2><div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div><p class="text-2xl text-slate-700 max-w-3xl mx-auto font-tajawal">حلول تقنية متكاملة تغطي كافة مراحل رحلة المياه</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     <div class="relative h-96 product-card"><div class="product-inner"><div class="product-front bg-gradient-to-br from-slate-900 to-cyan-900 shadow-2xl"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-40" alt="Sensors"><div class="absolute inset-0 flex flex-col justify-end p-8 text-white"><div class="text-5xl mb-4"><i class="fas fa-sensor-on"></i></div><h3 class="text-3xl font-bold mb-3">المستشعرات الذكية</h3><p class="text-cyan-100 text-lg mb-4">قياس فوري لنسبة الأملاح والحموضة</p><button class="mt-4 bg-white text-cyan-700 px-6 py-3 rounded-full font-bold self-start hover:bg-cyan-100 transition"><i class="fas fa-info-circle ml-2"></i>التفاصيل</button></div></div><div class="product-back bg-gradient-to-br from-cyan-600 to-teal-700 shadow-2xl p-8 flex flex-col justify-center text-white"><div class="text-5xl mb-6 text-center"><i class="fas fa-microchip"></i></div><h4 class="text-2xl font-bold mb-6 text-center">مواصفات المستشعر</h4><ul class="space-y-4 text-cyan-50 text-lg"><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> دقة قياس 0.01</li><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> بطارية تدوم 5 سنوات</li><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> مقاوم للماء IP68</li></ul><button class="mt-8 bg-white text-cyan-700 px-6 py-3 rounded-full font-bold self-center hover:bg-cyan-100 transition"><i class="fas fa-flask ml-2"></i>طلب تجربة</button></div></div></div>
                     <div class="relative h-96 product-card"><div class="product-inner"><div class="product-front bg-gradient-to-br from-slate-900 to-teal-900 shadow-2xl"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-40" alt="Dashboard"><div class="absolute inset-0 flex flex-col justify-end p-8 text-white"><div class="text-5xl mb-4"><i class="fas fa-brain"></i></div><h3 class="text-3xl font-bold mb-3">لوحة التحكم AI</h3><p class="text-teal-100 text-lg mb-4">تحليل البيانات الضخمة والتنبؤ بالجودة</p><button class="mt-4 bg-white text-teal-700 px-6 py-3 rounded-full font-bold self-start hover:bg-teal-100 transition"><i class="fas fa-info-circle ml-2"></i>التفاصيل</button></div></div><div class="product-back bg-gradient-to-br from-teal-500 to-emerald-700 shadow-2xl p-8 flex flex-col justify-center text-white"><div class="text-5xl mb-6 text-center"><i class="fas fa-chart-line"></i></div><h4 class="text-2xl font-bold mb-6 text-center">مميزات النظام</h4><ul class="space-y-4 text-teal-50 text-lg"><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> تقارير لحظية</li><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> تنبيهات عبر SMS/Email</li><li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> ربط مع أنظمة المصانع</li></ul><button class="mt-8 bg-white text-teal-700 px-6 py-3 rounded-full font-bold self-center hover:bg-teal-100 transition"><i class="fas fa-desktop ml-2"></i>عرض ديمو</button></div></div></div>
@@ -643,14 +711,17 @@
         let currentPage = 'loginPage';
 
         function showPage(pageId) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
 
+            // Show requested page
             setTimeout(() => {
                 document.getElementById(pageId).classList.add('active');
                 currentPage = pageId;
 
+                // Start typing animation on home page
                 if(pageId === 'homePage') {
                     setTimeout(startTyping, 300);
                     window.scrollTo(0, 0);
@@ -753,6 +824,7 @@
             });
         });
 
+        // Mobile Menu Logic
         function toggleMenu() {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('hidden');
