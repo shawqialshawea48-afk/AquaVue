@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaVue</title>
+    <title>أكوا فيو | AquaVue - منصة جودة المياه الذكية</title>
+    <meta name="description" content="أكوا فيو - تقنية ذكية لمراقبة وتحليل جودة المياه">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        :root {
+      :root {
             --primary: #0891b2;
             --secondary: #06b6d4;
             --accent: #14b8a6;
-            --light: #ffffff;
-            --dark: #ffffff; 
-            --text-main: #0f172a;
+            --light: #f0fdfa;
+            /* تم تغيير الداكن إلى فاتح */
+            --dark: #f8fafc; 
+            --dark-blue: #e2e8f0;
+            --text-main: #0f172a; /* لون جديد للنصوص */
         }
 
         * {
@@ -29,13 +37,14 @@
             font-family: 'Cairo', sans-serif;
             overflow-x: hidden;
             background: var(--dark);
-            color: var(--text-main);
+            color: #fff;
         }
 
         .font-amiri { font-family: 'Amiri', serif; }
         .font-tajawal { font-family: 'Tajawal', sans-serif; }
         .font-naskh { font-family: 'Noto Naskh Arabic', serif; }
 
+        /* ==================== 3D CANVAS BACKGROUND ==================== */
         #canvas3d {
             position: fixed;
             top: 0;
@@ -44,7 +53,6 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
         }
 
         .content-wrapper {
@@ -52,6 +60,7 @@
             z-index: 1;
         }
 
+        /* ==================== LOADING SCREEN ==================== */
         .loading-screen {
             position: fixed;
             inset: 0;
@@ -62,7 +71,6 @@
             align-items: center;
             justify-content: center;
             transition: opacity 1s ease, transform 1s ease;
-            color: #ffffff;
         }
 
         .loading-screen.hidden {
@@ -89,9 +97,10 @@
             position: absolute;
             width: 120px;
             height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 3px solid #ffffff;
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.3), rgba(20, 184, 166, 0.3));
+            border: 3px solid var(--secondary);
             opacity: 0.9;
+            box-shadow: 0 0 30px var(--accent);
         }
 
         .loader-face:nth-child(1) { transform: rotateY(0deg) translateZ(60px); }
@@ -106,6 +115,7 @@
             font-size: 2rem;
             font-weight: 900;
             color: white;
+            text-shadow: 0 0 20px var(--accent);
             animation: pulse 2s infinite;
         }
 
@@ -114,83 +124,243 @@
             50% { opacity: 0.5; }
         }
 
+        /* ==================== GLASS MORPHISM ==================== */
         .glass {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(8, 145, 178, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(8, 145, 178, 0.2);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            color: var(--text-main);
+            box-shadow: 0 8px 32px 0 rgba(8, 145, 178, 0.15);
         }
 
         .glass-strong {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(8, 145, 178, 0.1);
             backdrop-filter: blur(30px);
             border: 2px solid rgba(8, 145, 178, 0.3);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 12px 40px 0 rgba(8, 145, 178, 0.25);
         }
 
         .glass-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(8, 145, 178, 0.2);
+            box-shadow: 0 4px 20px 0 rgba(8, 145, 178, 0.1);
         }
 
+        /* ==================== 3D TEXT EFFECT ==================== */
         .text-3d {
-            color: var(--primary);
+            text-shadow:
+                0 1px 0 var(--secondary),
+                0 2px 0 var(--primary),
+                0 3px 0 #0e7490,
+                0 4px 0 #155e75,
+                0 5px 0 var(--dark-blue),
+                0 6px 1px rgba(0,0,0,0.1),
+                0 0 5px rgba(6, 182, 212, 0.3),
+                0 1px 3px rgba(0,0,0,0.3),
+                0 3px 5px rgba(0,0,0,0.2),
+                0 5px 10px rgba(0,0,0,0.25),
+                0 10px 15px rgba(8, 145, 178, 0.3),
+                0 20px 30px rgba(20, 184, 166, 0.2);
             transform: perspective(1000px) rotateX(5deg);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .text-3d:hover {
-            transform: perspective(1000px) rotateX(0deg) translateY(-5px) scale(1.02);
+            transform: perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.05);
+            text-shadow:
+                0 1px 0 var(--secondary),
+                0 2px 0 var(--primary),
+                0 3px 0 #0e7490,
+                0 4px 0 #155e75,
+                0 5px 0 var(--dark-blue),
+                0 6px 1px rgba(0,0,0,0.1),
+                0 0 10px rgba(6, 182, 212, 0.5),
+                0 1px 3px rgba(0,0,0,0.3),
+                0 3px 5px rgba(0,0,0,0.2),
+                0 5px 10px rgba(0,0,0,0.25),
+                0 15px 25px rgba(8, 145, 178, 0.4),
+                0 30px 50px rgba(20, 184, 166, 0.3);
         }
 
+        /* ==================== 3D CARDS ==================== */
         .card-3d {
             transform-style: preserve-3d;
             perspective: 1200px;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             position: relative;
-            background: white;
+        }
+
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            border-radius: inherit;
+            z-index: -1;
+            filter: blur(20px);
         }
 
         .card-3d:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-30px) rotateX(8deg) rotateY(-3deg) scale(1.05);
+            box-shadow:
+                0 50px 100px rgba(8, 145, 178, 0.5),
+                0 0 80px rgba(20, 184, 166, 0.4),
+                inset 0 0 0 2px rgba(6, 182, 212, 0.3);
         }
 
+        .card-3d:hover::before {
+            opacity: 1;
+        }
+
+        /* ==================== FLOATING ANIMATION ==================== */
+        @keyframes float3d {
+            0%, 100% {
+                transform: translateY(0) translateZ(0) rotateZ(0deg);
+            }
+            25% {
+                transform: translateY(-20px) translateZ(20px) rotateZ(5deg);
+            }
+            50% {
+                transform: translateY(-40px) translateZ(40px) rotateZ(0deg);
+            }
+            75% {
+                transform: translateY(-20px) translateZ(20px) rotateZ(-5deg);
+            }
+        }
+
+        .float-3d {
+            animation: float3d 8s ease-in-out infinite;
+        }
+
+        /* ==================== HOLOGRAPHIC EFFECT ==================== */
         .holographic {
             position: relative;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg,
+                rgba(8, 145, 178, 0.2) 0%,
+                rgba(20, 184, 166, 0.2) 25%,
+                rgba(6, 182, 212, 0.2) 50%,
+                rgba(20, 184, 166, 0.2) 75%,
+                rgba(8, 145, 178, 0.2) 100%);
+            background-size: 400% 400%;
+            animation: holographicShift 4s ease infinite;
         }
 
+        @keyframes holographicShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .holographic::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(60deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+            background-size: 200% 200%;
+            animation: shine 3s infinite;
+            border-radius: inherit;
+        }
+
+        @keyframes shine {
+            0% { background-position: -100% -100%; }
+            100% { background-position: 200% 200%; }
+        }
+
+        /* ==================== NEON GLOW ==================== */
         .neon-cyan {
-            color: var(--primary);
-            font-weight: bold;
+            color: var(--secondary);
+            text-shadow:
+                0 0 5px var(--secondary),
+                0 0 10px var(--secondary),
+                0 0 20px var(--secondary),
+                0 0 40px var(--primary),
+                0 0 80px var(--primary),
+                0 0 120px var(--primary);
+            animation: neonPulse 3s ease-in-out infinite;
         }
 
+        @keyframes neonPulse {
+            0%, 100% {
+                text-shadow:
+                    0 0 5px var(--secondary),
+                    0 0 10px var(--secondary),
+                    0 0 20px var(--secondary),
+                    0 0 40px var(--primary);
+            }
+            50% {
+                text-shadow:
+                    0 0 10px var(--secondary),
+                    0 0 20px var(--secondary),
+                    0 0 40px var(--secondary),
+                    0 0 80px var(--primary),
+                    0 0 120px var(--primary),
+                    0 0 160px var(--primary);
+            }
+        }
+
+        /* ==================== GRADIENT TEXT ==================== */
         .gradient-text {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientFlow 4s ease infinite;
         }
 
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ==================== ISOMETRIC GRID ==================== */
         .isometric-grid {
-            background-color: #ffffff;
-            background-image: radial-gradient(#0891b2 0.5px, transparent 0.5px), radial-gradient(#0891b2 0.5px, #ffffff 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            opacity: 0.1;
+            background-color: var(--dark);
+            background-image:
+              linear-gradient(30deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1)),
+                linear-gradient(150deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1));
+             /* ... باقي إعدادات الشبكة ... */
+                linear-gradient(30deg, rgba(8, 145, 178, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.08) 87.5%, rgba(8, 145, 178, 0.08)),
+                linear-gradient(150deg, rgba(8, 145, 178, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.08) 87.5%, rgba(8, 145, 178, 0.08)),
+                linear-gradient(60deg, rgba(20, 184, 166, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(20, 184, 166, 0.03) 75%, rgba(20, 184, 166, 0.03)),
+                linear-gradient(60deg, rgba(20, 184, 166, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(20, 184, 166, 0.03) 75%, rgba(20, 184, 166, 0.03));
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
         }
 
+        /* ==================== PARTICLE SYSTEM ==================== */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== 3D BUTTONS ==================== */
         .btn-3d {
             position: relative;
             transform-style: preserve-3d;
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            border: none;
+            border: 2px solid rgba(8, 145, 178, 0.5);
             overflow: hidden;
-            color: white !important; 
         }
 
         .btn-3d::before {
@@ -200,14 +370,36 @@
             background: linear-gradient(135deg, var(--primary), var(--accent));
             transform: translateZ(-15px);
             border-radius: inherit;
+            opacity: 0.9;
             transition: all 0.3s ease;
         }
 
-        .btn-3d:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(8, 145, 178, 0.3);
+        .btn-3d::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
         }
 
+        .btn-3d:hover::after {
+            transform: translateX(100%);
+        }
+
+        .btn-3d:hover {
+            transform: translateY(-8px) translateZ(15px) scale(1.05);
+            box-shadow:
+                0 25px 50px rgba(8, 145, 178, 0.5),
+                0 0 60px rgba(20, 184, 166, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-3d:active {
+            transform: translateY(-2px) translateZ(5px) scale(1.02);
+        }
+
+        /* ==================== Page Transition ==================== */
         .page {
             display: none;
             opacity: 0;
@@ -220,195 +412,476 @@
         }
 
         @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
+        /* ==================== Premium Gradient ==================== */
         .hero-gradient {
-            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
             position: relative;
-            color: white;
         }
 
-        .hero-gradient h1, .hero-gradient p, .hero-gradient span {
-            color: white;
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
+        /* ==================== Advanced Floating Elements ==================== */
         .floating-element {
             position: absolute;
             animation: floatAdvanced 8s infinite ease-in-out;
         }
 
-        .floating-element:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 25%; right: 15%; animation-delay: 1.5s; }
-        .floating-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 3s; }
-        .floating-element:nth-child(4) { bottom: 30%; right: 10%; animation-delay: 4.5s; }
-
-        @keyframes floatAdvanced {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(-2deg); }
+        .floating-element:nth-child(1) {
+            top: 15%; left: 10%;
+            animation-delay: 0s;
+        }
+        .floating-element:nth-child(2) {
+            top: 25%; right: 15%;
+            animation-delay: 1.5s;
+        }
+        .floating-element:nth-child(3) {
+            bottom: 20%; left: 20%;
+            animation-delay: 3s;
+        }
+        .floating-element:nth-child(4) {
+            bottom: 30%; right: 10%;
+            animation-delay: 4.5s;
         }
 
+        @keyframes floatAdvanced {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-30px) rotate(5deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-15px) rotate(-5deg);
+                opacity: 0.4;
+            }
+            75% {
+                transform: translateY(-25px) rotate(3deg);
+                opacity: 0.5;
+            }
+        }
+
+        /* ==================== REVEAL ANIMATION ==================== */
         .reveal {
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateY(100px) rotateX(-20deg);
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .reveal.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) rotateX(0deg);
         }
 
+        /* ==================== NAVBAR ==================== */
         .navbar-glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        }
-        
-        .navbar-glass .text-white {
-            color: #0f172a !important;
-        }
-        
-        .navbar-glass button.text-white {
-            color: #0f172a !important;
+            background: rgba(12, 74, 110, 0.3);
+            backdrop-filter: blur(25px);
+            border-bottom: 2px solid rgba(8, 145, 178, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(8, 145, 178, 0.2);
         }
 
         .navbar-gradient {
-            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
-            color: white;
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
         }
 
+        /* ==================== SCROLL PROGRESS ==================== */
         .scroll-progress {
             position: fixed;
             top: 0;
             left: 0;
             width: 0%;
-            height: 4px;
-            background: #0891b2;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
             z-index: 9998;
             transition: width 0.1s ease;
+            box-shadow: 0 0 20px var(--accent);
         }
 
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* ==================== CUSTOM SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
 
-        .hover-lift { transition: all 0.3s ease; }
-        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-track {
+            background: rgba(8, 145, 178, 0.1);
+        }
 
-        .product-card { perspective: 1200px; cursor: pointer; }
-        .product-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
-        .product-card.flipped .product-inner { transform: rotateY(180deg); }
-        .product-front, .product-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 1.5rem; overflow: hidden; }
-        .product-back { transform: rotateY(180deg); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+        }
 
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--secondary), var(--primary));
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* ==================== COUNTER ==================== */
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ==================== Enhanced Hover ==================== */
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(8, 145, 178, 0.3);
+        }
+
+        /* ==================== Product Card Flip ==================== */
+        .product-card {
+            perspective: 1200px;
+            cursor: pointer;
+        }
+        .product-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .product-card.flipped .product-inner {
+            transform: rotateY(180deg);
+        }
+        .product-front, .product-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .product-back {
+            transform: rotateY(180deg);
+        }
+
+        /* ==================== Gallery ==================== */
         .gallery-thumb {
             cursor: pointer;
             transition: all 0.3s;
-            opacity: 0.6;
+            opacity: 0.5;
             width: 70px;
             height: 70px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid transparent;
+            border-radius: 12px;
         }
-
         .gallery-thumb.active, .gallery-thumb:hover {
             opacity: 1;
-            transform: scale(1.05);
-            border-color: var(--primary);
+            transform: scale(1.15);
+            box-shadow: 0 0 0 3px #0891b2;
         }
 
+        /* ==================== AUTH PAGES STYLES ==================== */
         .auth-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
             position: relative;
             overflow: hidden;
-            color: white;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         .auth-decoration {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             animation: floatSlow 20s infinite ease-in-out;
         }
 
-        .auth-decoration:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; }
-        .auth-decoration:nth-child(2) { width: 300px; height: 300px; bottom: -80px; right: -80px; animation-delay: 3s; }
+        .auth-decoration:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .auth-decoration:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: 3s;
+        }
+
+        .auth-decoration:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 6s;
+        }
 
         @keyframes floatSlow {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -20px) scale(1.05); }
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+        }
+
+        .water-droplet {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50% 50% 50% 0;
+            animation: dropFall 3s infinite ease-in;
+        }
+
+        @keyframes dropFall {
+            0% {
+                transform: translateY(-100vh) rotate(45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(45deg);
+                opacity: 0;
+            }
         }
 
         .auth-input {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
             transition: all 0.3s ease;
         }
 
-        .auth-input::placeholder { color: rgba(255, 255, 255, 0.7); }
-        
         .auth-input:focus {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: white;
-            outline: none;
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3);
+        }
+
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-ripple:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.6s ease forwards;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #0891b2;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox:checked {
+            background: linear-gradient(135deg, #0891b2, #14b8a6);
+            border-color: #0891b2;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+
+        .auth-illustration {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .illustration-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: pulse 3s ease-in-out infinite;
         }
 
         .mobile-card {
             display: flex;
             align-items: center;
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);
             border-right: 4px solid #0891b2;
-            color: var(--text-main);
         }
 
-        .mobile-card-icon { font-size: 2.5rem; margin-left: 16px; min-width: 60px; text-align: center; color: var(--primary); }
-        .mobile-card-label { font-size: 1rem; color: #64748b; font-weight: bold; }
+        .mobile-card-icon {
+            font-size: 2.5rem;
+            margin-left: 16px;
+            min-width: 60px;
+            text-align: center;
+        }
 
+        .mobile-card-content {
+            flex: 1;
+        }
+
+        .mobile-card-value {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .mobile-card-label {
+            font-size: 1rem;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .text-3d {
+                font-size: 2.5rem !important;
+            }
+
+            .card-3d:hover {
+                transform: translateY(-20px) scale(1.03);
+            }
+        }
+
+        /* ==================== Advanced Typewriter with Pen ==================== */
         .typewriter-container {
             position: relative;
             display: inline-block;
             min-height: 120px;
             padding-left: 60px;
         }
-        
-        .typewriter-text { position: relative; display: inline-block; white-space: nowrap; color: white; }
-        
+
+        .typewriter-text {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
         .writing-pen {
             position: absolute;
             font-size: 3.5rem;
             color: #ffffff;
             z-index: 20;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
             transform-origin: bottom left;
             transition: left 0.1s linear;
             top: -10px;
         }
 
-        .pen-writing-anim { animation: penWiggle 0.2s infinite; }
+        .pen-writing-anim {
+            animation: penWiggle 0.2s infinite;
+        }
+
         @keyframes penWiggle {
             0% { transform: translateY(0) rotate(-45deg); }
             50% { transform: translateY(-5px) rotate(-35deg); }
             100% { transform: translateY(0) rotate(-45deg); }
         }
 
-        .text-white-force { color: white !important; }
-        .bg-cyan-force { background-color: var(--primary) !important; color: white !important; }
+        /* ==================== STATS ANIMATION ==================== */
+        @keyframes statsGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(8, 145, 178, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(20, 184, 166, 0.6), 0 0 60px rgba(6, 182, 212, 0.4);
+            }
+        }
+
+        .stats-card {
+            animation: statsGlow 3s ease-in-out infinite;
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900">
 
-    <div id="loadingScreen" class="loading-screen">
+    <div class="loading-screen" id="loadingScreen">
         <div class="loader-3d">
             <div class="loader-face"></div>
             <div class="loader-face"></div>
@@ -417,749 +890,1197 @@
             <div class="loader-face"></div>
             <div class="loader-face"></div>
         </div>
-        <div class="loading-text">جاري التحميل...</div>
+        <div class="loading-text">
+            جاري التحميل...
+        </div>
     </div>
 
-    <canvas id="canvas3d"></canvas>
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <div id="homePage" class="page content-wrapper">
-        <nav class="navbar-glass fixed w-full z-50 transition-all duration-300">
-            <div class="container mx-auto px-6 py-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <div class="text-3d text-3xl font-black tracking-tighter text-cyan-600">AquaVue</div>
+    <canvas id="canvas3d"></canvas>
+
+    <div class="content-wrapper">
+
+        <div id="loginPage" class="page">
+            <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass" id="navbar">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="flex items-center space-x-reverse space-x-4">
+                        <div class="text-3xl font-black text-white neon-cyan">
+                            <i class="fas fa-water"></i>
+                            Aqua<span>Vue</span>
+                        </div>
                     </div>
-                    <div class="hidden md:flex items-center space-x-8 space-x-reverse">
-                        <a href="#home" class="text-gray-700 hover:text-cyan-600 font-bold transition">الرئيسية</a>
-                        <a href="#tech" class="text-gray-700 hover:text-cyan-600 font-bold transition">التقنية</a>
-                        <a href="#about" class="text-gray-700 hover:text-cyan-600 font-bold transition">عن المنصة</a>
-                        <a href="#services" class="text-gray-700 hover:text-cyan-600 font-bold transition">خدماتنا</a>
-                        <a href="#contact" class="text-gray-700 hover:text-cyan-600 font-bold transition">اتصل بنا</a>
+
+                    <div class="hidden md:flex items-center gap-4">
+                        <button onclick="showPage('homePage')" class="btn-3d bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-home ml-2"></i>
+                            العودة للرئيسية
+                        </button>
+                        <button onclick="showPage('registerPage')" class="btn-3d bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-user-plus ml-2"></i>
+                            إنشاء حساب
+                        </button>
                     </div>
-                    <div class="hidden md:flex items-center space-x-4 space-x-reverse">
-                        <button onclick="showPage('loginPage')" class="px-6 py-2 rounded-full font-bold text-cyan-600 border-2 border-cyan-600 hover:bg-cyan-50 transition">تسجيل الدخول</button>
-                        <button onclick="showPage('registerPage')" class="btn-3d px-6 py-2 rounded-full font-bold bg-cyan-600 text-white shadow-lg hover:shadow-cyan-500/30 transition">إنشاء حساب</button>
-                    </div>
-                    <button id="menuBtn" class="md:hidden text-3xl text-cyan-600">
+
+                    <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="loginMenuBtn">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
-            </div>
-        </nav>
 
-        <div id="mobileMenu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] hidden transition-all duration-300 opacity-0 scale-95">
-            <div class="p-6 flex flex-col h-full">
-                <div class="flex justify-between items-center mb-8">
-                    <div class="text-2xl font-black text-cyan-600">AquaVue</div>
-                    <button id="closeMenuBtn" class="text-3xl text-gray-600">
+                <div id="loginMobileMenu" class="hidden md:hidden mt-4 glass-strong rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
+                    <button class="absolute top-4 left-4 text-cyan-400 text-2xl" id="loginCloseMenuBtn">
                         <i class="fas fa-times"></i>
                     </button>
+                    <ul class="space-y-5 text-white font-bold pt-8 text-center">
+                        <li><button onclick="showPage('homePage'); toggleLoginMenu();" class="block w-full py-3 text-cyan-400 hover:text-cyan-300"><i class="fas fa-home ml-2"></i>العودة للرئيسية</button></li>
+                        <li><button onclick="showPage('registerPage'); toggleLoginMenu();" class="block w-full py-3 text-teal-400 hover:text-teal-300"><i class="fas fa-user-plus ml-2"></i>إنشاء حساب</button></li>
+                    </ul>
                 </div>
-                <div class="flex flex-col space-y-6 text-center text-xl font-bold text-gray-800">
-                    <a href="#home" class="mobile-menu-link hover:text-cyan-600">الرئيسية</a>
-                    <a href="#tech" class="mobile-menu-link hover:text-cyan-600">التقنية</a>
-                    <a href="#about" class="mobile-menu-link hover:text-cyan-600">عن المنصة</a>
-                    <a href="#services" class="mobile-menu-link hover:text-cyan-600">خدماتنا</a>
-                    <a href="#contact" class="mobile-menu-link hover:text-cyan-600">اتصل بنا</a>
-                    <hr class="border-gray-200 my-4">
-                    <button onclick="showPage('loginPage'); toggleMenu()" class="text-cyan-600">تسجيل الدخول</button>
-                    <button onclick="showPage('registerPage'); toggleMenu()" class="bg-cyan-600 text-white py-3 rounded-xl">إنشاء حساب</button>
+            </nav>
+
+            <div class="auth-container pt-24">
+                <div class="auth-decoration"></div>
+                <div class="auth-decoration"></div>
+                <div class="auth-decoration"></div>
+
+                <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
+                <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
+                <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
+                <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
+
+                <div class="container mx-auto px-4 py-12 relative z-10">
+                    <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
+
+                        <div class="order-2 md:order-1 slide-in-right">
+                            <div class="glass-strong rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
+                                <div class="text-center mb-8">
+                                    <div class="inline-block bg-gradient-to-br from-cyan-500 to-teal-500 p-4 rounded-2xl mb-4 float-3d">
+                                        <i class="fas fa-water text-white text-5xl"></i>
+                                    </div>
+                                    <h1 class="text-4xl font-black gradient-text font-amiri mb-2 text-3d">مرحباً بعودتك</h1>
+                                    <p class="text-cyan-100 text-lg font-tajawal">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
+                                </div>
+
+                                <form id="loginForm" class="space-y-6">
+                                    <div>
+                                        <label class="block text-white font-bold mb-3 text-lg">
+                                            <i class="fas fa-envelope ml-2 text-cyan-400"></i>
+                                            البريد الإلكتروني
+                                        </label>
+                                        <input
+                                            type="email"
+                                            required
+                                            class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none text-white text-lg"
+                                            placeholder="example@aquavue.ye"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-white font-bold mb-3 text-lg">
+                                            <i class="fas fa-lock ml-2 text-cyan-400"></i>
+                                            كلمة المرور
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="password"
+                                                id="loginPassword"
+                                                required
+                                                class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none text-white text-lg"
+                                                placeholder="••••••••"
+                                            >
+                                            <button
+                                                type="button"
+                                                onclick="togglePassword('loginPassword', this)"
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition text-xl"
+                                            >
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <label class="flex items-center gap-3 cursor-pointer">
+                                            <input type="checkbox" class="custom-checkbox">
+                                            <span class="text-white text-lg">تذكرني</span>
+                                        </label>
+                                        <a href="#" class="text-cyan-400 hover:text-cyan-300 font-bold text-lg transition">
+                                            نسيت كلمة المرور؟
+                                        </a>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn-3d btn-ripple w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all"
+                                    >
+                                        <i class="fas fa-sign-in-alt ml-2"></i>
+                                        تسجيل الدخول
+                                    </button>
+                                </form>
+
+                                <div class="relative my-8">
+                                    <div class="absolute inset-0 flex items-center">
+                                        <div class="w-full border-t border-white/20"></div>
+                                    </div>
+                                    <div class="relative flex justify-center text-lg">
+                                        <span class="bg-transparent px-4 text-white">أو</span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 mb-8">
+                                    <button class="btn-3d flex items-center justify-center gap-2 px-4 py-3 border-2 border-white/20 rounded-xl hover:border-cyan-500 hover:bg-cyan-500/10 transition font-bold text-white">
+                                        <i class="fab fa-google text-red-400 text-xl"></i>
+                                        <span>Google</span>
+                                    </button>
+                                    <button class="btn-3d flex items-center justify-center gap-2 px-4 py-3 border-2 border-white/20 rounded-xl hover:border-cyan-500 hover:bg-cyan-500/10 transition font-bold text-white">
+                                        <i class="fab fa-facebook-f text-blue-400 text-xl"></i>
+                                        <span>Facebook</span>
+                                    </button>
+                                </div>
+
+                                <div class="text-center">
+                                    <p class="text-white text-lg">
+                                        ليس لديك حساب؟
+                                        <button onclick="showPage('registerPage')" class="text-cyan-400 hover:text-cyan-300 font-black transition">
+                                            إنشاء حساب جديد
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-1 md:order-2 slide-in-left">
+                            <div class="auth-illustration relative">
+                                <div class="illustration-glow"></div>
+
+                                <div class="relative">
+                                    <div class="w-full aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center holographic">
+                                        <div class="w-5/6 aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center">
+                                            <div class="text-center">
+                                                <i class="fas fa-water text-white text-9xl mb-8 drop-shadow-2xl float-3d"></i>
+                                                <h2 class="text-5xl font-black text-white mb-4 font-naskh drop-shadow-xl neon-cyan">أكوا فيو</h2>
+                                                <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">المياه النقية بذكاء صناعي</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="absolute top-10 right-10 text-white text-4xl animate-bounce" style="animation-delay: 0s;">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                    <div class="absolute bottom-20 right-20 text-white text-3xl animate-bounce" style="animation-delay: 0.5s;">
+                                        <i class="fas fa-microscope"></i>
+                                    </div>
+                                    <div class="absolute top-20 left-10 text-white text-3xl animate-bounce" style="animation-delay: 1s;">
+                                        <i class="fas fa-vial"></i>
+                                    </div>
+                                    <div class="absolute bottom-10 left-20 text-white text-4xl animate-bounce" style="animation-delay: 1.5s;">
+                                        <i class="fas fa-tint"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
 
-        <header id="home" class="hero-gradient relative min-h-screen flex items-center pt-20 overflow-hidden">
-            <div class="absolute inset-0 isometric-grid opacity-30"></div>
-            
-            <div class="floating-element opacity-20"><i class="fas fa-tint text-6xl text-white"></i></div>
-            <div class="floating-element opacity-20"><i class="fas fa-microchip text-5xl text-white"></i></div>
-            <div class="floating-element opacity-20"><i class="fas fa-wifi text-6xl text-white"></i></div>
-            <div class="floating-element opacity-20"><i class="fas fa-shield-alt text-5xl text-white"></i></div>
+        <div id="registerPage" class="page">
+            <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass" id="navbar">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="flex items-center space-x-reverse space-x-4">
+                        <div class="text-3xl font-black text-white neon-cyan">
+                            <i class="fas fa-water"></i>
+                            Aqua<span>Vue</span>
+                        </div>
+                    </div>
 
-            <div class="container mx-auto px-6 relative z-10">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
-                    <div class="text-right space-y-8 reveal">
-                        <div class="inline-block px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white font-bold text-sm mb-4 shadow-lg">
-                            <i class="fas fa-star text-yellow-300 ml-2"></i> Smart Water Quality Monitoring
+                    <div class="hidden md:flex items-center gap-4">
+                        <button onclick="showPage('homePage')" class="btn-3d bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-home ml-2"></i>
+                            العودة للرئيسية
+                        </button>
+                        <button onclick="showPage('loginPage')" class="btn-3d bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-sign-in-alt ml-2"></i>
+                            تسجيل الدخول
+                        </button>
+                    </div>
+
+                    <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="registerMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+
+                <div id="registerMobileMenu" class="hidden md:hidden mt-4 glass-strong rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
+                    <button class="absolute top-4 left-4 text-cyan-400 text-2xl" id="registerCloseMenuBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <ul class="space-y-5 text-white font-bold pt-8 text-center">
+                        <li><button onclick="showPage('homePage'); toggleRegisterMenu();" class="block w-full py-3 text-cyan-400 hover:text-cyan-300"><i class="fas fa-home ml-2"></i>العودة للرئيسية</button></li>
+                        <li><button onclick="showPage('loginPage'); toggleRegisterMenu();" class="block w-full py-3 text-teal-400 hover:text-teal-300"><i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول</button></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="auth-container pt-24">
+                <div class="auth-decoration"></div>
+                <div class="auth-decoration"></div>
+                <div class="auth-decoration"></div>
+
+                <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
+                <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
+                <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
+                <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
+
+                <div class="container mx-auto px-4 py-12 relative z-10">
+                    <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
+
+                        <div class="order-1 slide-in-right">
+                            <div class="auth-illustration relative">
+                                <div class="illustration-glow"></div>
+
+                                <div class="relative">
+                                    <div class="w-full aspect-square flex items-center justify-center">
+                                        <div class="relative w-full h-full">
+                                            <svg viewBox="0 0 400 400" class="w-full h-full">
+                                                <polygon points="200,20 350,110 350,290 200,380 50,290 50,110"
+                                                    fill="rgba(255,255,255,0.1)"
+                                                    stroke="rgba(255,255,255,0.3)"
+                                                    stroke-width="3"/>
+                                                <polygon points="200,60 310,130 310,270 200,340 90,270 90,130"
+                                                    fill="rgba(255,255,255,0.1)"
+                                                    stroke="rgba(255,255,255,0.3)"
+                                                    stroke-width="3"/>
+                                                <polygon points="200,100 270,150 270,250 200,300 130,250 130,150"
+                                                    fill="rgba(255,255,255,0.1)"
+                                                    stroke="rgba(255,255,255,0.3)"
+                                                    stroke-width="3"/>
+                                            </svg>
+
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <div class="text-center">
+                                                    <i class="fas fa-user-plus text-white text-9xl mb-8 drop-shadow-2xl float-3d"></i>
+                                                    <h2 class="text-5xl font-black text-white mb-4 font-naskh drop-shadow-xl neon-cyan">انضم إلينا</h2>
+                                                    <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">ابدأ رحلتك مع أكوا فيو</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="absolute top-0 left-1/2 -translate-x-1/2 text-white text-3xl animate-pulse">
+                                                <i class="fas fa-droplet"></i>
+                                            </div>
+                                            <div class="absolute top-1/4 right-0 text-white text-3xl animate-pulse" style="animation-delay: 0.5s;">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="absolute bottom-1/4 right-0 text-white text-3xl animate-pulse" style="animation-delay: 1s;">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 text-white text-3xl animate-pulse" style="animation-delay: 1.5s;">
+                                                <i class="fas fa-shield-alt"></i>
+                                            </div>
+                                            <div class="absolute bottom-1/4 left-0 text-white text-3xl animate-pulse" style="animation-delay: 2s;">
+                                                <i class="fas fa-brain"></i>
+                                            </div>
+                                            <div class="absolute top-1/4 left-0 text-white text-3xl animate-pulse" style="animation-delay: 2.5s;">
+                                                <i class="fas fa-cloud"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="typewriter-container">
-                            <h1 class="text-5xl lg:text-7xl font-black leading-tight mb-2 text-white" id="mainTitle"></h1>
+
+                        <div class="order-2 slide-in-left">
+                            <div class="glass-strong rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
+                                <div class="text-center mb-8">
+                                    <div class="inline-block bg-gradient-to-br from-teal-500 to-cyan-500 p-4 rounded-2xl mb-4 float-3d">
+                                        <i class="fas fa-water text-white text-5xl"></i>
+                                    </div>
+                                    <h1 class="text-4xl font-black gradient-text font-amiri mb-2 text-3d">إنشاء حساب جديد</h1>
+                                    <p class="text-cyan-100 text-lg font-tajawal">انضم لمجتمع أكوا فيو الذكي</p>
+                                </div>
+
+                                <form id="registerForm" class="space-y-5">
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-white font-bold mb-2 text-base">
+                                                <i class="fas fa-user ml-2 text-teal-400"></i>
+                                                الاسم الأول
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                                placeholder="أحمد"
+                                            >
+                                        </div>
+                                        <div>
+                                            <label class="block text-white font-bold mb-2 text-base">
+                                                <i class="fas fa-user ml-2 text-teal-400"></i>
+                                                الاسم الأخير
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                                placeholder="محمد"
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-white font-bold mb-2 text-base">
+                                            <i class="fas fa-envelope ml-2 text-teal-400"></i>
+                                            البريد الإلكتروني
+                                        </label>
+                                        <input
+                                            type="email"
+                                            required
+                                            class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                            placeholder="example@aquavue.ye"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-white font-bold mb-2 text-base">
+                                            <i class="fas fa-phone ml-2 text-teal-400"></i>
+                                            رقم الهاتف
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            required
+                                            class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                            placeholder="+967 770 000 000"
+                                            dir="ltr"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-white font-bold mb-2 text-base">
+                                            <i class="fas fa-lock ml-2 text-teal-400"></i>
+                                            كلمة المرور
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="password"
+                                                id="registerPassword"
+                                                required
+                                                class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                                placeholder="••••••••"
+                                            >
+                                            <button
+                                                type="button"
+                                                onclick="togglePassword('registerPassword', this)"
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-teal-400 hover:text-teal-300 transition text-xl"
+                                            >
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-white font-bold mb-2 text-base">
+                                            <i class="fas fa-lock ml-2 text-teal-400"></i>
+                                            تأكيد كلمة المرور
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="password"
+                                                id="confirmPassword"
+                                                required
+                                                class="auth-input w-full px-4 py-3 rounded-xl border-2 bg-white/10 border-teal-500/30 focus:border-teal-500 focus:outline-none text-white text-base"
+                                                placeholder="••••••••"
+                                            >
+                                            <button
+                                                type="button"
+                                                onclick="togglePassword('confirmPassword', this)"
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-teal-400 hover:text-teal-300 transition text-xl"
+                                            >
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3">
+                                        <input type="checkbox" required class="custom-checkbox mt-1">
+                                        <label class="text-white text-base">
+                                            أوافق على
+                                            <a href="#" class="text-teal-400 hover:text-teal-300 font-bold">الشروط والأحكام</a>
+                                            و
+                                            <a href="#" class="text-teal-400 hover:text-teal-300 font-bold">سياسة الخصوصية</a>
+                                        </label>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn-3d btn-ripple w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-4 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all"
+                                    >
+                                        <i class="fas fa-user-plus ml-2"></i>
+                                        إنشاء الحساب
+                                    </button>
+                                </form>
+
+                                <div class="text-center mt-6">
+                                    <p class="text-white text-base">
+                                        لديك حساب بالفعل؟
+                                        <button onclick="showPage('loginPage')" class="text-teal-400 hover:text-teal-300 font-black transition">
+                                            تسجيل الدخول
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="homePage" class="page">
+            <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass" id="navbar">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="flex items-center space-x-reverse space-x-4">
+                        <div class="text-3xl font-black text-white neon-cyan">
+                            <i class="fas fa-water"></i>
+                            Aqua<span>Vue</span>
+                        </div>
+                    </div>
+
+                    <ul class="hidden md:flex space-x-reverse space-x-8 text-white font-bold px-10 py-4 rounded-full">
+                        <li><a href="#home" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                        <li><a href="#tech" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                        <li><a href="#about" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                        <li><a href="#services" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                        <li><a href="#contact" class="hover:text-cyan-200 transition-colors duration-300"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+                    </ul>
+
+                    <div class="hidden md:flex items-center gap-4">
+                        <button onclick="showPage('loginPage')" class="btn-3d bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-sign-in-alt ml-2"></i>
+                            تسجيل الدخول
+                        </button>
+                        <button onclick="showPage('registerPage')" class="btn-3d bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
+                            <i class="fas fa-user-plus ml-2"></i>
+                            إنشاء حساب
+                        </button>
+                    </div>
+
+                    <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="menuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+
+                <div id="mobileMenu" class="hidden md:hidden mt-4 glass-strong rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
+                    <button class="absolute top-4 left-4 text-cyan-400 text-2xl" id="closeMenuBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <ul class="space-y-5 text-white font-bold pt-8 text-center">
+                        <li><a href="#home" class="block py-3 hover:text-cyan-400 mobile-menu-link"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
+                        <li><a href="#tech" class="block py-3 hover:text-cyan-400 mobile-menu-link"><i class="fas fa-microchip ml-2"></i>التقنية</a></li>
+                        <li><a href="#about" class="block py-3 hover:text-cyan-400 mobile-menu-link"><i class="fas fa-info-circle ml-2"></i>عن المنصة</a></li>
+                        <li><a href="#services" class="block py-3 hover:text-cyan-400 mobile-menu-link"><i class="fas fa-concierge-bell ml-2"></i>خدماتنا</a></li>
+                        <li><a href="#contact" class="block py-3 hover:text-cyan-400 mobile-menu-link"><i class="fas fa-envelope ml-2"></i>اتصل بنا</a></li>
+                        <li><button onclick="showPage('loginPage'); toggleMenu();" class="block w-full py-3 text-cyan-400 hover:text-cyan-300"><i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول</button></li>
+                        <li><button onclick="showPage('registerPage'); toggleMenu();" class="block w-full py-3 text-teal-400 hover:text-teal-300"><i class="fas fa-user-plus ml-2"></i>إنشاء حساب</button></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden pt-24 isometric-grid">
+                <div id="particleContainer" class="absolute inset-0"></div>
+
+                <div class="floating-element">
+                    <i class="fas fa-flask text-white/20 text-6xl"></i>
+                </div>
+                <div class="floating-element">
+                    <i class="fas fa-microscope text-white/20 text-5xl"></i>
+                </div>
+                <div class="floating-element">
+                    <i class="fas fa-vial text-white/20 text-7xl"></i>
+                </div>
+                <div class="floating-element">
+                    <i class="fas fa-water text-white/20 text-6xl"></i>
+                </div>
+
+                <div class="container py-20 mx-auto px-6 text-center relative z-10">
+                    <div class="reveal active">
+                        <div class="text-7xl md:text-9xl text-white mb-8 drop-shadow-2xl float-3d">
+                            <i class="fas fa-tint neon-cyan"></i>
+                        </div>
+
+                        <div class="typewriter-container mb-8">
                             <i class="fas fa-pen-fancy writing-pen" id="writingPen"></i>
+                            <h1 class="text-5xl md:text-8xl font-black text-white drop-shadow-2xl font-amiri typewriter-text text-3d" id="mainTitle">
+                            </h1>
                         </div>
-                        <p class="text-xl text-cyan-50 font-medium leading-relaxed max-w-xl">
-                            نقدم لكم أحدث حلول الذكاء الاصطناعي لضمان نقاء المياه وسلامة حياتكم
-                        </p>
-                        <div class="flex flex-wrap gap-4 pt-4">
-                            <a href="#tech" class="btn-3d bg-white text-cyan-700 px-8 py-4 rounded-xl font-black text-lg shadow-2xl hover:shadow-white/50 transition flex items-center">
+
+                        <div class="relative -mt-12 z-20 mb-2">
+                            <p class="text-2xl md:text-4xl text-cyan-100 font-bold drop-shadow-lg">
+                                Smart Water Quality Monitoring
+                            </p>
+                        </div>
+
+                        <div class="relative z-20 mb-6">
+                            <p class="text-xl md:text-2xl text-white font-bold max-w-4xl mx-auto leading-relaxed drop-shadow-md">
+                                نقدم لكم أحدث حلول الذكاء الاصطناعي لضمان نقاء المياه وسلامة حياتكم
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                            <a href="#tech" class="btn-3d group bg-gradient-to-r from-teal-400 to-cyan-500 text-white px-12 py-5 rounded-full text-xl font-black shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
+                                <i class="fas fa-rocket ml-2 group-hover:animate-bounce"></i>
                                 اكتشف التقنية
-                                <i class="fas fa-arrow-left mr-3"></i>
                             </a>
-                            <a href="#contact" class="px-8 py-4 rounded-xl font-bold text-white border-2 border-white/30 hover:bg-white/10 transition backdrop-blur-sm flex items-center">
+                            <a href="#contact" class="btn-3d group bg-white text-cyan-900 px-12 py-5 rounded-full text-xl font-black shadow-2xl hover:shadow-white/50 transition-all duration-300">
+                                <i class="fas fa-paper-plane ml-2 group-hover:animate-bounce"></i>
                                 تواصل معنا
                             </a>
                         </div>
                     </div>
-                    
-                    <div class="relative hidden lg:block reveal" style="transition-delay: 0.2s">
-                        <div class="relative z-10 transform hover:scale-105 transition duration-500">
-                            <div class="card-3d glass-strong rounded-[2rem] p-8 border-t border-l border-white/50 shadow-2xl bg-white/10 backdrop-blur-md">
-                                <div class="flex justify-between items-start mb-8">
-                                    <div>
-                                        <h3 class="text-2xl font-bold text-white">منصة المستقبل</h3>
-                                        <p class="text-cyan-100">الذكاء الاصطناعي في خدمة نقاء المياه</p>
-                                    </div>
-                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center shadow-lg text-white">
-                                        <i class="fas fa-brain text-3xl"></i>
-                                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 right-0">
+                    <svg viewBox="0 0 1440 320" class="w-full">
+                        <path fill="rgba(15, 23, 42, 0.8)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                    </svg>
+                </div>
+            </section>
+
+            <section id="about" class="py-24 relative overflow-hidden" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95));">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="text-6xl font-black gradient-text mb-6 font-amiri text-3d">
+                            <i class="fas fa-star text-cyan-400 ml-3 neon-cyan"></i>
+                            منصة المستقبل
+                        </h2>
+                        <p class="text-2xl text-cyan-100 font-tajawal">الذكاء الاصطناعي في خدمة نقاء المياه</p>
+                        <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-500 mx-auto mt-8 rounded-full"></div>
+                    </div>
+
+                    <div class="hidden md:grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+                        <div class="text-center reveal">
+                            <div class="glass-card rounded-3xl p-8 card-3d holographic stats-card">
+                                <div class="text-6xl mb-6 text-cyan-400 neon-cyan">
+                                    <i class="fas fa-check-double"></i>
                                 </div>
-                                
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10 text-white">
-                                        <div class="text-3xl font-black counter mb-1" data-target="99">0</div>
-                                        <div class="text-sm opacity-80">دقة التحليل %</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10 text-white">
-                                        <div class="text-3xl font-black counter mb-1" data-target="24">0</div>
-                                        <div class="text-sm opacity-80">ساعة مراقبة</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10 text-white">
-                                        <div class="text-3xl font-black counter mb-1" data-target="5000">0</div>
-                                        <div class="text-sm opacity-80">مستخدم نشط</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10 text-white">
-                                        <div class="text-3xl font-black counter mb-1" data-target="15">0</div>
-                                        <div class="text-sm opacity-80">مدينة مغطاة</div>
-                                    </div>
+                                <div class="text-5xl font-black text-cyan-100 mb-3 counter gradient-text" data-target="99">0</div>
+                                <p class="text-cyan-200 font-bold text-lg">دقة التحليل %</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center reveal">
+                            <div class="glass-card rounded-3xl p-8 card-3d holographic stats-card">
+                                <div class="text-6xl mb-6 text-teal-400 neon-cyan">
+                                    <i class="fas fa-broadcast-tower"></i>
                                 </div>
+                                <div class="text-5xl font-black text-teal-100 mb-3 counter gradient-text" data-target="24">0</div>
+                                <p class="text-cyan-200 font-bold text-lg">ساعة مراقبة</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center reveal">
+                            <div class="glass-card rounded-3xl p-8 card-3d holographic stats-card">
+                                <div class="text-6xl mb-6 text-amber-400 neon-cyan">
+                                    <i class="fas fa-users-cog"></i>
+                                </div>
+                                <div class="text-5xl font-black text-amber-100 mb-3 counter gradient-text" data-target="5000">0</div>
+                                <p class="text-cyan-200 font-bold text-lg">مستخدم نشط</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center reveal">
+                            <div class="glass-card rounded-3xl p-8 card-3d holographic stats-card">
+                                <div class="text-6xl mb-6 text-purple-400 neon-cyan">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="text-5xl font-black text-purple-100 mb-3 counter gradient-text" data-target="15">0</div>
+                                <p class="text-cyan-200 font-bold text-lg">مدينة مغطاة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:hidden space-y-4 mb-20">
+                        <div class="mobile-card reveal">
+                            <div class="mobile-card-icon text-cyan-400 neon-cyan">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <div class="mobile-card-content">
+                                <div class="mobile-card-value counter gradient-text" data-target="99">0</div>
+                                <div class="mobile-card-label">دقة التحليل %</div>
                             </div>
                         </div>
                         
-                        <div class="lg:hidden grid grid-cols-2 gap-3 mt-8">
-                            <div class="mobile-card text-white bg-white/10">
-                                <div class="mobile-card-content text-center">
-                                    <div class="text-2xl font-bold counter text-white" data-target="99">0</div>
-                                    <div class="text-xs text-cyan-100">دقة التحليل %</div>
-                                </div>
+                        <div class="mobile-card reveal">
+                            <div class="mobile-card-icon text-teal-400 neon-cyan">
+                                <i class="fas fa-broadcast-tower"></i>
                             </div>
-                            <div class="mobile-card text-white bg-white/10">
-                                <div class="mobile-card-content text-center">
-                                    <div class="text-2xl font-bold counter text-white" data-target="24">0</div>
-                                    <div class="text-xs text-cyan-100">ساعة مراقبة</div>
-                                </div>
-                            </div>
-                            <div class="mobile-card text-white bg-white/10">
-                                <div class="mobile-card-content text-center">
-                                    <div class="text-2xl font-bold counter text-white" data-target="5000">0</div>
-                                    <div class="text-xs text-cyan-100">مستخدم نشط</div>
-                                </div>
-                            </div>
-                            <div class="mobile-card text-white bg-white/10">
-                                <div class="mobile-card-content text-center">
-                                    <div class="text-2xl font-bold counter text-white" data-target="15">0</div>
-                                    <div class="text-xs text-cyan-100">مدينة مغطاة</div>
-                                </div>
+                            <div class="mobile-card-content">
+                                <div class="mobile-card-value counter gradient-text" data-target="24">0</div>
+                                <div class="mobile-card-label">ساعة مراقبة</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="absolute bottom-0 w-full overflow-hidden leading-none">
-                <svg class="relative block w-[calc(100%+1.3px)] h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
-                </svg>
-            </div>
-        </header>
-
-        <section id="about" class="py-24 relative">
-            <div class="container mx-auto px-6">
-                <div class="flex flex-col lg:flex-row items-center gap-16">
-                    <div class="lg:w-1/2 reveal">
-                        <div class="relative">
-                            <div class="absolute -inset-4 bg-gradient-to-r from-cyan-100 to-teal-100 rounded-full blur-3xl opacity-30"></div>
-                            <img src="/api/placeholder/600/400" alt="About AquaVue" class="relative rounded-3xl shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition duration-500">
-                        </div>
-                    </div>
-                    <div class="lg:w-1/2 space-y-8 reveal">
-                        <h2 class="text-4xl font-black gradient-text mb-6">رؤيتنا الجديدة</h2>
-                        <p class="text-lg text-gray-600 leading-loose">
-                            نسعى في أكوا فيو لتحويل قطاع المياه التقليدي إلى نظام رقمي ذكي. نؤمن بأن الوصول للمياه النقية حق، والتكنولوجيا هي الوسيلة لضمان هذا الحق.
-                        </p>
-                        <p class="text-lg text-gray-600 leading-loose">
-                            باستخدام خوارزميات التعلم الآلي، نستطيع التنبؤ بجودة المياه قبل استهلاكها، مما يوفر حياة صحية وآمنة لكل عائلة.
-                        </p>
                         
-                        <div class="grid gap-6 mt-8">
-                            <div class="flex items-center p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition hover-lift">
-                                <div class="w-12 h-12 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl ml-4 shrink-0">
-                                    <i class="fas fa-satellite-dish"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800">تكنولوجيا متقدمة</h4>
-                                    <p class="text-sm text-gray-500">مستشعرات IoT ترسل بيانات لحظية للسحابة</p>
-                                </div>
+                        <div class="mobile-card reveal">
+                            <div class="mobile-card-icon text-amber-400 neon-cyan">
+                                <i class="fas fa-users-cog"></i>
                             </div>
-                            <div class="flex items-center p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition hover-lift">
-                                <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl ml-4 shrink-0">
-                                    <i class="fas fa-shield-virus"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800">أمان مطلق</h4>
-                                    <p class="text-sm text-gray-500">تنبيهات فورية عند اكتشاف أي ملوثات</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition hover-lift">
-                                <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl ml-4 shrink-0">
-                                    <i class="fas fa-mobile-alt"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800">سهولة الاستخدام</h4>
-                                    <p class="text-sm text-gray-500">تطبيق جوال يضع التحكم الكامل بين يديك</p>
-                                </div>
+                            <div class="mobile-card-content">
+                                <div class="mobile-card-value counter gradient-text" data-target="5000">0</div>
+                                <div class="mobile-card-label">مستخدم نشط</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tech" class="py-24 relative bg-slate-50">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-20 reveal">
-                    <h2 class="text-4xl lg:text-5xl font-black text-gray-800 mb-6">تقنياتنا المبتكرة</h2>
-                    <div class="w-24 h-1 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto rounded-full mb-6"></div>
-                    <p class="text-xl text-gray-600">حلول تقنية متكاملة تغطي كافة مراحل رحلة المياه</p>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-10">
-                    <div class="product-card h-[400px] reveal" onclick="this.classList.toggle('flipped')">
-                        <div class="product-inner">
-                            <div class="product-front glass-card rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-cyan-400 transition">
-                                <div class="w-24 h-24 rounded-full bg-cyan-50 mb-6 flex items-center justify-center text-4xl text-cyan-600 neon-cyan">
-                                    <i class="fas fa-microchip"></i>
-                                </div>
-                                <h3 class="text-2xl font-bold mb-4 text-gray-800">المستشعرات الذكية</h3>
-                                <p class="text-gray-600 mb-6">قياس فوري لنسبة الأملاح والحموضة</p>
-                                <button class="mt-auto text-cyan-600 font-bold flex items-center gap-2">
-                                    التفاصيل <i class="fas fa-arrow-left"></i>
-                                </button>
+                        
+                        <div class="mobile-card reveal">
+                            <div class="mobile-card-icon text-purple-400 neon-cyan">
+                                <i class="fas fa-city"></i>
                             </div>
-                            <div class="product-back bg-gradient-to-br from-cyan-600 to-teal-600 rounded-3xl p-8 flex flex-col items-center justify-center text-center text-white">
-                                <h3 class="text-2xl font-bold mb-6">مواصفات المستشعر</h3>
-                                <ul class="text-right space-y-3 mb-8 text-cyan-50 w-full">
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> دقة قياس 0.01</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> بطارية تدوم 5 سنوات</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> مقاوم للماء IP68</li>
-                                </ul>
-                                <button class="bg-white text-cyan-600 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition">طلب تجربة</button>
+                            <div class="mobile-card-content">
+                                <div class="mobile-card-value counter gradient-text" data-target="15">0</div>
+                                <div class="mobile-card-label">مدينة مغطاة</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="product-card h-[400px] reveal" onclick="this.classList.toggle('flipped')" style="transition-delay: 0.2s">
-                        <div class="product-inner">
-                            <div class="product-front glass-card rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-cyan-400 transition">
-                                <div class="w-24 h-24 rounded-full bg-cyan-50 mb-6 flex items-center justify-center text-4xl text-cyan-600 neon-cyan">
-                                    <i class="fas fa-server"></i>
+                    <div class="grid md:grid-cols-2 gap-16 items-center mb-20">
+                        <div class="reveal">
+                            <div class="bg-gradient-to-br from-cyan-500 to-teal-500 rounded-3xl p-1.5 card-3d hover-lift">
+                                <div class="glass-strong rounded-3xl p-10">
+                                    <div class="text-5xl text-cyan-400 mb-6 neon-cyan">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h3 class="text-4xl font-black text-white mb-6 font-amiri text-3d gradient-text">رؤيتنا الجديدة</h3>
+                                    <p class="text-cyan-100 text-lg leading-relaxed mb-6">
+                                        نسعى في أكوا فيو لتحويل قطاع المياه التقليدي إلى نظام رقمي ذكي. نؤمن بأن الوصول للمياه النقية حق، والتكنولوجيا هي الوسيلة لضمان هذا الحق.
+                                    </p>
+                                    <p class="text-cyan-100 text-lg leading-relaxed">
+                                        باستخدام خوارزميات التعلم الآلي، نستطيع التنبؤ بجودة المياه قبل استهلاكها، مما يوفر حياة صحية وآمنة لكل عائلة.
+                                    </p>
                                 </div>
-                                <h3 class="text-2xl font-bold mb-4 text-gray-800">لوحة التحكم AI</h3>
-                                <p class="text-gray-600 mb-6">تحليل البيانات الضخمة والتنبؤ بالجودة</p>
-                                <button class="mt-auto text-cyan-600 font-bold flex items-center gap-2">
-                                    التفاصيل <i class="fas fa-arrow-left"></i>
-                                </button>
-                            </div>
-                            <div class="product-back bg-gradient-to-br from-cyan-600 to-teal-600 rounded-3xl p-8 flex flex-col items-center justify-center text-center text-white">
-                                <h3 class="text-2xl font-bold mb-6">مميزات النظام</h3>
-                                <ul class="text-right space-y-3 mb-8 text-cyan-50 w-full">
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> تقارير لحظية</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> تنبيهات عبر SMS/Email</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> ربط مع أنظمة المصانع</li>
-                                </ul>
-                                <button class="bg-white text-cyan-600 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition">عرض ديمو</button>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="product-card h-[400px] reveal" onclick="this.classList.toggle('flipped')" style="transition-delay: 0.4s">
-                        <div class="product-inner">
-                            <div class="product-front glass-card rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-cyan-400 transition">
-                                <div class="w-24 h-24 rounded-full bg-cyan-50 mb-6 flex items-center justify-center text-4xl text-cyan-600 neon-cyan">
-                                    <i class="fas fa-mobile-screen"></i>
-                                </div>
-                                <h3 class="text-2xl font-bold mb-4 text-gray-800">تطبيق المستهلك</h3>
-                                <p class="text-gray-600 mb-6">راقب مياه منزلك من هاتفك مباشرة</p>
-                                <button class="mt-auto text-cyan-600 font-bold flex items-center gap-2">
-                                    التفاصيل <i class="fas fa-arrow-left"></i>
-                                </button>
-                            </div>
-                            <div class="product-back bg-gradient-to-br from-cyan-600 to-teal-600 rounded-3xl p-8 flex flex-col items-center justify-center text-center text-white">
-                                <h3 class="text-2xl font-bold mb-6">مميزات التطبيق</h3>
-                                <ul class="text-right space-y-3 mb-8 text-cyan-50 w-full">
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> واجهة سهلة الاستخدام</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> طلب صيانة بضغطة زر</li>
-                                    <li class="flex items-center"><i class="fas fa-check ml-2"></i> متوفر لـ iOS و Android</li>
-                                </ul>
-                                <button class="bg-white text-cyan-600 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition">تحميل الآن</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-20 bg-white relative overflow-hidden">
-            <div class="container mx-auto px-6 relative z-10">
-                <div class="flex flex-col lg:flex-row items-center gap-12">
-                    <div class="lg:w-1/2 reveal">
-                        <h2 class="text-4xl font-black text-gray-800 mb-8">معرض النظام</h2>
-                        <p class="text-lg text-gray-600 mb-8">نظرة عن كثب على واجهات النظام والأجهزة المستخدمة</p>
-                        <div class="rounded-2xl overflow-hidden shadow-2xl border-4 border-gray-100 mb-6 h-[400px]">
-                            <img id="mainGalleryImage" src="/api/placeholder/800/600" alt="System Interface" class="w-full h-full object-cover transition-opacity duration-300">
-                        </div>
-                        <div class="flex gap-4 justify-center">
-                            <img src="/api/placeholder/800/600" onclick="updateMainImage(this.src)" class="gallery-thumb active" alt="Dashboard">
-                            <img src="/api/placeholder/801/601" onclick="updateMainImage(this.src)" class="gallery-thumb" alt="App">
-                            <img src="/api/placeholder/802/602" onclick="updateMainImage(this.src)" class="gallery-thumb" alt="Sensor">
-                            <img src="/api/placeholder/803/603" onclick="updateMainImage(this.src)" class="gallery-thumb" alt="Report">
-                        </div>
-                    </div>
-                    <div class="lg:w-1/2 reveal">
-                        <div class="bg-slate-50 rounded-3xl p-8 lg:p-12 shadow-lg border border-slate-100">
-                            <h3 class="text-3xl font-bold text-gray-800 mb-6">تكامل تقني شامل</h3>
-                            <p class="text-gray-600 mb-8 leading-relaxed">
-                                نظام AquaVue يدمج بين الأجهزة (Hardware) والبرمجيات (Software) في بيئة واحدة متناغمة تضمن لك التحكم الكامل.
-                            </p>
+                        <div class="reveal">
                             <div class="space-y-6">
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center mt-1 ml-4">1</div>
+                                <div class="flex items-start space-x-reverse space-x-4 glass-card rounded-2xl p-8 card-3d hover-lift holographic">
+                                    <div class="text-5xl text-cyan-400 neon-cyan">
+                                        <i class="fas fa-microchip"></i>
+                                    </div>
                                     <div>
-                                        <h4 class="font-bold text-gray-800">الخوادم السحابية</h4>
-                                        <p class="text-sm text-gray-500">تخزين آمن للبيانات مع إمكانية الرجوع للأرشيف</p>
+                                        <h4 class="text-2xl font-bold text-white mb-3 gradient-text">تكنولوجيا متقدمة</h4>
+                                        <p class="text-cyan-100 text-lg">مستشعرات IoT ترسل بيانات لحظية للسحابة</p>
                                     </div>
                                 </div>
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center mt-1 ml-4">2</div>
+
+                                <div class="flex items-start space-x-reverse space-x-4 glass-card rounded-2xl p-8 card-3d hover-lift holographic">
+                                    <div class="text-5xl text-teal-400 neon-cyan">
+                                        <i class="fas fa-shield-virus"></i>
+                                    </div>
                                     <div>
-                                        <h4 class="font-bold text-gray-800">تحليل البيانات</h4>
-                                        <p class="text-sm text-gray-500">خوارزميات تتنبأ بالأعطال قبل حدوثها</p>
+                                        <h4 class="text-2xl font-bold text-white mb-3 gradient-text">أمان مطلق</h4>
+                                        <p class="text-cyan-100 text-lg">تنبيهات فورية عند اكتشاف أي ملوثات</p>
                                     </div>
                                 </div>
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center mt-1 ml-4">3</div>
+
+                                <div class="flex items-start space-x-reverse space-x-4 glass-card rounded-2xl p-8 card-3d hover-lift holographic">
+                                    <div class="text-5xl text-amber-400 neon-cyan">
+                                        <i class="fas fa-mobile-screen-button"></i>
+                                    </div>
                                     <div>
-                                        <h4 class="font-bold text-gray-800">وصول عالمي</h4>
-                                        <p class="text-sm text-gray-500">تحكم في محطاتك من أي مكان في العالم</p>
+                                        <h4 class="text-2xl font-bold text-white mb-3 gradient-text">سهولة الاستخدام</h4>
+                                        <p class="text-cyan-100 text-lg">تطبيق جوال يضع التحكم الكامل بين يديك</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="services" class="py-24 bg-slate-50">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="text-4xl font-black text-gray-800 mb-4">خدماتنا</h2>
-                    <p class="text-xl text-gray-600">نقدم حلولاً ذكية للمنازل والمصانع</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="glass-card p-8 rounded-3xl hover:border-cyan-400 transition hover-lift group bg-white">
-                        <div class="h-48 bg-gray-100 rounded-2xl mb-6 overflow-hidden relative">
-                            <div class="absolute inset-0 bg-cyan-600/20 group-hover:bg-cyan-600/10 transition"></div>
-                            <i class="fas fa-home absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-cyan-600/50"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">للمنازل الذكية</h3>
-                        <p class="text-gray-600 mb-6">تركيب مستشعرات للخزانات المنزلية وربطها بتطبيق الجوال</p>
-                        <a href="#" class="text-cyan-600 font-bold hover:underline">اطلب الآن <i class="fas fa-arrow-left mr-1"></i></a>
-                    </div>
-                    
-                    <div class="glass-card p-8 rounded-3xl hover:border-cyan-400 transition hover-lift group bg-white">
-                        <div class="h-48 bg-gray-100 rounded-2xl mb-6 overflow-hidden relative">
-                            <div class="absolute inset-0 bg-cyan-600/20 group-hover:bg-cyan-600/10 transition"></div>
-                            <i class="fas fa-industry absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-cyan-600/50"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">للمصانع</h3>
-                        <p class="text-gray-600 mb-6">نظام مراقبة متكامل لخطوط الإنتاج وضمان جودة المياه</p>
-                        <a href="#" class="text-cyan-600 font-bold hover:underline">اطلب الآن <i class="fas fa-arrow-left mr-1"></i></a>
+            </section>
+            
+            <section id="tech" class="py-24 relative overflow-hidden" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 1));">
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="text-6xl font-black text-white mb-6 font-amiri text-3d">
+                            <i class="fas fa-cogs text-cyan-400 ml-3 neon-cyan"></i>
+                            تقنياتنا <span class="gradient-text">المبتكرة</span>
+                        </h2>
+                        <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
+                        <p class="text-2xl text-cyan-100 max-w-3xl mx-auto font-tajawal">حلول تقنية متكاملة تغطي كافة مراحل رحلة المياه</p>
                     </div>
 
-                    <div class="glass-card p-8 rounded-3xl hover:border-cyan-400 transition hover-lift group bg-white">
-                        <div class="h-48 bg-gray-100 rounded-2xl mb-6 overflow-hidden relative">
-                            <div class="absolute inset-0 bg-cyan-600/20 group-hover:bg-cyan-600/10 transition"></div>
-                            <i class="fas fa-leaf absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-cyan-600/50"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">للآبار والمزارع</h3>
-                        <p class="text-gray-600 mb-6">تحليل صلاحية مياه الآبار للزراعة والشرب</p>
-                        <a href="#" class="text-cyan-600 font-bold hover:underline">اطلب الآن <i class="fas fa-arrow-left mr-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="py-24 relative bg-white">
-            <div class="container mx-auto px-6">
-                <div class="grid lg:grid-cols-2 gap-16">
-                    <div class="reveal">
-                        <h2 class="text-4xl font-black text-gray-800 mb-6">تواصل معنا</h2>
-                        <p class="text-lg text-gray-600 mb-12">فريقنا التقني جاهز لخدمتكم</p>
-                        
-                        <form class="space-y-6">
-                            <div>
-                                <label class="block text-gray-700 font-bold mb-2">الاسم / الجهة</label>
-                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-bold mb-2">البريد الإلكتروني</label>
-                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-bold mb-2">نوع الاستفسار</label>
-                                <select class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition">
-                                    <option>طلب تركيب نظام</option>
-                                    <option>استفسار تقني</option>
-                                    <option>شراكة أعمال</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-bold mb-2">الرسالة</label>
-                                <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"></textarea>
-                            </div>
-                            <button class="w-full btn-3d bg-cyan-600 text-white font-bold py-4 rounded-xl shadow-lg">إرسال الطلب</button>
-                        </form>
-                    </div>
-
-                    <div class="space-y-8 reveal">
-                        <div class="bg-gradient-to-br from-cyan-600 to-teal-600 rounded-3xl p-8 text-white shadow-2xl">
-                            <h3 class="text-2xl font-bold mb-6">المقر الرئيسي</h3>
-                            <div class="flex items-start gap-4">
-                                <i class="fas fa-map-marker-alt text-2xl mt-1 opacity-80"></i>
-                                <p class="text-lg text-cyan-50">صنعاء - الحي التكنولوجي<br>مبنى الابتكار - الدور الخامس</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-6">خدمة العملاء</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-4 text-gray-600">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center"><i class="fas fa-phone-alt"></i></div>
-                                    <span class="text-lg font-bold dir-ltr">+967 770 000 000</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        <div class="relative h-96 product-card">
+                            <div class="product-inner">
+                                <div class="product-front glass-strong shadow-2xl">
+                                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-40" alt="Sensors">
+                                    <div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                                        <div class="text-5xl mb-4 neon-cyan"><i class="fas fa-sensor-on"></i></div>
+                                        <h3 class="text-3xl font-bold mb-3 gradient-text">المستشعرات الذكية</h3>
+                                        <p class="text-cyan-100 text-lg mb-4">قياس فوري لنسبة الأملاح والحموضة</p>
+                                        <button class="mt-4 btn-3d bg-white text-cyan-700 px-6 py-3 rounded-full font-bold self-start hover:bg-cyan-100 transition">
+                                            <i class="fas fa-info-circle ml-2"></i>التفاصيل
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-4 text-gray-600">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center"><i class="fas fa-envelope"></i></div>
-                                    <span class="text-lg">support@aquavue.ye</span>
+                                <div class="product-back bg-gradient-to-br from-cyan-600 to-teal-700 shadow-2xl p-8 flex flex-col justify-center text-white">
+                                    <div class="text-5xl mb-6 text-center neon-cyan"><i class="fas fa-microchip"></i></div>
+                                    <h4 class="text-2xl font-bold mb-6 text-center">مواصفات المستشعر</h4>
+                                    <ul class="space-y-4 text-cyan-50 text-lg">
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> دقة قياس 0.01</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> بطارية تدوم 5 سنوات</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> مقاوم للماء IP68</li>
+                                    </ul>
+                                    <button class="mt-8 btn-3d bg-white text-cyan-700 px-6 py-3 rounded-full font-bold self-center hover:bg-cyan-100 transition">
+                                        <i class="fas fa-flask ml-2"></i>طلب تجربة
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex justify-center gap-6">
-                            <h3 class="text-gray-500 font-bold my-auto">شبكات التواصل</h3>
-                            <a href="#" class="w-12 h-12 rounded-full bg-gray-100 hover:bg-cyan-600 hover:text-white text-gray-600 flex items-center justify-center transition text-xl"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="w-12 h-12 rounded-full bg-gray-100 hover:bg-cyan-600 hover:text-white text-gray-600 flex items-center justify-center transition text-xl"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="w-12 h-12 rounded-full bg-gray-100 hover:bg-cyan-600 hover:text-white text-gray-600 flex items-center justify-center transition text-xl"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="w-12 h-12 rounded-full bg-gray-100 hover:bg-cyan-600 hover:text-white text-gray-600 flex items-center justify-center transition text-xl"><i class="fab fa-linkedin-in"></i></a>
+                        <div class="relative h-96 product-card">
+                            <div class="product-inner">
+                                <div class="product-front glass-strong shadow-2xl">
+                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-40" alt="Dashboard">
+                                    <div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                                        <div class="text-5xl mb-4 neon-cyan"><i class="fas fa-brain"></i></div>
+                                        <h3 class="text-3xl font-bold mb-3 gradient-text">لوحة التحكم AI</h3>
+                                        <p class="text-teal-100 text-lg mb-4">تحليل البيانات الضخمة والتنبؤ بالجودة</p>
+                                        <button class="mt-4 btn-3d bg-white text-teal-700 px-6 py-3 rounded-full font-bold self-start hover:bg-teal-100 transition">
+                                            <i class="fas fa-info-circle ml-2"></i>التفاصيل
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-back bg-gradient-to-br from-teal-500 to-emerald-700 shadow-2xl p-8 flex flex-col justify-center text-white">
+                                    <div class="text-5xl mb-6 text-center neon-cyan"><i class="fas fa-chart-line"></i></div>
+                                    <h4 class="text-2xl font-bold mb-6 text-center">مميزات النظام</h4>
+                                    <ul class="space-y-4 text-teal-50 text-lg">
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> تقارير لحظية</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> تنبيهات عبر SMS/Email</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> ربط مع أنظمة المصانع</li>
+                                    </ul>
+                                    <button class="mt-8 btn-3d bg-white text-teal-700 px-6 py-3 rounded-full font-bold self-center hover:bg-teal-100 transition">
+                                        <i class="fas fa-desktop ml-2"></i>عرض ديمو
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative h-96 product-card">
+                            <div class="product-inner">
+                                <div class="product-front glass-strong shadow-2xl">
+                                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-40" alt="App">
+                                    <div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                                        <div class="text-5xl mb-4 neon-cyan"><i class="fas fa-mobile-alt"></i></div>
+                                        <h3 class="text-3xl font-bold mb-3 gradient-text">تطبيق المستهلك</h3>
+                                        <p class="text-purple-100 text-lg mb-4">راقب مياه منزلك من هاتفك مباشرة</p>
+                                        <button class="mt-4 btn-3d bg-white text-purple-700 px-6 py-3 rounded-full font-bold self-start hover:bg-purple-100 transition">
+                                            <i class="fas fa-info-circle ml-2"></i>التفاصيل
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-back bg-gradient-to-br from-purple-600 to-indigo-700 shadow-2xl p-8 flex flex-col justify-center text-white">
+                                    <div class="text-5xl mb-6 text-center neon-cyan"><i class="fas fa-app-store-ios"></i></div>
+                                    <h4 class="text-2xl font-bold mb-6 text-center">مميزات التطبيق</h4>
+                                    <ul class="space-y-4 text-purple-50 text-lg">
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> واجهة سهلة الاستخدام</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> طلب صيانة بضغطة زر</li>
+                                        <li class="flex items-center"><i class="fas fa-check-circle ml-3 text-2xl"></i> متوفر لـ iOS و Android</li>
+                                    </ul>
+                                    <button class="mt-8 btn-3d bg-white text-purple-700 px-6 py-3 rounded-full font-bold self-center hover:bg-purple-100 transition">
+                                        <i class="fas fa-download ml-2"></i>تحميل الآن
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <footer class="bg-slate-900 text-white py-16 relative overflow-hidden">
-            <div class="absolute inset-0 isometric-grid opacity-5"></div>
-            <div class="container mx-auto px-6 relative z-10">
-                <div class="grid md:grid-cols-4 gap-12">
-                    <div class="col-span-1 md:col-span-2">
-                        <div class="text-3xl font-black text-cyan-400 mb-6">AquaVue</div>
-                        <p class="text-gray-400 leading-loose mb-8 max-w-md">
-                            منصة ذكية لمراقبة جودة المياه باستخدام أحدث تقنيات الذكاء الاصطناعي وإنترنت الأشياء.
+            <section id="gallery" class="py-24 relative overflow-hidden" style="background: rgba(15, 23, 42, 1);">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="text-6xl font-black text-white mb-6 font-amiri text-3d">
+                            <i class="fas fa-images text-cyan-400 ml-3 neon-cyan"></i>
+                            معرض <span class="gradient-text">النظام</span>
+                        </h2>
+                        <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
+                        <p class="text-2xl text-cyan-100 max-w-3xl mx-auto font-tajawal">
+                            نظرة عن كثب على واجهات النظام والأجهزة المستخدمة
                         </p>
                     </div>
-                    
-                    <div>
-                        <h4 class="text-xl font-bold mb-6 text-white border-b-2 border-cyan-900 pb-2 inline-block">روابط سريعة</h4>
-                        <ul class="space-y-3 text-gray-400">
-                            <li><a href="#home" class="hover:text-cyan-400 transition">الرئيسية</a></li>
-                            <li><a href="#about" class="hover:text-cyan-400 transition">عن المنصة</a></li>
-                            <li><a href="#tech" class="hover:text-cyan-400 transition">التقنية</a></li>
-                            <li><a href="#services" class="hover:text-cyan-400 transition">الخدمات</a></li>
-                            <li><a href="#contact" class="hover:text-cyan-400 transition">اتصل بنا</a></li>
-                        </ul>
-                    </div>
 
-                    <div>
-                        <h4 class="text-xl font-bold mb-6 text-white border-b-2 border-cyan-900 pb-2 inline-block">خدماتنا</h4>
-                        <ul class="space-y-3 text-gray-400">
-                            <li class="flex items-center"><i class="fas fa-chevron-left ml-2 text-xs text-cyan-600"></i> مراقبة جودة المياه</li>
-                            <li class="flex items-center"><i class="fas fa-chevron-left ml-2 text-xs text-cyan-600"></i> تحليل البيانات الذكي</li>
-                            <li class="flex items-center"><i class="fas fa-chevron-left ml-2 text-xs text-cyan-600"></i> تنبيهات فورية</li>
-                            <li class="flex items-center"><i class="fas fa-chevron-left ml-2 text-xs text-cyan-600"></i> التخزين السحابي</li>
-                            <li class="flex items-center"><i class="fas fa-chevron-left ml-2 text-xs text-cyan-600"></i> تطبيق الهاتف</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500 text-sm">
-                    &copy; 2024 AquaVue. جميع الحقوق محفوظة.
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <div id="loginPage" class="page auth-container">
-        <div class="auth-decoration"></div>
-        <div class="auth-decoration"></div>
-        <div class="auth-decoration"></div>
-
-        <nav class="absolute top-0 w-full p-6 z-50">
-            <div class="flex justify-between items-center">
-                <div class="text-3xl font-black text-white">AquaVue</div>
-                <button onclick="showPage('homePage')" class="text-white hover:text-cyan-200 transition font-bold flex items-center gap-2">
-                    <i class="fas fa-arrow-right"></i> العودة للرئيسية
-                </button>
-            </div>
-        </nav>
-
-        <div class="container mx-auto px-6 min-h-screen flex items-center justify-center relative z-10">
-            <div class="w-full max-w-4xl grid md:grid-cols-2 gap-0 bg-white/10 backdrop-blur-lg rounded-3xl overflow-hidden shadow-2xl border border-white/20">
-                <div class="p-10 flex flex-col justify-center">
-                    <h2 class="text-4xl font-black mb-2 text-white">مرحباً بعودتك</h2>
-                    <p class="text-cyan-100 mb-8">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
-                    
-                    <form class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-cyan-50">البريد الإلكتروني</label>
-                            <input 
-                                type="email" 
-                                required 
-                                class="auth-input w-full px-6 py-4 rounded-xl text-white text-lg"
-                                placeholder="example@aquavue.ye"
-                            >
-                        </div>
-                        
-                        <div class="relative">
-                            <div class="flex justify-between mb-2">
-                                <label class="text-sm font-bold text-cyan-50">كلمة المرور</label>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                        <div class="reveal">
                             <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="loginPassword"
-                                    required 
-                                    class="auth-input w-full px-6 py-4 rounded-xl text-white text-lg"
-                                    placeholder="••••••••"
-                                >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePassword('loginPassword', this)"
-                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-200 hover:text-white transition text-xl"
-                                >
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                                <div class="absolute inset-0 bg-gradient-to-br from-cyan-300 to-teal-300 rounded-full opacity-30 blur-3xl animate-pulse"></div>
+                                <div class="gallery-container relative">
+                                    <div class="rounded-3xl overflow-hidden shadow-2xl ring-4 ring-cyan-500/50">
+                                        <img id="mainGalleryImage" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" class="w-full h-80 object-cover transition-all duration-500" alt="Tech">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-center mt-6 gap-3">
+                                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=200&q=80" class="gallery-thumb active" onclick="updateMainImage(this.src)">
+                                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=200&q=80" class="gallery-thumb" onclick="updateMainImage(this.src)">
+                                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80" class="gallery-thumb" onclick="updateMainImage(this.src)">
+                                <img src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=200&q=80" class="gallery-thumb" onclick="updateMainImage(this.src)">
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="custom-checkbox mr-2">
-                                <span class="text-sm text-cyan-100 mr-2">تذكرني</span>
-                            </label>
-                            <a href="#" class="text-sm text-white hover:text-cyan-200 font-bold underline">نسيت كلمة المرور؟</a>
+                        <div class="reveal space-y-8">
+                            <div>
+                                <h3 class="text-4xl font-black text-white mb-6 font-amiri text-3d gradient-text">
+                                    <i class="fas fa-puzzle-piece text-cyan-400 ml-2 neon-cyan"></i>
+                                    تكامل تقني شامل
+                                </h3>
+                                <p class="text-cyan-100 text-xl leading-relaxed mb-8">
+                                    نظام AquaVue يدمج بين الأجهزة (Hardware) والبرمجيات (Software) في بيئة واحدة متناغمة تضمن لك التحكم الكامل.
+                                </p>
+                            </div>
+                            <div class="space-y-5">
+                                <div class="p-6 glass-card rounded-2xl border-r-4 border-cyan-500 card-3d hover-lift holographic">
+                                    <h4 class="font-bold text-cyan-300 mb-3 text-xl">
+                                        <i class="fas fa-server ml-2 text-2xl neon-cyan"></i> الخوادم السحابية
+                                    </h4>
+                                    <p class="text-cyan-100 text-lg">تخزين آمن للبيانات مع إمكانية الرجوع للأرشيف</p>
+                                </div>
+                                <div class="p-6 glass-card rounded-2xl border-r-4 border-teal-500 card-3d hover-lift holographic">
+                                    <h4 class="font-bold text-teal-300 mb-3 text-xl">
+                                        <i class="fas fa-chart-bar ml-2 text-2xl neon-cyan"></i> تحليل البيانات
+                                    </h4>
+                                    <p class="text-cyan-100 text-lg">خوارزميات تتنبأ بالأعطال قبل حدوثها</p>
+                                </div>
+                                <div class="p-6 glass-card rounded-2xl border-r-4 border-purple-500 card-3d hover-lift holographic">
+                                    <h4 class="font-bold text-purple-300 mb-3 text-xl">
+                                        <i class="fas fa-globe-africa ml-2 text-2xl neon-cyan"></i> وصول عالمي
+                                    </h4>
+                                    <p class="text-cyan-100 text-lg">تحكم في محطاتك من أي مكان في العالم</p>
+                                </div>
+                            </div>
                         </div>
-
-                        <button 
-                            type="submit" 
-                            class="btn-3d btn-ripple w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all"
-                        >
-                            تسجيل الدخول
-                        </button>
-
-                        <div class="relative flex py-2 items-center">
-                            <div class="flex-grow border-t border-white/20"></div>
-                            <span class="flex-shrink-0 mx-4 text-cyan-100 text-sm">أو</span>
-                            <div class="flex-grow border-t border-white/20"></div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <button type="button" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition border border-white/10 text-white">
-                                <i class="fab fa-google"></i> Google
-                            </button>
-                            <button type="button" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition border border-white/10 text-white">
-                                <i class="fab fa-facebook-f"></i> Facebook
-                            </button>
-                        </div>
-
-                        <div class="text-center mt-6">
-                            <span class="text-cyan-100">ليس لديك حساب؟</span>
-                            <button type="button" onclick="showPage('registerPage')" class="text-white font-bold hover:underline mr-1">إنشاء حساب جديد</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="hidden md:flex flex-col items-center justify-center bg-white/5 p-10 relative overflow-hidden">
-                    <div class="auth-illustration w-64 h-64 mb-8">
-                        <div class="illustration-glow"></div>
-                        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-2xl">
-                            <polygon points="200,20 350,110 350,290 200,380 50,290 50,110" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                            <polygon points="200,60 310,130 310,270 200,340 90,270 90,130" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                            <polygon points="200,100 270,150 270,250 200,300 130,250 130,150" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                        </svg>
                     </div>
-                    <h3 class="text-3xl font-bold text-center mb-4 text-white">أكوا فيو</h3>
-                    <p class="text-center text-cyan-100 max-w-xs">المياه النقية بذكاء صناعي</p>
                 </div>
-            </div>
-        </div>
-    </div>
+            </section>
 
-    <div id="registerPage" class="page auth-container">
-        <div class="auth-decoration"></div>
-        <div class="auth-decoration"></div>
-        <div class="water-droplet" style="left: 20%; animation-duration: 4s;"></div>
-        <div class="water-droplet" style="left: 80%; animation-duration: 5s; animation-delay: 1s;"></div>
+            <section id="services" class="py-24" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 1), rgba(12, 74, 110, 0.5));">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="text-6xl font-black gradient-text mb-6 font-amiri text-3d">
+                            <i class="fas fa-hands-helping text-cyan-400 ml-3 neon-cyan"></i>
+                            خدماتنا
+                        </h2>
+                        <p class="text-2xl text-cyan-100 font-tajawal">نقدم حلولاً ذكية للمنازل والمصانع</p>
+                        <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mt-8 rounded-full"></div>
+                    </div>
 
-        <nav class="absolute top-0 w-full p-6 z-50">
-            <div class="flex justify-between items-center">
-                <div class="text-3xl font-black text-white">AquaVue</div>
-                <button onclick="showPage('homePage')" class="text-white hover:text-cyan-200 transition font-bold flex items-center gap-2">
-                    <i class="fas fa-arrow-right"></i> العودة للرئيسية
-                </button>
-            </div>
-        </nav>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic reveal">
+                            <div class="text-7xl mb-8 text-center neon-cyan float-3d">
+                                <i class="fas fa-house-user text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-5 text-center gradient-text">للمنازل الذكية</h3>
+                            <p class="text-cyan-100 text-center text-lg leading-relaxed">تركيب مستشعرات للخزانات المنزلية وربطها بتطبيق الجوال</p>
+                            <div class="mt-6 text-center">
+                                <a href="#contact" class="inline-block btn-3d bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition">
+                                    <i class="fas fa-arrow-left ml-2"></i>
+                                    اطلب الآن
+                                </a>
+                            </div>
+                        </div>
 
-        <div class="container mx-auto px-6 min-h-screen flex items-center justify-center relative z-10 py-20">
-            <div class="w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl p-10 shadow-2xl border border-white/20">
-                <div class="text-center mb-10">
-                    <h2 class="text-4xl font-black mb-2 text-white">إنشاء حساب جديد</h2>
-                    <p class="text-cyan-100">انضم لمجتمع أكوا فيو الذكي</p>
+                        <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic reveal">
+                            <div class="text-7xl mb-8 text-center neon-cyan float-3d">
+                                <i class="fas fa-industry text-teal-400"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-5 text-center gradient-text">للمصانع</h3>
+                            <p class="text-cyan-100 text-center text-lg leading-relaxed">نظام مراقبة متكامل لخطوط الإنتاج وضمان جودة المياه</p>
+                            <div class="mt-6 text-center">
+                                <a href="#contact" class="inline-block btn-3d bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition">
+                                    <i class="fas fa-arrow-left ml-2"></i>
+                                    اطلب الآن
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic reveal">
+                            <div class="text-7xl mb-8 text-center neon-cyan float-3d">
+                                <i class="fas fa-seedling text-emerald-400"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-5 text-center gradient-text">للآبار والمزارع</h3>
+                            <p class="text-cyan-100 text-center text-lg leading-relaxed">تحليل صلاحية مياه الآبار للزراعة والشرب</p>
+                            <div class="mt-6 text-center">
+                                <a href="#contact" class="inline-block btn-3d bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition">
+                                    <i class="fas fa-arrow-left ml-2"></i>
+                                    اطلب الآن
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <form class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
+            <section id="contact" class="py-24" style="background: linear-gradient(to bottom, rgba(12, 74, 110, 0.5), rgba(15, 23, 42, 1));">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="text-6xl font-black gradient-text mb-6 font-amiri text-3d">
+                            <i class="fas fa-headset text-cyan-400 ml-3 neon-cyan"></i>
+                            تواصل معنا
+                        </h2>
+                        <p class="text-2xl text-cyan-100 font-tajawal">فريقنا التقني جاهز لخدمتكم</p>
+                        <div class="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mt-8 rounded-full"></div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-16">
+                        <div class="reveal">
+                            <form id="contactForm" class="glass-card rounded-3xl p-10 space-y-8 card-3d">
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg">
+                                        <i class="fas fa-user ml-2 text-cyan-400"></i>
+                                        الاسم / الجهة
+                                    </label>
+                                    <input type="text" class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none text-white text-lg transition" placeholder="أدخل الاسم">
+                                </div>
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg">
+                                        <i class="fas fa-envelope ml-2 text-cyan-400"></i>
+                                        البريد الإلكتروني
+                                    </label>
+                                    <input type="email" class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none text-white text-lg transition" placeholder="email@domain.com">
+                                </div>
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg">
+                                        <i class="fas fa-list-ul ml-2 text-cyan-400"></i>
+                                        نوع الاستفسار
+                                    </label>
+                                    <select class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none text-white text-lg transition">
+                                        <option class="bg-slate-800">طلب تركيب نظام</option>
+                                        <option class="bg-slate-800">استفسار تقني</option>
+                                        <option class="bg-slate-800">شراكة أعمال</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg">
+                                        <i class="fas fa-comment-dots ml-2 text-cyan-400"></i>
+                                        الرسالة
+                                    </label>
+                                    <textarea rows="5" class="auth-input w-full px-6 py-4 rounded-xl border-2 bg-white/10 border-cyan-500/30 focus:border-cyan-500 focus:outline-none resize-none text-white text-lg transition" placeholder="كيف يمكننا مساعدتك؟"></textarea>
+                                </div>
+                                <button type="submit" class="btn-3d btn-ripple w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-full text-xl font-black shadow-xl hover:shadow-2xl transition-all">
+                                    <i class="fas fa-paper-plane ml-2"></i>
+                                    إرسال الطلب
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="space-y-8 reveal">
+                            <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic">
+                                <div class="flex items-start space-x-reverse space-x-6">
+                                    <div class="text-5xl text-cyan-400 neon-cyan">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-white mb-4 gradient-text">المقر الرئيسي</h3>
+                                        <p class="text-cyan-100 text-lg leading-relaxed">صنعاء - الحي التكنولوجي<br>مبنى الابتكار - الدور الخامس</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic">
+                                <div class="flex items-start space-x-reverse space-x-6">
+                                    <div class="text-5xl text-teal-400 neon-cyan">
+                                        <i class="fas fa-phone-volume"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-white mb-4 gradient-text">خدمة العملاء</h3>
+                                        <p class="text-cyan-100 text-lg" dir="ltr">+967 770 000 000</p>
+                                        <p class="text-cyan-100 text-lg">support@aquavue.ye</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card rounded-3xl p-10 card-3d hover-lift holographic">
+                                <h3 class="text-2xl font-bold text-white mb-6 text-center gradient-text">
+                                    <i class="fas fa-share-alt text-cyan-400 ml-2 neon-cyan"></i>
+                                    شبكات التواصل
+                                </h3>
+                                <div class="flex justify-center space-x-reverse space-x-8">
+                                    <a href="#" class="text-5xl text-blue-400 hover:scale-125 transition-transform neon-cyan">
+                                        <i class="fab fa-facebook-square"></i>
+                                    </a>
+                                    <a href="#" class="text-5xl text-sky-400 hover:scale-125 transition-transform neon-cyan">
+                                        <i class="fab fa-twitter-square"></i>
+                                    </a>
+                                    <a href="#" class="text-5xl text-pink-400 hover:scale-125 transition-transform neon-cyan">
+                                        <i class="fab fa-instagram-square"></i>
+                                    </a>
+                                    <a href="#" class="text-5xl text-blue-500 hover:scale-125 transition-transform neon-cyan">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="text-white py-16 border-t-4 border-cyan-500 relative overflow-hidden" style="background: rgba(15, 23, 42, 1);">
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
                         <div>
-                            <label class="block text-sm font-bold mb-2 text-cyan-50">الاسم الأول</label>
-                            <input 
-                                type="text" 
-                                required 
-                                class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                                placeholder="أحمد"
-                            >
+                            <div class="text-4xl font-black mb-6 neon-cyan">
+                                <i class="fas fa-water text-cyan-400"></i>
+                                AquaVue
+                            </div>
+                            <p class="text-cyan-100 mb-6 leading-relaxed text-lg">
+                                منصة ذكية لمراقبة جودة المياه باستخدام أحدث تقنيات الذكاء الاصطناعي وإنترنت الأشياء.
+                            </p>
+                            <div class="flex space-x-reverse space-x-4">
+                                <a href="#" class="w-12 h-12 glass-card text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-full flex items-center justify-center transition text-xl shadow-sm hover:shadow-md">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 glass-card text-sky-400 hover:bg-sky-500 hover:text-white rounded-full flex items-center justify-center transition text-xl shadow-sm hover:shadow-md">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 glass-card text-pink-400 hover:bg-pink-600 hover:text-white rounded-full flex items-center justify-center transition text-xl shadow-sm hover:shadow-md">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 glass-card text-blue-400 hover:bg-blue-700 hover:text-white rounded-full flex items-center justify-center transition text-xl shadow-sm hover:shadow-md">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
                         </div>
+
                         <div>
-                            <label class="block text-sm font-bold mb-2 text-cyan-50">الاسم الأخير</label>
-                            <input 
-                                type="text" 
-                                required 
-                                class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                                placeholder="محمد"
-                            >
+                            <h3 class="text-2xl font-bold mb-6 text-cyan-400 gradient-text">
+                                <i class="fas fa-link ml-2"></i>
+                                روابط سريعة
+                            </h3>
+                            <ul class="space-y-3 text-cyan-100 text-lg">
+                                <li>
+                                    <a href="#home" class="hover:text-cyan-400 transition flex items-center group">
+                                        <i class="fas fa-chevron-left ml-2 text-cyan-400 text-sm group-hover:-translate-x-1 transition-transform"></i>
+                                        الرئيسية
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#about" class="hover:text-cyan-400 transition flex items-center group">
+                                        <i class="fas fa-chevron-left ml-2 text-cyan-400 text-sm group-hover:-translate-x-1 transition-transform"></i>
+                                        عن المنصة
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tech" class="hover:text-cyan-400 transition flex items-center group">
+                                        <i class="fas fa-chevron-left ml-2 text-cyan-400 text-sm group-hover:-translate-x-1 transition-transform"></i>
+                                        التقنية
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#services" class="hover:text-cyan-400 transition flex items-center group">
+                                        <i class="fas fa-chevron-left ml-2 text-cyan-400 text-sm group-hover:-translate-x-1 transition-transform"></i>
+                                        الخدمات
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#contact" class="hover:text-cyan-400 transition flex items-center group">
+                                        <i class="fas fa-chevron-left ml-2 text-cyan-400 text-sm group-hover:-translate-x-1 transition-transform"></i>
+                                        اتصل بنا
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6 text-cyan-400 gradient-text">
+                                <i class="fas fa-cog ml-2"></i>
+                                خدماتنا
+                            </h3>
+                            <ul class="space-y-3 text-cyan-100 text-lg">
+                                <li class="flex items-start">
+                                    <i class="fas fa-water ml-2 text-cyan-400 mt-1"></i>
+                                    <span>مراقبة جودة المياه</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-chart-line ml-2 text-cyan-400 mt-1"></i>
+                                    <span>تحليل البيانات الذكي</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-bell ml-2 text-cyan-400 mt-1"></i>
+                                    <span>تنبيهات فورية</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-cloud ml-2 text-cyan-400 mt-1"></i>
+                                    <span>التخزين السحابي</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-mobile-alt ml-2 text-cyan-400 mt-1"></i>
+                                    <span>تطبيق الهاتف</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6 text-cyan-400 gradient-text">
+                                <i class="fas fa-address-book ml-2"></i>
+                                معلومات التواصل
+                            </h3>
+                            <ul class="space-y-4 text-cyan-100 text-lg">
+                                <li class="flex items-start">
+                                    <i class="fas fa-map-marker-alt ml-3 text-cyan-400 mt-1 text-xl"></i>
+                                    <span>صنعاء - الحي التكنولوجي<br>مبنى الابتكار</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-phone ml-3 text-cyan-400 text-xl"></i>
+                                    <span dir="ltr">+967 770 000 000</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-envelope ml-3 text-cyan-400 text-xl"></i>
+                                    <span>support@aquavue.ye</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-clock ml-3 text-cyan-400 text-xl"></i>
+                                    <span>24/7 خدمة متواصلة</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-cyan-50">البريد الإلكتروني</label>
-                        <input 
-                            type="email" 
-                            required 
-                            class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                            placeholder="example@aquavue.ye"
-                        >
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-cyan-50">رقم الهاتف</label>
-                        <input 
-                            type="tel" 
-                            required 
-                            class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                            placeholder="+967 770 000 000"
-                            dir="ltr"
-                        >
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="relative">
-                            <label class="block text-sm font-bold mb-2 text-cyan-50">كلمة المرور</label>
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="registerPassword"
-                                    required 
-                                    class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                                    placeholder="••••••••"
-                                >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePassword('registerPassword', this)"
-                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-teal-200 hover:text-white transition text-xl"
-                                >
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="relative">
-                            <label class="block text-sm font-bold mb-2 text-cyan-50">تأكيد كلمة المرور</label>
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="confirmPassword"
-                                    required 
-                                    class="auth-input w-full px-4 py-3 rounded-xl text-white text-base"
-                                    placeholder="••••••••"
-                                >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePassword('confirmPassword', this)"
-                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-teal-200 hover:text-white transition text-xl"
-                                >
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+<div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-cyan-200/60 text-sm mb-4 md:mb-0">
+                            &copy; 2024 أكوا فيو | AquaVue. جميع الحقوق محفوظة.
+                        </p>
+                        <div class="flex space-x-reverse space-x-6 text-sm text-cyan-200/60">
+                            <a href="#" class="hover:text-cyan-400 transition">سياسة الخصوصية</a>
+                            <a href="#" class="hover:text-cyan-400 transition">شروط الاستخدام</a>
+                            <a href="#" class="hover:text-cyan-400 transition">خريطة الموقع</a>
                         </div>
                     </div>
-
-                    <div class="flex items-center">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="custom-checkbox mr-2" required>
-                            <span class="text-sm text-cyan-100 mr-2">أوافق على <a href="#" class="underline hover:text-white">الشروط والأحكام</a> و <a href="#" class="underline hover:text-white">سياسة الخصوصية</a></span>
-                        </label>
-                    </div>
-
-                    <button 
-                        type="submit" 
-                        class="btn-3d btn-ripple w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-4 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all"
-                    >
-                        إنشاء الحساب
-                    </button>
-
-                    <div class="text-center mt-6">
-                        <span class="text-cyan-100">لديك حساب بالفعل؟</span>
-                        <button type="button" onclick="showPage('loginPage')" class="text-white font-bold hover:underline mr-1">تسجيل الدخول</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('homePage').style.display = 'block';
-            setTimeout(() => document.getElementById('homePage').classList.add('active'), 100);
-            setTimeout(hideLoader, 1500);
-        });
-
+                </div>
+            </footer>
+        </div> </div><script>
+        // ==================== LOADING SCREEN FIX ====================
+        // دالة لإخفاء شاشة التحميل وتشغيل التأثيرات
         function hideLoader() {
-            const loader = document.getElementById('loadingScreen');
-            if(loader && !loader.classList.contains('hidden')) {
-                loader.classList.add('hidden');
-                initTypewriter();
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+                loadingScreen.classList.add('hidden');
+                initTypewriter(); // تشغيل تأثير الكتابة
             }
         }
 
+        // المحاولة الأولى: بمجرد جاهزية العناصر الأساسية (سريع)
+        document.addEventListener('DOMContentLoaded', () => {
+            // تهيئة الصفحة الرئيسية
+            document.getElementById('homePage').style.display = 'block';
+            setTimeout(() => document.getElementById('homePage').classList.add('active'), 100);
+            
+            // إخفاء التحميل بعد ثانية ونصف
+            setTimeout(hideLoader, 1500);
+        });
+
+        // المحاولة الثانية (احتياطية): في حال تأخر التحميل، اجبره على الفتح بعد 4 ثواني كحد أقصى
         window.addEventListener('load', hideLoader);
         setTimeout(hideLoader, 4000); 
 
+        // ==================== NAVIGATION ====================
         function showPage(pageId) {
+            // إخفاء جميع الصفحات
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
                 setTimeout(() => {
@@ -1167,6 +2088,7 @@
                 }, 500);
             });
 
+            // إظهار الصفحة المطلوبة
             const targetPage = document.getElementById(pageId);
             if(targetPage) {
                 targetPage.style.display = 'block';
@@ -1177,6 +2099,8 @@
             window.scrollTo(0, 0);
         }
 
+        // ==================== MOBILE MENUS ====================
+        // Home Menu
         const menuBtn = document.getElementById('menuBtn');
         const closeMenuBtn = document.getElementById('closeMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
@@ -1194,10 +2118,48 @@
         if(menuBtn) menuBtn.addEventListener('click', toggleMenu);
         if(closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
 
+        // Login Menu
+        const loginMenuBtn = document.getElementById('loginMenuBtn');
+        const loginCloseMenuBtn = document.getElementById('loginCloseMenuBtn');
+        const loginMobileMenu = document.getElementById('loginMobileMenu');
+
+        function toggleLoginMenu() {
+            if(loginMobileMenu) {
+                loginMobileMenu.classList.toggle('hidden');
+                setTimeout(() => {
+                    loginMobileMenu.classList.toggle('opacity-0');
+                    loginMobileMenu.classList.toggle('scale-95');
+                }, 10);
+            }
+        }
+
+        if(loginMenuBtn) loginMenuBtn.addEventListener('click', toggleLoginMenu);
+        if(loginCloseMenuBtn) loginCloseMenuBtn.addEventListener('click', toggleLoginMenu);
+
+        // Register Menu
+        const registerMenuBtn = document.getElementById('registerMenuBtn');
+        const registerCloseMenuBtn = document.getElementById('registerCloseMenuBtn');
+        const registerMobileMenu = document.getElementById('registerMobileMenu');
+
+        function toggleRegisterMenu() {
+            if(registerMobileMenu) {
+                registerMobileMenu.classList.toggle('hidden');
+                setTimeout(() => {
+                    registerMobileMenu.classList.toggle('opacity-0');
+                    registerMobileMenu.classList.toggle('scale-95');
+                }, 10);
+            }
+        }
+
+        if(registerMenuBtn) registerMenuBtn.addEventListener('click', toggleRegisterMenu);
+        if(registerCloseMenuBtn) registerCloseMenuBtn.addEventListener('click', toggleRegisterMenu);
+
+        // Close menu when clicking a link
         document.querySelectorAll('.mobile-menu-link').forEach(link => {
             link.addEventListener('click', toggleMenu);
         });
 
+        // ==================== SCROLL PROGRESS ====================
         window.addEventListener('scroll', () => {
             const scrollProgress = document.getElementById('scrollProgress');
             if(scrollProgress) {
@@ -1208,22 +2170,24 @@
             }
         });
 
+        // ==================== TYPEWRITER EFFECT ====================
         function initTypewriter() {
             const textElement = document.getElementById('mainTitle');
             const penElement = document.getElementById('writingPen');
-
-            if(!textElement || !penElement) return;
             
+            if(!textElement || !penElement) return;
+
             const text = "مستقبل نقاء المياه";
             let index = 0;
-            
+
             textElement.innerHTML = '';
             penElement.style.opacity = '1';
             penElement.classList.add('pen-writing-anim');
-            
+
             function type() {
                 if (index < text.length) {
                     textElement.innerHTML += text.charAt(index);
+                    // تحريك القلم بشكل تقريبي
                     const currentWidth = index * 25; 
                     penElement.style.left = (60 + currentWidth) + 'px'; 
                     index++;
@@ -1238,8 +2202,9 @@
             type();
         }
 
+        // ==================== REVEAL ON SCROLL & COUNTERS ====================
         const observerOptions = { threshold: 0.1 };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1260,7 +2225,6 @@
             const duration = 2000;
             const step = target / (duration / 16);
             let current = 0;
-
             const updateCounter = () => {
                 current += step;
                 if (current < target) {
@@ -1268,13 +2232,14 @@
                     requestAnimationFrame(updateCounter);
                 } else {
                     counter.innerText = target;
-                    if(target > 90 && target < 101) counter.innerText += "%";
+                    if(target > 90) counter.innerText += "%";
                     else if(target > 1000) counter.innerText = "+5000";
                 }
             };
             updateCounter();
         }
 
+        // ==================== GALLERY ====================
         function updateMainImage(src) {
             const mainImage = document.getElementById('mainGalleryImage');
             if(mainImage) {
@@ -1290,6 +2255,7 @@
             });
         }
 
+        // ==================== PASSWORD TOGGLE ====================
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             const icon = btn.querySelector('i');
@@ -1304,48 +2270,50 @@
             }
         }
 
+        // ==================== THREE.JS BACKGROUND ====================
+        // وضعنا الكود داخل try-catch لتجنب توقف الموقع في حال فشل تحميل المكتبة
         try {
             const canvas = document.getElementById('canvas3d');
             if (typeof THREE !== 'undefined' && canvas) {
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-
+                
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 renderer.setPixelRatio(window.devicePixelRatio);
-                
+
                 const particlesGeometry = new THREE.BufferGeometry();
                 const particlesCount = 700;
                 const posArray = new Float32Array(particlesCount * 3);
-                
+
                 for(let i = 0; i < particlesCount * 3; i++) {
                     posArray[i] = (Math.random() - 0.5) * 15;
                 }
-                
+
                 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-                
+
                 const material = new THREE.PointsMaterial({
                     size: 0.02,
-                    color: 0x0891b2,
+                    color: 0x06b6d4,
                     transparent: true,
                     opacity: 0.8,
                 });
-                
+
                 const particlesMesh = new THREE.Points(particlesGeometry, material);
                 scene.add(particlesMesh);
-                
+
                 camera.position.z = 3;
-                
+
                 let mouseX = 0;
                 let mouseY = 0;
-                
+
                 document.addEventListener('mousemove', (event) => {
                     mouseX = event.clientX / window.innerWidth - 0.5;
                     mouseY = event.clientY / window.innerHeight - 0.5;
                 });
-                
+
                 const clock = new THREE.Clock();
-                
+
                 function animate() {
                     const elapsedTime = clock.getElapsedTime();
                     particlesMesh.rotation.y = elapsedTime * 0.05;
@@ -1356,7 +2324,7 @@
                     window.requestAnimationFrame(animate);
                 }
                 animate();
-                
+
                 window.addEventListener('resize', () => {
                     camera.aspect = window.innerWidth / window.innerHeight;
                     camera.updateProjectionMatrix();
