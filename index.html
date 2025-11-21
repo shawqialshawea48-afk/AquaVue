@@ -1,1153 +1,683 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>مصمم ومبرمج مواقع محترف | Portfolio</title>
-     <meta name="description" content="تصميم وبرمجة مواقع احترافية بتقنيات حديثة - نحول أفكارك إلى واقع رقمي">
- 
-     <script src="https://cdn.tailwindcss.com"></script>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
- 
-     <style>
-          :root {
-              --primary: #0891b2;
-              --secondary: #06b6d4;
-              --accent: #14b8a6;
-              --light: #f0fdfa;
-          }
- 
-          body {
-              font-family: 'Cairo', sans-serif;
-              overflow-x: hidden;
-              background: #000;
-          }
- 
-          .font-amiri { font-family: 'Amiri', serif; }
-          .font-tajawal { font-family: 'Tajawal', sans-serif; }
- 
-          /* ========== 3D CANVAS BACKGROUND ========== */
-          #canvas3d {
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              z-index: 0;
-              pointer-events: none;
-          }
- 
-          .content-wrapper {
-              position: relative;
-              z-index: 1;
-          }
- 
-          /* ========== GLASS MORPHISM ========== */
-          .glass {
-              background: rgba(8, 145, 178, 0.05);
-              backdrop-filter: blur(20px);
-              border: 1px solid rgba(8, 145, 178, 0.2);
-              box-shadow: 0 8px 32px 0 rgba(8, 145, 178, 0.15);
-          }
- 
-          .glass-strong {
-              background: rgba(8, 145, 178, 0.1);
-              backdrop-filter: blur(30px);
-              border: 2px solid rgba(8, 145, 178, 0.3);
-          }
- 
-          /* ========== 3D TEXT EFFECT ========== */
-          .text-3d {
-              text-shadow: 
-                  0 1px 0 #06b6d4,
-                  0 2px 0 #0891b2,
-                  0 3px 0 #0e7490,
-                  0 4px 0 #155e75,
-                  0 5px 10px rgba(0,0,0,0.4),
-                  0 15px 20px rgba(8, 145, 178, 0.3);
-              transform: perspective(800px) rotateX(10deg);
-              transition: all 0.6s ease;
-          }
- 
-          .text-3d:hover {
-              transform: perspective(800px) rotateX(0deg) scale(1.05);
-          }
- 
-          /* ========== 3D CARDS ========== */
-          .card-3d {
-              transform-style: preserve-3d;
-              perspective: 1000px;
-              transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-          }
- 
-          .card-3d:hover {
-              transform: translateY(-30px) rotateX(10deg) rotateY(-5deg) scale(1.05);
-              box-shadow: 
-                  0 40px 80px rgba(8, 145, 178, 0.4),
-                  0 0 60px rgba(20, 184, 166, 0.3);
-          }
- 
-          .card-3d::before {
-              content: '';
-              position: absolute;
-              inset: 0;
-              background: linear-gradient(135deg, rgba(8, 145, 178, 0.3), rgba(20, 184, 166, 0.3));
-              opacity: 0;
-              transition: opacity 0.6s ease;
-              border-radius: inherit;
-              z-index: -1;
-          }
- 
-          .card-3d:hover::before {
-              opacity: 1;
-          }
- 
-          /* ========== FLOATING ANIMATION ========== */
-          @keyframes float3d {
-              0%, 100% {
-                  transform: translateY(0) translateZ(0);
-              }
-              50% {
-                  transform: translateY(-30px) translateZ(50px);
-              }
-          }
- 
-          .float-3d {
-              animation: float3d 6s ease-in-out infinite;
-          }
- 
-          /* ========== ROTATING CUBE ========== */
-          @keyframes rotateCube {
-              0% {
-                  transform: rotateX(0deg) rotateY(0deg);
-              }
-              100% {
-                  transform: rotateX(360deg) rotateY(360deg);
-              }
-          }
- 
-          .rotate-cube {
-              animation: rotateCube 20s linear infinite;
-              transform-style: preserve-3d;
-          }
- 
-          /* ========== HOLOGRAPHIC EFFECT ========== */
-          .holographic {
-              position: relative;
-              background: linear-gradient(135deg, 
-                  rgba(8, 145, 178, 0.2) 0%, 
-                  rgba(20, 184, 166, 0.2) 25%,
-                  rgba(6, 182, 212, 0.2) 50%,
-                  rgba(20, 184, 166, 0.2) 75%,
-                  rgba(8, 145, 178, 0.2) 100%);
-              background-size: 200% 200%;
-              animation: holographicShift 3s ease infinite;
-          }
- 
-          @keyframes holographicShift {
-              0%, 100% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; }
-          }
- 
-          .holographic::before {
-              content: '';
-              position: absolute;
-              inset: 0;
-              background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-              background-size: 200% 200%;
-              animation: shine 2s infinite;
-          }
- 
-          @keyframes shine {
-              0% { background-position: -100% -100%; }
-              100% { background-position: 100% 100%; }
-          }
- 
-          /* ========== NEON GLOW ========== */
-          .neon-cyan {
-              color: #06b6d4;
-              text-shadow: 
-                  0 0 5px #06b6d4,
-                  0 0 10px #06b6d4,
-                  0 0 20px #06b6d4,
-                  0 0 40px #0891b2,
-                  0 0 80px #0891b2;
-              animation: neonPulse 2s ease-in-out infinite;
-          }
- 
-          @keyframes neonPulse {
-              0%, 100% { 
-                  text-shadow: 
-                      0 0 5px #06b6d4,
-                      0 0 10px #06b6d4,
-                      0 0 20px #06b6d4,
-                      0 0 40px #0891b2;
-              }
-              50% { 
-                  text-shadow: 
-                      0 0 10px #06b6d4,
-                      0 0 20px #06b6d4,
-                      0 0 40px #06b6d4,
-                      0 0 80px #0891b2,
-                      0 0 120px #0891b2;
-              }
-          }
- 
-          /* ========== ISOMETRIC GRID ========== */
-          .isometric-grid {
-              background-image: 
-                  linear-gradient(30deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1)),
-                  linear-gradient(150deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1)),
-                  linear-gradient(30deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1)),
-                  linear-gradient(150deg, rgba(8, 145, 178, 0.1) 12%, transparent 12.5%, transparent 87%, rgba(8, 145, 178, 0.1) 87.5%, rgba(8, 145, 178, 0.1));
-              background-size: 80px 140px;
-              background-position: 0 0, 0 0, 40px 70px, 40px 70px;
-          }
- 
-          /* ========== PARTICLE SYSTEM ========== */
-          .particle {
-              position: absolute;
-              border-radius: 50%;
-              pointer-events: none;
-              animation: particleFloat 4s infinite ease-in-out;
-          }
- 
-          @keyframes particleFloat {
-              0%, 100% {
-                  transform: translateY(0) translateX(0);
-                  opacity: 0;
-              }
-              10% {
-                  opacity: 1;
-              }
-              90% {
-                  opacity: 1;
-              }
-              100% {
-                  transform: translateY(-100vh) translateX(50px);
-                  opacity: 0;
-              }
-          }
- 
-          /* ========== TYPING EFFECT ========== */
-          .typing::after {
-              content: '|';
-              animation: blink 1s infinite;
-          }
- 
-          @keyframes blink {
-              0%, 49% { opacity: 1; }
-              50%, 100% { opacity: 0; }
-          }
- 
-          /* ========== SKILL BARS WITH 3D ========== */
-          .skill-bar {
-              position: relative;
-              height: 30px;
-              background: rgba(8, 145, 178, 0.1);
-              border-radius: 15px;
-              overflow: visible;
-              transform-style: preserve-3d;
-          }
- 
-          .skill-progress {
-              height: 100%;
-              background: linear-gradient(135deg, #0891b2, #14b8a6, #06b6d4);
-              border-radius: 15px;
-              position: relative;
-              transform: translateZ(20px);
-              box-shadow: 
-                  0 4px 15px rgba(8, 145, 178, 0.5),
-                  0 0 30px rgba(20, 184, 166, 0.3);
-              animation: skillGrow 2s ease-out;
-          }
- 
-          @keyframes skillGrow {
-              from { width: 0; }
-          }
- 
-          /* ========== 3D BUTTON ========== */
-          .btn-3d {
-              position: relative;
-              transform-style: preserve-3d;
-              transition: all 0.3s ease;
-              border: 2px solid rgba(8, 145, 178, 0.5);
-          }
- 
-          .btn-3d::before {
-              content: '';
-              position: absolute;
-              inset: 0;
-              background: linear-gradient(135deg, #0891b2, #14b8a6);
-              transform: translateZ(-10px);
-              border-radius: inherit;
-              opacity: 0.8;
-          }
- 
-          .btn-3d:hover {
-              transform: translateY(-5px) translateZ(10px);
-              box-shadow: 
-                  0 20px 40px rgba(8, 145, 178, 0.4),
-                  0 0 50px rgba(20, 184, 166, 0.3);
-          }
- 
-          /* ========== PRICING CARDS 3D ========== */
-          .pricing-card {
-              transform-style: preserve-3d;
-              perspective: 1000px;
-              transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-          }
- 
-          .pricing-card:hover {
-              transform: translateY(-40px) scale(1.1);
-              box-shadow: 
-                  0 50px 100px rgba(8, 145, 178, 0.5),
-                  0 0 80px rgba(20, 184, 166, 0.4);
-              z-index: 10;
-          }
- 
-          .pricing-card.featured {
-              transform: translateY(-20px) scale(1.05);
-              border: 3px solid #14b8a6;
-          }
- 
-          /* ========== SCROLL REVEAL ========== */
-          .reveal {
-              opacity: 0;
-              transform: translateY(100px);
-              transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-          }
- 
-          .reveal.active {
-              opacity: 1;
-              transform: translateY(0);
-          }
- 
-          /* ========== LOADING SCREEN ========== */
-          .loading-screen {
-              position: fixed;
-              inset: 0;
-              background: #000;
-              z-index: 9999;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              transition: opacity 1s ease;
-          }
- 
-          .loading-screen.hidden {
-              opacity: 0;
-              pointer-events: none;
-          }
- 
-          .loader {
-              width: 100px;
-              height: 100px;
-              position: relative;
-              transform-style: preserve-3d;
-              animation: loaderSpin 2s infinite linear;
-          }
- 
-          @keyframes loaderSpin {
-              0% { transform: rotateX(0deg) rotateY(0deg); }
-              100% { transform: rotateX(360deg) rotateY(360deg); }
-          }
- 
-          .loader-face {
-              position: absolute;
-              width: 100px;
-              height: 100px;
-              background: linear-gradient(135deg, #0891b2, #14b8a6);
-              border: 2px solid #06b6d4;
-              opacity: 0.8;
-          }
- 
-          /* ========== GRADIENT TEXT ========== */
-          .gradient-text {
-              background: linear-gradient(135deg, #0891b2, #14b8a6, #06b6d4);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              background-clip: text;
-              background-size: 200% 200%;
-              animation: gradientFlow 3s ease infinite;
-          }
- 
-          @keyframes gradientFlow {
-              0%, 100% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; }
-          }
- 
-          /* ========== RESPONSIVE ========== */
-          @media (max-width: 768px) {
-              .text-3d {
-                  font-size: 2rem !important;
-              }
-              
-              .card-3d:hover {
-                  transform: translateY(-15px) scale(1.02);
-              }
-          }
- 
-          /* ========== CUSTOM SCROLLBAR ========== */
-          ::-webkit-scrollbar {
-              width: 10px;
-          }
- 
-          ::-webkit-scrollbar-track {
-              background: rgba(8, 145, 178, 0.1);
-          }
- 
-          ::-webkit-scrollbar-thumb {
-              background: linear-gradient(180deg, #0891b2, #14b8a6);
-              border-radius: 10px;
-          }
- 
-          ::-webkit-scrollbar-thumb:hover {
-              background: linear-gradient(180deg, #06b6d4, #0891b2);
-          }
-     </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكوا فيو | AquaVue - منصة جودة المياه الذكية</title>
+    <meta name="description" content="أكوا فيو - تقنية ذكية لمراقبة وتحليل جودة المياه">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0891b2;
+            --secondary: #06b6d4;
+            --accent: #14b8a6;
+            --light: #f0fdfa;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            background: #000;
+            color: white;
+        }
+
+        .font-amiri { font-family: 'Amiri', serif; }
+        .font-tajawal { font-family: 'Tajawal', sans-serif; }
+
+        /* ========== 3D CANVAS BACKGROUND ========== */
+        #canvas3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== PAGE TRANSITIONS (SPA) ========== */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeInPage 0.8s ease forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== GLASS MORPHISM ========== */
+        .glass {
+            background: rgba(8, 145, 178, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(8, 145, 178, 0.15);
+        }
+
+        .glass-strong {
+            background: rgba(8, 145, 178, 0.1);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(8, 145, 178, 0.3);
+        }
+
+        /* ========== 3D EFFECTS ========== */
+        .text-3d {
+            text-shadow: 
+                0 1px 0 #06b6d4,
+                0 2px 0 #0891b2,
+                0 3px 0 #0e7490,
+                0 4px 0 #155e75,
+                0 5px 10px rgba(0,0,0,0.4),
+                0 15px 20px rgba(8, 145, 178, 0.3);
+            transform: perspective(800px) rotateX(10deg);
+            transition: all 0.6s ease;
+        }
+
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card-3d:hover {
+            transform: translateY(-30px) rotateX(10deg) rotateY(-5deg) scale(1.05);
+            box-shadow: 
+                0 40px 80px rgba(8, 145, 178, 0.4),
+                0 0 60px rgba(20, 184, 166, 0.3);
+        }
+
+        /* ========== NEON GLOW ========== */
+        .neon-cyan {
+            color: #06b6d4;
+            text-shadow: 0 0 10px #06b6d4, 0 0 20px #06b6d4, 0 0 40px #0891b2;
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 10px #06b6d4, 0 0 20px #06b6d4; }
+            50% { text-shadow: 0 0 20px #06b6d4, 0 0 40px #06b6d4, 0 0 80px #0891b2; }
+        }
+
+        /* ========== GRADIENT TEXT ========== */
+        .gradient-text {
+            background: linear-gradient(135deg, #0891b2, #14b8a6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ========== INPUT FIELDS (Dark Mode) ========== */
+        .auth-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(8, 145, 178, 0.3);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .auth-input:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* ========== 3D BUTTON ========== */
+        .btn-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(8, 145, 178, 0.5);
+        }
+        .btn-3d:hover {
+            transform: translateY(-5px) translateZ(10px);
+            box-shadow: 0 20px 40px rgba(8, 145, 178, 0.4);
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0891b2, #14b8a6); border-radius: 10px; }
+
+        /* ========== LOADING SCREEN ========== */
+        .loading-screen {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 1s ease;
+        }
+        .loading-screen.hidden { opacity: 0; pointer-events: none; }
+        
+        .loader {
+            width: 100px; height: 100px; position: relative;
+            transform-style: preserve-3d; animation: loaderSpin 2s infinite linear;
+        }
+        .loader-face {
+            position: absolute; width: 100px; height: 100px;
+            background: linear-gradient(135deg, #0891b2, #14b8a6);
+            border: 2px solid #06b6d4; opacity: 0.5;
+        }
+        @keyframes loaderSpin {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* ========== PRODUCT CARD FLIP (Adapted to Dark) ========== */
+        .product-card { perspective: 1200px; cursor: pointer; }
+        .product-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.8s; transform-style: preserve-3d;
+        }
+        .product-card.flipped .product-inner { transform: rotateY(180deg); }
+        .product-front, .product-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 1.5rem; overflow: hidden;
+        }
+        .product-front { background: rgba(8, 145, 178, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(8, 145, 178, 0.3); }
+        .product-back { transform: rotateY(180deg); background: linear-gradient(135deg, #0891b2, #0f766e); }
+
+    </style>
 </head>
-<body class="bg-black text-white">
- 
-     <div class="loading-screen" id="loadingScreen">
-         <div class="loader">
-             <div class="loader-face" style="transform: rotateY(0deg) translateZ(50px);"></div>
-             <div class="loader-face" style="transform: rotateY(90deg) translateZ(50px);"></div>
-             <div class="loader-face" style="transform: rotateY(180deg) translateZ(50px);"></div>
-             <div class="loader-face" style="transform: rotateY(-90deg) translateZ(50px);"></div>
-             <div class="loader-face" style="transform: rotateX(90deg) translateZ(50px);"></div>
-             <div class="loader-face" style="transform: rotateX(-90deg) translateZ(50px);"></div>
-         </div>
-     </div>
- 
-     <canvas id="canvas3d"></canvas>
- 
-     <div class="content-wrapper">
-         <nav class="fixed top-0 w-full z-50 glass-strong py-4 px-6">
-             <div class="container mx-auto flex justify-between items-center">
-                 <div class="text-3xl font-black neon-cyan">
-                     <i class="fas fa-code"></i>
-                     <span class="gradient-text">DevPro</span>
-                 </div>
-                 <ul class="hidden md:flex space-x-reverse space-x-8 text-lg font-bold">
-                     <li><a href="#home" class="hover:text-cyan-400 transition"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                     <li><a href="#services" class="hover:text-cyan-400 transition"><i class="fas fa-briefcase ml-2"></i>الخدمات</a></li>
-                     <li><a href="#portfolio" class="hover:text-cyan-400 transition"><i class="fas fa-folder-open ml-2"></i>الأعمال</a></li>
-                     <li><a href="#skills" class="hover:text-cyan-400 transition"><i class="fas fa-chart-bar ml-2"></i>المهارات</a></li>
-                     <li><a href="#pricing" class="hover:text-cyan-400 transition"><i class="fas fa-tags ml-2"></i>الأسعار</a></li>
-                     <li><a href="#contact" class="hover:text-cyan-400 transition"><i class="fas fa-envelope ml-2"></i>تواصل</a></li>
-                 </ul>
-                 <button class="md:hidden text-3xl text-cyan-400" onclick="toggleMobileMenu()">
-                     <i class="fas fa-bars"></i>
-                 </button>
-             </div>
-         </nav>
- 
-         <div id="mobileMenu" class="hidden fixed top-20 right-6 z-40 glass-strong rounded-3xl p-8 md:hidden">
-             <ul class="space-y-4 text-lg font-bold">
-                 <li><a href="#home" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-home ml-2"></i>الرئيسية</a></li>
-                 <li><a href="#services" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-briefcase ml-2"></i>الخدمات</a></li>
-                 <li><a href="#portfolio" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-folder-open ml-2"></i>الأعمال</a></li>
-                 <li><a href="#skills" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-chart-bar ml-2"></i>المهارات</a></li>
-                 <li><a href="#pricing" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-tags ml-2"></i>الأسعار</a></li>
-                 <li><a href="#contact" onclick="toggleMobileMenu()" class="block hover:text-cyan-400 transition"><i class="fas fa-envelope ml-2"></i>تواصل</a></li>
-             </ul>
-         </div>
- 
-         <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-24 isometric-grid">
-             <div id="particleContainer"></div>
- 
-             <div class="container mx-auto px-6 text-center relative z-10">
-                 <div class="reveal active">
-                     <div class="text-9xl mb-8 float-3d">
-                         <i class="fas fa-laptop-code neon-cyan"></i>
-                     </div>
-                     
-                     <h1 class="text-6xl md:text-8xl font-black mb-8 text-3d font-amiri">
-                         مصمم ومبرمج <span class="gradient-text">محترف</span>
-                     </h1>
-                     
-                     <div class="text-3xl md:text-4xl mb-12 holographic p-6 rounded-3xl inline-block">
-                         <span class="typing" id="typingText"></span>
-                     </div>
-                     
-                     <p class="text-xl md:text-2xl text-cyan-100 max-w-4xl mx-auto mb-12 leading-relaxed">
-                         أحول أفكارك إلى <span class="gradient-text font-bold">مواقع وتطبيقات ويب استثنائية</span> بتقنيات حديثة وتصاميم مبتكرة تجذب العملاء وتحقق أهدافك
-                     </p>
-                     
-                     <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                         <a href="#contact" class="btn-3d bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-12 py-6 rounded-full text-2xl font-black shadow-2xl">
-                             <i class="fas fa-rocket ml-2"></i>
-                             ابدأ مشروعك
-                         </a>
-                         <a href="#portfolio" class="btn-3d glass-strong text-white px-12 py-6 rounded-full text-2xl font-black shadow-2xl">
-                             <i class="fas fa-eye ml-2"></i>
-                             شاهد الأعمال
-                         </a>
-                     </div>
- 
-                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
-                         <div class="glass rounded-3xl p-8 card-3d">
-                             <div class="text-5xl font-black gradient-text mb-3 counter" data-target="150">0</div>
-                             <p class="text-cyan-200 text-lg">مشروع منجز</p>
-                         </div>
-                         <div class="glass rounded-3xl p-8 card-3d">
-                             <div class="text-5xl font-black gradient-text mb-3 counter" data-target="120">0</div>
-                             <p class="text-cyan-200 text-lg">عميل سعيد</p>
-                         </div>
-                         <div class="glass rounded-3xl p-8 card-3d">
-                             <div class="text-5xl font-black gradient-text mb-3 counter" data-target="8">0</div>
-                             <p class="text-cyan-200 text-lg">سنوات خبرة</p>
-                         </div>
-                         <div class="glass rounded-3xl p-8 card-3d">
-                             <div class="text-5xl font-black gradient-text mb-3 counter" data-target="99">0</div>
-                             <p class="text-cyan-200 text-lg">نسبة الرضا %</p>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <section id="services" class="py-24 relative">
-             <div class="container mx-auto px-6">
-                 <div class="text-center mb-20 reveal">
-                     <h2 class="text-6xl font-black mb-6 font-amiri">
-                         <i class="fas fa-briefcase neon-cyan ml-3"></i>
-                         <span class="gradient-text">الخدمات الاحترافية</span>
-                     </h2>
-                     <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                     <p class="text-2xl text-cyan-100">حلول شاملة لجميع احتياجاتك الرقمية</p>
-                 </div>
- 
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-palette" style="color: #0891b2;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">تصميم واجهات UI/UX</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">تصاميم عصرية تجذب الأنظار وتوفر تجربة مستخدم استثنائية</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تصميم responsive لجميع الأجهزة</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تجربة مستخدم متميزة</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> ألوان وأيقونات احترافية</li>
-                         </ul>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-code" style="color: #14b8a6;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">برمجة Frontend</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">كود نظيف وسريع باستخدام أحدث التقنيات والمكتبات</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> React.js & Vue.js & Angular</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> HTML5, CSS3, JavaScript ES6+</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> Tailwind CSS & Bootstrap</li>
-                         </ul>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-server" style="color: #06b6d4;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">برمجة Backend</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">خوادم قوية وآمنة مع قواعد بيانات محترفة</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> Node.js & Python & PHP</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> MySQL & MongoDB & PostgreSQL</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> REST API & GraphQL</li>
-                         </ul>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-shopping-cart" style="color: #0891b2;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">متاجر إلكترونية</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">متاجر احترافية جاهزة للبيع مع بوابات دفع آمنة</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تكامل مع بوابات الدفع</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> لوحة تحكم شاملة</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> نظام إدارة المنتجات</li>
-                         </ul>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-mobile-alt" style="color: #14b8a6;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">تطبيقات الويب PWA</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">تطبيقات ويب تعمل كتطبيقات أصلية على الهواتف</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تعمل بدون اتصال Offline</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> قابلة للتثبيت على الهاتف</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> إشعارات Push Notifications</li>
-                         </ul>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 card-3d holographic reveal">
-                         <div class="text-7xl mb-6 text-center">
-                             <i class="fas fa-rocket" style="color: #06b6d4;"></i>
-                         </div>
-                         <h3 class="text-3xl font-bold mb-5 text-center gradient-text">تحسين الأداء SEO</h3>
-                         <p class="text-cyan-100 text-center text-lg mb-6 leading-relaxed">تصدر نتائج البحث وزيادة الظهور الرقمي</p>
-                         <ul class="space-y-3 text-cyan-200">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تحسين سرعة الموقع</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> SEO On-Page & Off-Page</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تحليلات وتقارير دورية</li>
-                         </ul>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <section id="portfolio" class="py-24 relative">
-             <div class="container mx-auto px-6">
-                 <div class="text-center mb-20 reveal">
-                     <h2 class="text-6xl font-black mb-6 font-amiri">
-                         <i class="fas fa-folder-open neon-cyan ml-3"></i>
-                         <span class="gradient-text">معرض الأعمال</span>
-                     </h2>
-                     <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                     <p class="text-2xl text-cyan-100">مشاريع حقيقية لعملاء راضين</p>
-                 </div>
- 
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Dashboard">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">لوحة تحكم تحليلات</h3>
-                             <p class="text-cyan-100 mb-4">نظام متكامل لإدارة وتحليل البيانات</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">React</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">Node.js</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">MongoDB</span>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Ecommerce">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">متجر إلكتروني فاخر</h3>
-                             <p class="text-cyan-100 mb-4">منصة تجارة إلكترونية متكاملة</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Vue.js</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">Laravel</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Stripe</span>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Corporate">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">موقع شركة تقنية</h3>
-                             <p class="text-cyan-100 mb-4">موقع مؤسسي بتصميم احترافي</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Next.js</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">Tailwind</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Prisma</span>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Mobile App">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">تطبيق ويب PWA</h3>
-                             <p class="text-cyan-100 mb-4">تطبيق يعمل على جميع المنصات</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">PWA</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">Angular</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Firebase</span>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Portfolio">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">موقع Portfolio إبداعي</h3>
-                             <p class="text-cyan-100 mb-4">معرض أعمال بتأثيرات ثري دي</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Three.js</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">GSAP</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">WebGL</span>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl overflow-hidden card-3d reveal group">
-                         <div class="relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" alt="Blog">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                 <button class="btn-3d bg-cyan-500 text-white px-6 py-3 rounded-full font-bold">
-                                     <i class="fas fa-eye ml-2"></i>
-                                     عرض المشروع
-                                 </button>
-                             </div>
-                         </div>
-                         <div class="p-8">
-                             <h3 class="text-2xl font-bold mb-3 gradient-text">منصة محتوى Blog</h3>
-                             <p class="text-cyan-100 mb-4">مدونة حديثة بنظام CMS</p>
-                             <div class="flex flex-wrap gap-2">
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Gatsby</span>
-                                 <span class="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">Strapi</span>
-                                 <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">GraphQL</span>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <section id="skills" class="py-24 relative">
-             <div class="container mx-auto px-6">
-                 <div class="text-center mb-20 reveal">
-                     <h2 class="text-6xl font-black mb-6 font-amiri">
-                         <i class="fas fa-chart-bar neon-cyan ml-3"></i>
-                         <span class="gradient-text">المهارات التقنية</span>
-                     </h2>
-                     <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                     <p class="text-2xl text-cyan-100">خبرة متقدمة في أحدث التقنيات</p>
-                 </div>
- 
-                 <div class="grid md:grid-cols-2 gap-16">
-                     <div class="glass-strong rounded-3xl p-10 reveal">
-                         <h3 class="text-3xl font-bold mb-10 gradient-text text-center">
-                             <i class="fas fa-laptop-code ml-2"></i>
-                             Frontend Development
-                         </h3>
-                         <div class="space-y-8">
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">React.js</span>
-                                     <span class="text-xl font-bold gradient-text">95%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 95%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">Vue.js</span>
-                                     <span class="text-xl font-bold gradient-text">90%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 90%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">HTML5 & CSS3</span>
-                                     <span class="text-xl font-bold gradient-text">98%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 98%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">JavaScript ES6+</span>
-                                     <span class="text-xl font-bold gradient-text">93%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 93%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">Tailwind CSS</span>
-                                     <span class="text-xl font-bold gradient-text">96%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 96%"></div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 reveal">
-                         <h3 class="text-3xl font-bold mb-10 gradient-text text-center">
-                             <i class="fas fa-server ml-2"></i>
-                             Backend Development
-                         </h3>
-                         <div class="space-y-8">
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">Node.js</span>
-                                     <span class="text-xl font-bold gradient-text">92%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 92%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">Python</span>
-                                     <span class="text-xl font-bold gradient-text">88%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 88%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">MongoDB</span>
-                                     <span class="text-xl font-bold gradient-text">90%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 90%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">MySQL</span>
-                                     <span class="text-xl font-bold gradient-text">87%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 87%"></div>
-                                 </div>
-                             </div>
-                             <div>
-                                 <div class="flex justify-between mb-3">
-                                     <span class="text-xl font-bold text-cyan-100">REST API</span>
-                                     <span class="text-xl font-bold gradient-text">94%</span>
-                                 </div>
-                                 <div class="skill-bar">
-                                     <div class="skill-progress" style="width: 94%"></div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
- 
-                 <div class="mt-16 glass-strong rounded-3xl p-10 reveal">
-                     <h3 class="text-3xl font-bold mb-10 gradient-text text-center">
-                         <i class="fas fa-tools ml-2"></i>
-                         أدوات ومهارات إضافية
-                     </h3>
-                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                         <div class="text-center p-6 glass rounded-2xl card-3d">
-                             <i class="fab fa-git-alt text-5xl mb-3 text-cyan-400"></i>
-                             <p class="text-lg font-bold">Git & GitHub</p>
-                         </div>
-                         <div class="text-center p-6 glass rounded-2xl card-3d">
-                             <i class="fab fa-docker text-5xl mb-3 text-cyan-400"></i>
-                             <p class="text-lg font-bold">Docker</p>
-                         </div>
-                         <div class="text-center p-6 glass rounded-2xl card-3d">
-                             <i class="fab fa-figma text-5xl mb-3 text-cyan-400"></i>
-                             <p class="text-lg font-bold">Figma</p>
-                         </div>
-                         <div class="text-center p-6 glass rounded-2xl card-3d">
-                             <i class="fab fa-aws text-5xl mb-3 text-cyan-400"></i>
-                             <p class="text-lg font-bold">AWS</p>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <section id="pricing" class="py-24 relative">
-             <div class="container mx-auto px-6">
-                 <div class="text-center mb-20 reveal">
-                     <h2 class="text-6xl font-black mb-6 font-amiri">
-                         <i class="fas fa-tags neon-cyan ml-3"></i>
-                         <span class="gradient-text">باقات الأسعار</span>
-                     </h2>
-                     <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                     <p class="text-2xl text-cyan-100">اختر الباقة المناسبة لمشروعك</p>
-                 </div>
- 
-                 <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                     <div class="glass-strong rounded-3xl p-10 pricing-card reveal">
-                         <div class="text-center mb-8">
-                             <i class="fas fa-rocket text-6xl text-cyan-400 mb-4"></i>
-                             <h3 class="text-3xl font-bold mb-3 gradient-text">الباقة الأساسية</h3>
-                             <div class="text-5xl font-black mb-2">
-                                 <span class="gradient-text">$499</span>
-                             </div>
-                             <p class="text-cyan-200">لموقع واحد</p>
-                         </div>
-                         <ul class="space-y-4 mb-10 text-cyan-100">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تصميم احترافي responsive</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> 5 صفحات داخلية</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> نموذج تواصل</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تحسين SEO أساسي</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> دعم فني لمدة شهر</li>
-                         </ul>
-                         <button class="btn-3d w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-4 rounded-full text-xl font-black">
-                             <i class="fas fa-shopping-cart ml-2"></i>
-                             اطلب الآن
-                         </button>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 pricing-card featured reveal">
-                         <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                             <span class="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-2 rounded-full font-bold text-lg">
-                                 <i class="fas fa-star ml-2"></i>
-                                 الأكثر طلباً
-                             </span>
-                         </div>
-                         <div class="text-center mb-8 mt-6">
-                             <i class="fas fa-crown text-6xl text-teal-400 mb-4"></i>
-                             <h3 class="text-3xl font-bold mb-3 gradient-text">الباقة الاحترافية</h3>
-                             <div class="text-5xl font-black mb-2">
-                                 <span class="gradient-text">$999</span>
-                             </div>
-                             <p class="text-cyan-200">للمشاريع المتوسطة</p>
-                         </div>
-                         <ul class="space-y-4 mb-10 text-cyan-100">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تصميم مخصص فريد</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> 10 صفحات داخلية</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> لوحة تحكم إدارية</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تحسين SEO متقدم</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تكامل مع الـ API</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> دعم فني لمدة 3 أشهر</li>
-                         </ul>
-                         <button class="btn-3d w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-4 rounded-full text-xl font-black">
-                             <i class="fas fa-shopping-cart ml-2"></i>
-                             اطلب الآن
-                         </button>
-                     </div>
- 
-                     <div class="glass-strong rounded-3xl p-10 pricing-card reveal">
-                         <div class="text-center mb-8">
-                             <i class="fas fa-gem text-6xl text-cyan-400 mb-4"></i>
-                             <h3 class="text-3xl font-bold mb-3 gradient-text">باقة المؤسسات</h3>
-                             <div class="text-5xl font-black mb-2">
-                                 <span class="gradient-text">$2499+</span>
-                             </div>
-                             <p class="text-cyan-200">للمشاريع الضخمة</p>
-                         </div>
-                         <ul class="space-y-4 mb-10 text-cyan-100">
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تصميم متكامل بتقنية 3D</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> صفحات غير محدودة</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> نظام متعدد المستخدمين</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> تطبيق PWA كامل</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> SEO & تحليلات متقدمة</li>
-                             <li><i class="fas fa-check-circle text-teal-400 ml-2"></i> دعم فني سنوي</li>
-                         </ul>
-                         <button class="btn-3d w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-4 rounded-full text-xl font-black">
-                             <i class="fas fa-phone ml-2"></i>
-                             تواصل معنا
-                         </button>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <section id="contact" class="py-24 relative">
-             <div class="container mx-auto px-6">
-                 <div class="text-center mb-20 reveal">
-                     <h2 class="text-6xl font-black mb-6 font-amiri">
-                         <i class="fas fa-envelope neon-cyan ml-3"></i>
-                         <span class="gradient-text">تواصل معنا</span>
-                     </h2>
-                     <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-6 rounded-full"></div>
-                     <p class="text-2xl text-cyan-100">لنبدأ مشروعك القادم معاً</p>
-                 </div>
- 
-                 <div class="grid md:grid-cols-2 gap-16">
-                     <div class="glass-strong rounded-3xl p-10 reveal">
-                         <form id="contactForm" class="space-y-6">
-                             <div>
-                                 <label class="block text-cyan-100 font-bold mb-3 text-lg">
-                                     <i class="fas fa-user ml-2 text-cyan-400"></i>
-                                     الاسم
-                                 </label>
-                                 <input type="text" required class="w-full px-6 py-4 bg-black/30 border-2 border-cyan-500/30 rounded-xl focus:border-cyan-500 focus:outline-none text-white text-lg transition">
-                             </div>
-                             <div>
-                                 <label class="block text-cyan-100 font-bold mb-3 text-lg">
-                                     <i class="fas fa-envelope ml-2 text-cyan-400"></i>
-                                     البريد الإلكتروني
-                                 </label>
-                                 <input type="email" required class="w-full px-6 py-4 bg-black/30 border-2 border-cyan-500/30 rounded-xl focus:border-cyan-500 focus:outline-none text-white text-lg transition">
-                             </div>
-                             <div>
-                                 <label class="block text-cyan-100 font-bold mb-3 text-lg">
-                                     <i class="fas fa-briefcase ml-2 text-cyan-400"></i>
-                                     نوع المشروع
-                                 </label>
-                                 <select required class="w-full px-6 py-4 bg-black/30 border-2 border-cyan-500/30 rounded-xl focus:border-cyan-500 focus:outline-none text-white text-lg transition">
-                                     <option value="">اختر نوع المشروع</option>
-                                     <option>موقع شخصي / Portfolio</option>
-                                     <option>موقع شركة</option>
-                                     <option>متجر إلكتروني</option>
-                                     <option>تطبيق ويب</option>
-                                     <option>أخرى</option>
-                                 </select>
-                             </div>
-                             <div>
-                                 <label class="block text-cyan-100 font-bold mb-3 text-lg">
-                                     <i class="fas fa-comment-dots ml-2 text-cyan-400"></i>
-                                     تفاصيل المشروع
-                                 </label>
-                                 <textarea rows="5" required class="w-full px-6 py-4 bg-black/30 border-2 border-cyan-500/30 rounded-xl focus:border-cyan-500 focus:outline-none text-white text-lg resize-none transition"></textarea>
-                             </div>
-                             <button type="submit" class="btn-3d w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-full text-2xl font-black">
-                                 <i class="fas fa-paper-plane ml-2"></i>
-                                 إرسال الطلب
-                             </button>
-                         </form>
-                     </div>
- 
-                     <div class="space-y-8 reveal">
-                         <div class="glass-strong rounded-3xl p-10 card-3d">
-                             <div class="flex items-start space-x-reverse space-x-6">
-                                 <div class="text-5xl text-cyan-400">
-                                     <i class="fas fa-phone-volume"></i>
-                                 </div>
-                                 <div>
-                                     <h3 class="text-2xl font-bold mb-3 gradient-text">اتصل بنا</h3>
-                                     <p class="text-cyan-100 text-lg" dir="ltr">+967 770 000 000</p>
-                                     <p class="text-cyan-100 text-lg" dir="ltr">+1 (555) 123-4567</p>
-                                 </div>
-                             </div>
-                         </div>
- 
-                         <div class="glass-strong rounded-3xl p-10 card-3d">
-                             <div class="flex items-start space-x-reverse space-x-6">
-                                 <div class="text-5xl text-teal-400">
-                                     <i class="fas fa-envelope-open-text"></i>
-                                 </div>
-                                 <div>
-                                     <h3 class="text-2xl font-bold mb-3 gradient-text">راسلنا</h3>
-                                     <p class="text-cyan-100 text-lg">info@devpro.com</p>
-                                     <p class="text-cyan-100 text-lg">support@devpro.com</p>
-                                 </div>
-                             </div>
-                         </div>
- 
-                         <div class="glass-strong rounded-3xl p-10 card-3d">
-                             <div class="flex items-start space-x-reverse space-x-6">
-                                 <div class="text-5xl text-cyan-400">
-                                     <i class="fas fa-map-marker-alt"></i>
-                                 </div>
-                                 <div>
-                                     <h3 class="text-2xl font-bold mb-3 gradient-text">موقعنا</h3>
-                                     <p class="text-cyan-100 text-lg">صنعاء - اليمن</p>
-                                     <p class="text-cyan-100 text-lg">الحي التكنولوجي - مبنى الابتكار</p>
-                                 </div>
-                             </div>
-                         </div>
- 
-                         <div class="glass-strong rounded-3xl p-10 card-3d">
-                             <h3 class="text-2xl font-bold mb-6 text-center gradient-text">
-                                 <i class="fas fa-share-alt ml-2"></i>
-                                 تابعنا
-                             </h3>
-                             <div class="flex justify-center space-x-reverse space-x-8">
-                                 <a href="#" class="text-5xl text-blue-400 hover:scale-125 transition-transform">
-                                     <i class="fab fa-facebook"></i>
-                                 </a>
-                                 <a href="#" class="text-5xl text-sky-400 hover:scale-125 transition-transform">
-                                     <i class="fab fa-twitter"></i>
-                                 </a>
-                                 <a href="#" class="text-5xl text-pink-500 hover:scale-125 transition-transform">
-                                     <i class="fab fa-instagram"></i>
-                                 </a>
-                                 <a href="#" class="text-5xl text-blue-600 hover:scale-125 transition-transform">
-                                     <i class="fab fa-linkedin"></i>
-                                 </a>
-                                 <a href="#" class="text-5xl text-green-500 hover:scale-125 transition-transform">
-                                     <i class="fab fa-whatsapp"></i>
-                                 </a>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </section>
- 
-         <footer class="glass-strong py-12 border-t-2 border-cyan-500/30">
-             <div class="container mx-auto px-6">
-                 <div class="text-center">
-                     <div class="text-4xl font-black mb-4 neon-cyan">
-                         <i class="fas fa-code"></i>
-                         <span class="gradient-text">DevPro</span>
-                     </div>
-                     <p class="text-cyan-100 mb-6 text-lg">
-                         تصميم وبرمجة مواقع احترافية بتقنيات حديثة
-                     </p>
-                     <div class="border-t border-cyan-500/30 pt-6">
-                         <p class="text-cyan-200">
-                             <i class="fas fa-copyright ml-1"></i>
-                             2025 DevPro - جميع الحقوق محفوظة
-                         </p>
-                         <p class="text-cyan-300 mt-2">
-                             صنع بـ <i class="fas fa-heart text-red-500 animate-pulse"></i> في اليمن
-                         </p>
-                     </div>
-                 </div>
-             </div>
-         </footer>
- 
-         <button id="scrollTop" class="fixed bottom-8 left-8 bg-gradient-to-r from-cyan-500 to-teal-500 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-2xl opacity-0 pointer-events-none transition-all hover:scale-110 z-40">
-             <i class="fas fa-arrow-up"></i>
-         </button>
-     </div>
- 
-     <script>
-          // ========== LOADING SCREEN ==========
-          window.addEventListener('load', () => {
-              setTimeout(() => {
-                  document.getElementById('loadingScreen').classList.add('hidden');
-                  init3DBackground();
-                  startTypingEffect();
-                  createParticles();
-              }, 2000);
-          });
- 
-          // ========== 3D BACKGROUND WITH THREE.JS ==========
-          function init3DBackground() {
-              const canvas = document.getElementById('canvas3d');
-              const scene = new THREE.Scene();
-              const camera = new THREE.Perspective
+<body class="bg-black text-white selection:bg-cyan-500 selection:text-white">
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader">
+            <div class="loader-face" style="transform: rotateY(0deg) translateZ(50px);"></div>
+            <div class="loader-face" style="transform: rotateY(90deg) translateZ(50px);"></div>
+            <div class="loader-face" style="transform: rotateY(180deg) translateZ(50px);"></div>
+            <div class="loader-face" style="transform: rotateY(-90deg) translateZ(50px);"></div>
+            <div class="loader-face" style="transform: rotateX(90deg) translateZ(50px);"></div>
+            <div class="loader-face" style="transform: rotateX(-90deg) translateZ(50px);"></div>
+        </div>
+    </div>
+
+    <canvas id="canvas3d"></canvas>
+
+    <div class="content-wrapper">
+        
+        <div id="loginPage" class="page">
+            <nav class="fixed top-0 w-full z-50 glass-strong py-4 px-6">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="text-3xl font-black neon-cyan cursor-pointer" onclick="showPage('homePage')">
+                        <i class="fas fa-water"></i>
+                        <span class="gradient-text">AquaVue</span>
+                    </div>
+                    <button onclick="showPage('homePage')" class="hidden md:block text-cyan-300 hover:text-white transition">
+                        <i class="fas fa-arrow-right ml-2"></i> العودة للرئيسية
+                    </button>
+                </div>
+            </nav>
+
+            <div class="min-h-screen flex items-center justify-center p-4 pt-24">
+                <div class="glass-strong rounded-3xl p-10 md:p-12 max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center card-3d">
+                    <div class="order-2 md:order-1">
+                        <div class="text-center mb-8">
+                            <h1 class="text-4xl font-black gradient-text font-amiri mb-2">تسجيل الدخول</h1>
+                            <p class="text-cyan-100">مرحباً بك مجدداً في منصة الذكاء الاصطناعي</p>
+                        </div>
+                        <form id="loginForm" class="space-y-6">
+                            <div>
+                                <label class="block text-cyan-300 font-bold mb-2"><i class="fas fa-envelope ml-2"></i>البريد الإلكتروني</label>
+                                <input type="email" required class="auth-input w-full px-6 py-4 rounded-xl outline-none" placeholder="example@aquavue.ye">
+                            </div>
+                            <div>
+                                <label class="block text-cyan-300 font-bold mb-2"><i class="fas fa-lock ml-2"></i>كلمة المرور</label>
+                                <input type="password" required class="auth-input w-full px-6 py-4 rounded-xl outline-none" placeholder="••••••••">
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <label class="flex items-center cursor-pointer text-cyan-100 hover:text-white">
+                                    <input type="checkbox" class="mr-2 accent-cyan-500"> تذكرني
+                                </label>
+                                <a href="#" class="text-cyan-400 hover:text-white transition">نسيت كلمة المرور؟</a>
+                            </div>
+                            <button type="submit" class="btn-3d w-full bg-gradient-to-r from-cyan-600 to-teal-600 text-white py-4 rounded-xl font-bold text-lg mt-4">
+                                <i class="fas fa-sign-in-alt ml-2"></i> دخول
+                            </button>
+                        </form>
+                        <div class="mt-6 text-center text-cyan-100">
+                            ليس لديك حساب؟ <button onclick="showPage('registerPage')" class="text-cyan-400 font-bold hover:text-white underline">إنشاء حساب جديد</button>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2 text-center hidden md:block">
+                        <div class="text-9xl mb-6 neon-cyan animate-pulse">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-4">أمان وحماية</h2>
+                        <p class="text-cyan-200 leading-relaxed">بياناتك ومحطات المراقبة الخاصة بك محمية بأحدث تقنيات التشفير العالمية.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="registerPage" class="page">
+            <nav class="fixed top-0 w-full z-50 glass-strong py-4 px-6">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="text-3xl font-black neon-cyan cursor-pointer" onclick="showPage('homePage')">
+                        <i class="fas fa-water"></i>
+                        <span class="gradient-text">AquaVue</span>
+                    </div>
+                    <button onclick="showPage('loginPage')" class="hidden md:block text-cyan-300 hover:text-white transition">
+                        تسجيل الدخول <i class="fas fa-sign-in-alt mr-2"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="min-h-screen flex items-center justify-center p-4 pt-24">
+                <div class="glass-strong rounded-3xl p-10 md:p-12 max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center card-3d">
+                    <div class="hidden md:block text-center">
+                        <div class="text-9xl mb-6 text-teal-400 animate-pulse">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-4">انضم للمستقبل</h2>
+                        <p class="text-cyan-200 leading-relaxed">كن جزءاً من مجتمع AquaVue وساهم في تحسين جودة الحياة باستخدام التكنولوجيا.</p>
+                    </div>
+                    <div>
+                        <div class="text-center mb-8">
+                            <h1 class="text-4xl font-black gradient-text font-amiri mb-2">إنشاء حساب</h1>
+                            <p class="text-cyan-100">سجل الآن للوصول إلى لوحة التحكم</p>
+                        </div>
+                        <form id="registerForm" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" placeholder="الاسم الأول" class="auth-input w-full px-4 py-3 rounded-xl outline-none">
+                                <input type="text" placeholder="الاسم الأخير" class="auth-input w-full px-4 py-3 rounded-xl outline-none">
+                            </div>
+                            <input type="email" placeholder="البريد الإلكتروني" class="auth-input w-full px-4 py-3 rounded-xl outline-none">
+                            <input type="password" placeholder="كلمة المرور" class="auth-input w-full px-4 py-3 rounded-xl outline-none">
+                            <input type="password" placeholder="تأكيد كلمة المرور" class="auth-input w-full px-4 py-3 rounded-xl outline-none">
+                            
+                            <button type="submit" class="btn-3d w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-4 rounded-xl font-bold text-lg mt-4">
+                                <i class="fas fa-rocket ml-2"></i> إنشاء الحساب
+                            </button>
+                        </form>
+                        <div class="mt-6 text-center text-cyan-100">
+                            لديك حساب بالفعل؟ <button onclick="showPage('loginPage')" class="text-cyan-400 font-bold hover:text-white underline">تسجيل الدخول</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="homePage" class="page">
+            
+            <nav class="fixed top-0 w-full z-50 glass-strong py-4 px-6">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div class="text-3xl font-black neon-cyan">
+                        <i class="fas fa-water"></i>
+                        <span class="gradient-text">AquaVue</span>
+                    </div>
+                    <ul class="hidden md:flex space-x-reverse space-x-8 text-lg font-bold text-cyan-100">
+                        <li><a href="#home" class="hover:text-white hover:scale-110 transition inline-block">الرئيسية</a></li>
+                        <li><a href="#tech" class="hover:text-white hover:scale-110 transition inline-block">التقنية</a></li>
+                        <li><a href="#services" class="hover:text-white hover:scale-110 transition inline-block">خدماتنا</a></li>
+                        <li><a href="#contact" class="hover:text-white hover:scale-110 transition inline-block">اتصل بنا</a></li>
+                    </ul>
+                    <div class="flex gap-4">
+                        <button onclick="showPage('loginPage')" class="hidden md:block text-white hover:text-cyan-400 font-bold transition">دخول</button>
+                        <button onclick="showPage('registerPage')" class="btn-3d px-6 py-2 rounded-full bg-cyan-500/20 text-white font-bold border border-cyan-500 hover:bg-cyan-500 transition">حساب جديد</button>
+                    </div>
+                </div>
+            </nav>
+
+            <section id="home" class="min-h-screen flex items-center justify-center relative pt-20">
+                <div class="container mx-auto px-6 text-center relative z-10">
+                    <div class="text-9xl mb-8 text-cyan-500/20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[-1] animate-pulse">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-8xl font-black mb-8 text-3d font-amiri leading-tight">
+                        أكوا فيو <br> <span class="gradient-text">تكنولوجيا الحياة</span>
+                    </h1>
+                    
+                    <p class="text-xl md:text-3xl text-cyan-100 max-w-4xl mx-auto mb-12 leading-relaxed font-tajawal">
+                        الذكاء الاصطناعي يلتقي بنقاء المياه. راقب، حلل، وتنّبأ بجودة المياه باستخدام أحدث تقنيات إنترنت الأشياء IoT.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <a href="#tech" class="btn-3d bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-12 py-6 rounded-full text-2xl font-black shadow-2xl">
+                            <i class="fas fa-microchip ml-2"></i> اكتشف التقنية
+                        </a>
+                        <a href="#contact" class="btn-3d glass-strong text-white px-12 py-6 rounded-full text-2xl font-black shadow-2xl">
+                            <i class="fas fa-headset ml-2"></i> تواصل معنا
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24">
+                        <div class="glass rounded-3xl p-6 card-3d">
+                            <div class="text-4xl font-black gradient-text mb-2 counter" data-target="99">0</div>
+                            <p class="text-cyan-200">دقة التحليل %</p>
+                        </div>
+                        <div class="glass rounded-3xl p-6 card-3d">
+                            <div class="text-4xl font-black gradient-text mb-2 counter" data-target="5000">0</div>
+                            <p class="text-cyan-200">مستشعر نشط</p>
+                        </div>
+                        <div class="glass rounded-3xl p-6 card-3d">
+                            <div class="text-4xl font-black gradient-text mb-2 counter" data-target="24">0</div>
+                            <p class="text-cyan-200">ساعة مراقبة</p>
+                        </div>
+                        <div class="glass rounded-3xl p-6 card-3d">
+                            <div class="text-4xl font-black gradient-text mb-2 counter" data-target="15">0</div>
+                            <p class="text-cyan-200">مدينة ذكية</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tech" class="py-24 relative">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="text-5xl font-black mb-6 font-amiri"><span class="gradient-text">تقنياتنا المبتكرة</span></h2>
+                        <div class="w-32 h-2 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div class="relative h-96 product-card card-3d">
+                            <div class="product-inner">
+                                <div class="product-front flex flex-col items-center justify-center text-center p-8">
+                                    <i class="fas fa-wifi text-6xl text-cyan-400 mb-6"></i>
+                                    <h3 class="text-3xl font-bold text-white mb-2">IoT Sensors</h3>
+                                    <p class="text-cyan-200">مستشعرات ذكية متصلة</p>
+                                    <span class="mt-8 text-sm text-cyan-500 bg-cyan-500/10 px-4 py-2 rounded-full">اضغط للتفاصيل</span>
+                                </div>
+                                <div class="product-back flex flex-col items-center justify-center text-center p-8">
+                                    <h3 class="text-2xl font-bold text-white mb-4">المواصفات</h3>
+                                    <ul class="text-cyan-100 space-y-2 text-lg">
+                                        <li>قياس فوري PH/TDS</li>
+                                        <li>اتصال 5G/Wi-Fi</li>
+                                        <li>بطارية تدوم 5 سنوات</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative h-96 product-card card-3d">
+                            <div class="product-inner">
+                                <div class="product-front flex flex-col items-center justify-center text-center p-8">
+                                    <i class="fas fa-brain text-6xl text-teal-400 mb-6"></i>
+                                    <h3 class="text-3xl font-bold text-white mb-2">AI Analysis</h3>
+                                    <p class="text-cyan-200">تحليل بالذكاء الاصطناعي</p>
+                                    <span class="mt-8 text-sm text-cyan-500 bg-cyan-500/10 px-4 py-2 rounded-full">اضغط للتفاصيل</span>
+                                </div>
+                                <div class="product-back flex flex-col items-center justify-center text-center p-8">
+                                    <h3 class="text-2xl font-bold text-white mb-4">المواصفات</h3>
+                                    <ul class="text-cyan-100 space-y-2 text-lg">
+                                        <li>تنبؤ بالأعطال</li>
+                                        <li>تقارير دورية آلية</li>
+                                        <li>كشف التلوث لحظياً</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative h-96 product-card card-3d">
+                            <div class="product-inner">
+                                <div class="product-front flex flex-col items-center justify-center text-center p-8">
+                                    <i class="fas fa-mobile-alt text-6xl text-purple-400 mb-6"></i>
+                                    <h3 class="text-3xl font-bold text-white mb-2">Mobile App</h3>
+                                    <p class="text-cyan-200">تحكم كامل عبر الهاتف</p>
+                                    <span class="mt-8 text-sm text-cyan-500 bg-cyan-500/10 px-4 py-2 rounded-full">اضغط للتفاصيل</span>
+                                </div>
+                                <div class="product-back flex flex-col items-center justify-center text-center p-8">
+                                    <h3 class="text-2xl font-bold text-white mb-4">المميزات</h3>
+                                    <ul class="text-cyan-100 space-y-2 text-lg">
+                                        <li>واجهة سهلة الاستخدام</li>
+                                        <li>تنبيهات فورية</li>
+                                        <li>لوحة تحكم شاملة</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="services" class="py-24 relative">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="text-5xl font-black mb-6 font-amiri"><span class="gradient-text">خدماتنا</span></h2>
+                        <p class="text-2xl text-cyan-100">حلول تناسب الجميع</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div class="glass-strong rounded-3xl p-10 card-3d hover:bg-cyan-900/20 transition">
+                            <div class="text-6xl text-cyan-400 mb-6 text-center"><i class="fas fa-home"></i></div>
+                            <h3 class="text-3xl font-bold text-center mb-4">للمنازل</h3>
+                            <p class="text-center text-cyan-200">ضمان نقاء مياه الشرب والاستخدام المنزلي لعائلتك.</p>
+                        </div>
+                        <div class="glass-strong rounded-3xl p-10 card-3d hover:bg-cyan-900/20 transition">
+                            <div class="text-6xl text-teal-400 mb-6 text-center"><i class="fas fa-industry"></i></div>
+                            <h3 class="text-3xl font-bold text-center mb-4">للمصانع</h3>
+                            <p class="text-center text-cyan-200">مراقبة خطوط الإنتاج والامتثال لمعايير الجودة العالمية.</p>
+                        </div>
+                        <div class="glass-strong rounded-3xl p-10 card-3d hover:bg-cyan-900/20 transition">
+                            <div class="text-6xl text-green-400 mb-6 text-center"><i class="fas fa-seedling"></i></div>
+                            <h3 class="text-3xl font-bold text-center mb-4">للمزارع</h3>
+                            <p class="text-center text-cyan-200">تحليل ملوحة مياه الآبار لضمان أفضل إنتاج زراعي.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="py-24 relative">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="text-5xl font-black mb-6 font-amiri"><span class="gradient-text">تواصل معنا</span></h2>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-16">
+                        <div class="glass-strong rounded-3xl p-10 card-3d">
+                            <form id="contactForm" class="space-y-6">
+                                <div>
+                                    <label class="text-cyan-300 font-bold block mb-2">الاسم</label>
+                                    <input type="text" class="auth-input w-full px-6 py-4 rounded-xl outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-cyan-300 font-bold block mb-2">البريد الإلكتروني</label>
+                                    <input type="email" class="auth-input w-full px-6 py-4 rounded-xl outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-cyan-300 font-bold block mb-2">الرسالة</label>
+                                    <textarea rows="4" class="auth-input w-full px-6 py-4 rounded-xl outline-none resize-none"></textarea>
+                                </div>
+                                <button type="submit" class="btn-3d w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-4 rounded-xl font-bold text-lg">
+                                    <i class="fas fa-paper-plane ml-2"></i> إرسال
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div class="glass-strong rounded-3xl p-8 card-3d flex items-center gap-6">
+                                <div class="text-4xl text-cyan-400"><i class="fas fa-phone"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white">اتصل بنا</h3>
+                                    <p class="text-cyan-200" dir="ltr">+967 770 000 000</p>
+                                </div>
+                            </div>
+                            <div class="glass-strong rounded-3xl p-8 card-3d flex items-center gap-6">
+                                <div class="text-4xl text-teal-400"><i class="fas fa-envelope"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white">البريد الإلكتروني</h3>
+                                    <p class="text-cyan-200">support@aquavue.ye</p>
+                                </div>
+                            </div>
+                            <div class="glass-strong rounded-3xl p-8 card-3d flex items-center gap-6">
+                                <div class="text-4xl text-purple-400"><i class="fas fa-map-marker-alt"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white">الموقع</h3>
+                                    <p class="text-cyan-200">صنعاء - الحي التكنولوجي</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="glass-strong py-12 border-t border-cyan-500/30 mt-20">
+                <div class="container mx-auto px-6 text-center">
+                    <div class="text-4xl font-black mb-4 neon-cyan">
+                        <i class="fas fa-water"></i>
+                        <span class="gradient-text">AquaVue</span>
+                    </div>
+                    <p class="text-cyan-200 mb-6">صنع بـ <i class="fas fa-heart text-red-500 animate-pulse"></i> في اليمن</p>
+                    <p class="text-cyan-400/60 text-sm">© 2025 جميع الحقوق محفوظة</p>
+                </div>
+            </footer>
+        </div>
+
+    </div>
+
+    <script>
+        // ========== LOADING & INIT ==========
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                init3DBackground();
+                showPage('homePage'); // Default page
+            }, 1500);
+        });
+
+        // ========== SPA NAVIGATION ==========
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                setTimeout(() => { page.style.display = 'none'; }, 600); // Wait for fade out
+            });
+
+            const selectedPage = document.getElementById(pageId);
+            selectedPage.style.display = 'block';
+            setTimeout(() => { selectedPage.classList.add('active'); }, 50);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========== 3D BACKGROUND ==========
+        function init3DBackground() {
+            const canvas = document.getElementById('canvas3d');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.position.z = 5;
+
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const colors = [];
+
+            for (let i = 0; i < 4000; i++) {
+                vertices.push((Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000);
+                const color = new THREE.Color();
+                color.setHSL(0.5 + Math.random() * 0.1, 0.7, 0.5); // Cyan/Teal hues
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({ size: 2, vertexColors: true, transparent: true, opacity: 0.8 });
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0005;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // ========== 3D TILT EFFECT ==========
+        document.querySelectorAll('.card-3d').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ========== FLIP CARDS ==========
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+        });
+
+        // ========== FORM HANDLERS ==========
+        document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+            e.target.reset();
+        });
+
+        document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showPage('homePage');
+        });
+
+        document.getElementById('registerForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('تم إنشاء الحساب بنجاح!');
+            showPage('homePage');
+        });
+
+        // ========== COUNTERS ==========
+        const counters = document.querySelectorAll('.counter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    let count = 0;
+                    const update = () => {
+                        count += target / 100;
+                        if(count < target) {
+                            counter.innerText = Math.ceil(count);
+                            requestAnimationFrame(update);
+                        } else {
+                            counter.innerText = target + "+";
+                        }
+                    };
+                    update();
+                    observer.unobserve(counter);
+                }
+            });
+        });
+        counters.forEach(c => observer.observe(c));
+
+    </script>
+</body>
+</html>
