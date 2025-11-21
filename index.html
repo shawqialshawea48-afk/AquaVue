@@ -168,8 +168,13 @@
             display: flex; align-items: center; justify-content: center;
             transition: opacity 1s ease;
         }
-        .loading-screen.hidden { opacity: 0; pointer-events: none; }
-        
+       .loading-screen.hidden {
+    opacity: 0;
+    transform: scale(1.2);
+    pointer-events: none;
+    visibility: hidden;
+    display: none;
+}
         .loader {
             width: 100px; height: 100px; position: relative;
             transform-style: preserve-3d; animation: loaderSpin 2s infinite linear;
@@ -771,14 +776,14 @@
 
     <script>
         // ========== LOADING & INIT ==========
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loadingScreen').classList.add('hidden');
-                init3DBackground();
-                showPage('homePage'); // Start at Home Page
-            }, 1500);
-        });
-
+    window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        init3DBackground();
+        startTypingEffect();
+        createParticles();
+    }, 2500);
+});
         // ========== SPA NAVIGATION ==========
         function showPage(pageId) {
             // Only hide pages that are NOT the target page
