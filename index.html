@@ -7,8 +7,8 @@
     <meta name="description" content="أكوا فيو - تقنية ذكية لمراقبة وتحليل جودة المياه">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,97 +28,72 @@
             font-family: 'Cairo', sans-serif;
             overflow-x: hidden;
             background: var(--light);
-            margin: 0; /* إزالة الهوامش الافتراضية */
+            margin: 0;
         }
 
-        /* ==================== 3D INTRO LAYER STYLES ==================== */
-        #intro-layer {
+        /* ==================== 3D BACKGROUND (FIXED) ==================== */
+        #canvas-container {
+            position: fixed; /* ثابت في الخلفية */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* خلف المحتوى */
+            pointer-events: none; /* عدم اعتراض النقرات */
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); /* لون الخلفية الأساسي */
+        }
+
+        /* ==================== INTRO OVERLAY ==================== */
+        #intro-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, #0e7490 0%, #082f49 100%);
-            z-index: 99999; /* أعلى طبقة */
+            background: radial-gradient(circle, transparent 20%, #0c4a6e 90%); /* متدرج يسمح برؤية الـ 3D */
+            z-index: 99999;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
         }
 
-        #intro-layer.fade-out {
+        #intro-overlay.fade-out {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
 
-        #intro-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .intro-text {
-            position: relative;
-            z-index: 2;
+        .loading-text {
+            margin-top: 250px; /* مسافة أسفل الشكل الثري دي */
             color: white;
             font-family: 'Amiri', serif;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
-            animation: pulseText 2s infinite;
-            margin-top: 200px; /* لإنزال النص تحت الشكل */
+            font-size: 2rem;
+            animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        /* ==================== ORIGINAL STYLES ==================== */
+        /* ==================== GENERAL STYLES ==================== */
         .font-amiri { font-family: 'Amiri', serif; }
         .font-tajawal { font-family: 'Tajawal', sans-serif; }
         .font-naskh { font-family: 'Noto Naskh Arabic', serif; }
 
-        /* Page Transition */
-        .page {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
+        .page { display: none; opacity: 0; transition: opacity 0.6s ease; position: relative; z-index: 10; }
+        .page.active { display: block; animation: fadeInPage 0.6s ease forwards; }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .page.active {
-            display: block;
-            animation: fadeInPage 0.6s ease forwards;
-        }
-
-        @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Transparent Cards */
         .glass-card {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(8, 145, 178, 0.2);
-            box-shadow: 0 4px 20px 0 rgba(8, 145, 178, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
-        /* Premium Gradient */
-        .hero-gradient {
-            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%);
-            position: relative;
-        }
-
-        .hero-gradient::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        /* Navbar */
+        .navbar-glass {
+            background: rgba(12, 74, 110, 0.3);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .gradient-text {
@@ -128,18 +103,10 @@
             background-size: 200% 200%;
             animation: gradientShift 4s ease infinite;
         }
+        @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* Advanced Floating Elements */
-        .floating-element {
-            position: absolute;
-            animation: floatAdvanced 8s infinite ease-in-out;
-        }
-
+        /* Animations */
+        .floating-element { position: absolute; animation: floatAdvanced 8s infinite ease-in-out; z-index: 1; }
         .floating-element:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
         .floating-element:nth-child(2) { top: 25%; right: 15%; animation-delay: 1.5s; }
         .floating-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 3s; }
@@ -152,153 +119,97 @@
             75% { transform: translateY(-25px) rotate(3deg); opacity: 0.5; }
         }
 
-        /* Advanced Typewriter with Pen */
-        .typewriter-container {
-            position: relative;
-            display: inline-block;
-            min-height: 120px;
-            padding-left: 60px;
-        }
-
-        .typewriter-text {
-            position: relative;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
+        .typewriter-container { position: relative; display: inline-block; min-height: 120px; padding-left: 60px; }
+        .typewriter-text { position: relative; display: inline-block; white-space: nowrap; }
         .writing-pen {
-            position: absolute;
-            font-size: 3.5rem;
-            color: #ffffff;
-            z-index: 20;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
-            transform-origin: bottom left;
-            transition: left 0.1s linear;
-            top: -10px;
+            position: absolute; font-size: 3.5rem; color: #ffffff; z-index: 20;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform-origin: bottom left;
+            transition: left 0.1s linear; top: -10px;
         }
-
         .pen-writing-anim { animation: penWiggle 0.2s infinite; }
+        @keyframes penWiggle { 0% { transform: translateY(0) rotate(-45deg); } 50% { transform: translateY(-5px) rotate(-35deg); } 100% { transform: translateY(0) rotate(-45deg); } }
 
-        @keyframes penWiggle {
-            0% { transform: translateY(0) rotate(-45deg); }
-            50% { transform: translateY(-5px) rotate(-35deg); }
-            100% { transform: translateY(0) rotate(-45deg); }
-        }
-
-        /* Reveal Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Enhanced Card Hover */
         .hover-lift { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-lift:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
 
-        /* Product Card Flip */
+        /* Auth Styles */
+        .auth-container { 
+            min-height: 100vh; 
+            /* خلفية شفافة لأن الخلفية الأساسية (canvas-container) هي التي ستظهر */
+            background: transparent; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .auth-decoration { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); animation: floatSlow 20s infinite ease-in-out; }
+        .auth-decoration:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s; }
+        .auth-decoration:nth-child(2) { width: 300px; height: 300px; bottom: -80px; right: -80px; animation-delay: 3s; }
+        .auth-decoration:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 10%; animation-delay: 6s; }
+        @keyframes floatSlow { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -30px) scale(1.1); } 66% { transform: translate(-30px, 30px) scale(0.9); } }
+
+        .water-droplet { position: absolute; background: rgba(255, 255, 255, 0.2); border-radius: 50% 50% 50% 0; animation: dropFall 3s infinite ease-in; }
+        @keyframes dropFall { 0% { transform: translateY(-100vh) rotate(45deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(100vh) rotate(45deg); opacity: 0; } }
+
+        .auth-input { transition: all 0.3s ease; }
+        .auth-input:focus { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3); }
+
+        .btn-ripple { position: relative; overflow: hidden; }
+        .btn-ripple::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.5); transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s; }
+        .btn-ripple:active::before { width: 300px; height: 300px; }
+
+        .slide-in-right { animation: slideInRight 0.6s ease forwards; }
+        .slide-in-left { animation: slideInLeft 0.6s ease forwards; }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .custom-checkbox { appearance: none; width: 20px; height: 20px; border: 2px solid #0891b2; border-radius: 4px; cursor: pointer; position: relative; transition: all 0.3s ease; }
+        .custom-checkbox:checked { background: linear-gradient(135deg, #0891b2, #14b8a6); border-color: #0891b2; }
+        .custom-checkbox:checked::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; }
+
+        .auth-illustration { position: relative; animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .illustration-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%); filter: blur(40px); animation: pulse 3s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+
+        .mobile-card { display: flex; align-items: center; background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-right: 4px solid #0891b2; }
+        .mobile-card-icon { font-size: 2.5rem; margin-left: 16px; min-width: 60px; text-align: center; }
+        .mobile-card-content { flex: 1; }
+        .mobile-card-value { font-size: 2rem; font-weight: 900; margin-bottom: 4px; }
+        .mobile-card-label { font-size: 1rem; color: #64748b; font-weight: bold; }
+        
+        .scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #0891b2, #14b8a6); z-index: 9999; transition: width 0.1s ease; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0891b2, #14b8a6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0e7490; }
+
         .product-card { perspective: 1200px; cursor: pointer; }
         .product-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
         .product-card.flipped .product-inner { transform: rotateY(180deg); }
         .product-front, .product-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 1.5rem; overflow: hidden; }
         .product-back { transform: rotateY(180deg); }
 
-        /* Gallery */
-        .gallery-thumb { cursor: pointer; transition: all 0.3s; opacity: 0.5; width: 70px; height: 70px; object-fit: cover; border-radius: 12px; }
-        .gallery-thumb.active, .gallery-thumb:hover { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 3px #0891b2; }
-
-        /* Navbar with Hero Gradient */
-        .navbar-gradient { background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); }
-
-        /* Scroll Progress Bar */
-        .scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #0891b2, #14b8a6); z-index: 9999; transition: width 0.1s ease; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0891b2, #14b8a6); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0e7490; }
-
-        /* AUTH PAGES STYLES */
-        .auth-container { min-height: 100vh; background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 35%, #06b6d4 65%, #14b8a6 100%); position: relative; overflow: hidden; }
-        .auth-container::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-
-        /* Auth Decorative Elements */
-        .auth-decoration { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); animation: floatSlow 20s infinite ease-in-out; }
-        .auth-decoration:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s; }
-        .auth-decoration:nth-child(2) { width: 300px; height: 300px; bottom: -80px; right: -80px; animation-delay: 3s; }
-        .auth-decoration:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 10%; animation-delay: 6s; }
-
-        @keyframes floatSlow {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-30px, 30px) scale(0.9); }
+        /* Specific style for Home Hero to show canvas */
+        #home-hero {
+            background: transparent; /* مهم جداً لظهور الـ 3D */
         }
-
-        /* Water Droplet Animation */
-        .water-droplet { position: absolute; background: rgba(255, 255, 255, 0.2); border-radius: 50% 50% 50% 0; animation: dropFall 3s infinite ease-in; }
-        @keyframes dropFall {
-            0% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
-        }
-
-        /* Input Focus Effects */
-        .auth-input { transition: all 0.3s ease; }
-        .auth-input:focus { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3); }
-
-        /* Button Ripple Effect */
-        .btn-ripple { position: relative; overflow: hidden; }
-        .btn-ripple::before {
-            content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
-            transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
-        }
-        .btn-ripple:active::before { width: 300px; height: 300px; }
-
-        /* Slide Animation for Auth Forms */
-        .slide-in-right { animation: slideInRight 0.6s ease forwards; }
-        .slide-in-left { animation: slideInLeft 0.6s ease forwards; }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Custom Checkbox */
-        .custom-checkbox { appearance: none; width: 20px; height: 20px; border: 2px solid #0891b2; border-radius: 4px; cursor: pointer; position: relative; transition: all 0.3s ease; }
-        .custom-checkbox:checked { background: linear-gradient(135deg, #0891b2, #14b8a6); border-color: #0891b2; }
-        .custom-checkbox:checked::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; }
-
-        /* Illustration Styles */
-        .auth-illustration { position: relative; animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-
-        .illustration-glow {
-            position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%);
-            filter: blur(40px); animation: pulse 3s ease-in-out infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
-
-        /* Mobile Cards */
-        .mobile-card {
-            display: flex; align-items: center; background: white; border-radius: 16px; padding: 20px;
-            margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-right: 4px solid #0891b2;
-        }
-        .mobile-card-icon { font-size: 2.5rem; margin-left: 16px; min-width: 60px; text-align: center; }
-        .mobile-card-content { flex: 1; }
-        .mobile-card-value { font-size: 2rem; font-weight: 900; margin-bottom: 4px; }
-        .mobile-card-label { font-size: 1rem; color: #64748b; font-weight: bold; }
     </style>
 </head>
-<body class="bg-slate-50">
+<body>
 
-    <div id="intro-layer">
-        <canvas id="intro-canvas"></canvas>
-        <div class="intro-text">جاري التحميل...</div>
+    <div id="canvas-container"></div>
+
+    <div id="intro-overlay">
+        <div class="loading-text">جاري بدء النظام...</div>
     </div>
 
     <div class="scroll-progress" id="scrollProgress"></div>
 
     <div id="loginPage" class="page">
-        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
+        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-reverse space-x-4">
                     <div class="text-3xl font-black text-white">
@@ -306,10 +217,16 @@
                     </div>
                 </div>
                 <div class="hidden md:flex items-center gap-4">
-                    <button onclick="showPage('homePage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition"><i class="fas fa-home ml-2"></i> العودة للرئيسية</button>
-                    <button onclick="showPage('registerPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition"><i class="fas fa-user-plus ml-2"></i> إنشاء حساب</button>
+                    <button onclick="showPage('homePage')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-full font-bold transition">
+                        <i class="fas fa-home ml-2"></i> العودة للرئيسية
+                    </button>
+                    <button onclick="showPage('registerPage')" class="bg-white hover:bg-cyan-50 text-cyan-700 px-6 py-2 rounded-full font-bold transition">
+                        <i class="fas fa-user-plus ml-2"></i> إنشاء حساب
+                    </button>
                 </div>
-                <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="loginMenuBtn"><i class="fas fa-bars"></i></button>
+                <button class="md:hidden text-3xl text-white hover:text-cyan-200 transition-colors duration-300" id="loginMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
             <div id="loginMobileMenu" class="hidden md:hidden mt-4 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-cyan-200 transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-w-sm mx-auto">
                 <button class="absolute top-4 left-4 text-cyan-600 text-2xl" id="loginCloseMenuBtn"><i class="fas fa-times"></i></button>
@@ -330,44 +247,43 @@
             <div class="container mx-auto px-4 py-12 relative z-10">
                 <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
                     <div class="order-2 md:order-1 slide-in-right">
-                        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
+                        <div class="glass-card rounded-3xl p-10 md:p-12">
                             <div class="text-center mb-8">
                                 <div class="inline-block bg-gradient-to-br from-cyan-500 to-teal-500 p-4 rounded-2xl mb-4"><i class="fas fa-water text-white text-5xl"></i></div>
-                                <h1 class="text-4xl font-black gradient-text font-amiri mb-2">مرحباً بعودتك</h1>
-                                <p class="text-slate-600 text-lg font-tajawal">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
+                                <h1 class="text-4xl font-black text-white font-amiri mb-2">مرحباً بعودتك</h1>
+                                <p class="text-cyan-100 text-lg font-tajawal">سجّل دخولك للوصول إلى منصة أكوا فيو</p>
                             </div>
                             <form id="loginForm" class="space-y-6">
-                                <div><label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-envelope ml-2 text-cyan-600"></i> البريد الإلكتروني</label><input type="email" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="example@aquavue.ye"></div>
-                                <div><label class="block text-slate-700 font-bold mb-3 text-lg"><i class="fas fa-lock ml-2 text-cyan-600"></i> كلمة المرور</label><div class="relative"><input type="password" id="loginPassword" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-cyan-500 focus:outline-none text-lg" placeholder="••••••••"><button type="button" onclick="togglePassword('loginPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-600 transition text-xl"><i class="fas fa-eye"></i></button></div></div>
-                                <div class="flex items-center justify-between"><label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" class="custom-checkbox"><span class="text-slate-600 text-lg">تذكرني</span></label><a href="#" class="text-cyan-600 hover:text-cyan-700 font-bold text-lg transition">نسيت كلمة المرور؟</a></div>
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg"><i class="fas fa-envelope ml-2 text-cyan-400"></i> البريد الإلكتروني</label>
+                                    <input type="email" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-white/30 bg-white/10 focus:border-cyan-500 focus:outline-none text-lg text-white" placeholder="example@aquavue.ye">
+                                </div>
+                                <div>
+                                    <label class="block text-white font-bold mb-3 text-lg"><i class="fas fa-lock ml-2 text-cyan-400"></i> كلمة المرور</label>
+                                    <div class="relative">
+                                        <input type="password" id="loginPassword" required class="auth-input w-full px-6 py-4 rounded-xl border-2 border-white/30 bg-white/10 focus:border-cyan-500 focus:outline-none text-lg text-white" placeholder="••••••••">
+                                        <button type="button" onclick="togglePassword('loginPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white transition text-xl"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" class="custom-checkbox"><span class="text-white text-lg">تذكرني</span></label>
+                                    <a href="#" class="text-cyan-300 hover:text-cyan-100 font-bold text-lg transition">نسيت كلمة المرور؟</a>
+                                </div>
                                 <button type="submit" class="btn-ripple w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-5 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all hover:scale-105"><i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول</button>
                             </form>
-                            <div class="relative my-8"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div><div class="relative flex justify-center text-lg"><span class="bg-white px-4 text-slate-500">أو</span></div></div>
+                            <div class="relative my-8"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/30"></div></div><div class="relative flex justify-center text-lg"><span class="bg-transparent px-4 text-white">أو</span></div></div>
                             <div class="grid grid-cols-2 gap-4 mb-8">
-                                <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition font-bold"><i class="fab fa-google text-red-500 text-xl"></i> <span class="text-slate-700">Google</span></button>
-                                <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition font-bold"><i class="fab fa-facebook-f text-blue-600 text-xl"></i> <span class="text-slate-700">Facebook</span></button>
+                                <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-white/30 bg-white/10 rounded-xl hover:border-cyan-500 hover:bg-cyan-500/20 text-white transition font-bold"><i class="fab fa-google text-red-500 text-xl"></i> <span>Google</span></button>
+                                <button class="flex items-center justify-center gap-2 px-4 py-3 border-2 border-white/30 bg-white/10 rounded-xl hover:border-cyan-500 hover:bg-cyan-500/20 text-white transition font-bold"><i class="fab fa-facebook-f text-blue-600 text-xl"></i> <span>Facebook</span></button>
                             </div>
-                            <div class="text-center"><p class="text-slate-600 text-lg">ليس لديك حساب؟ <button onclick="showPage('registerPage')" class="text-cyan-600 hover:text-cyan-700 font-black transition">إنشاء حساب جديد</button></p></div>
+                            <div class="text-center"><p class="text-white text-lg">ليس لديك حساب؟ <button onclick="showPage('registerPage')" class="text-cyan-300 hover:text-cyan-100 font-black transition">إنشاء حساب جديد</button></p></div>
                         </div>
                     </div>
                     <div class="order-1 md:order-2 slide-in-left">
-                        <div class="auth-illustration relative">
-                            <div class="illustration-glow"></div>
-                            <div class="relative">
-                                <div class="w-full aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center">
-                                    <div class="w-5/6 aspect-square bg-white/10 backdrop-blur-sm rounded-full border-4 border-white/30 flex items-center justify-center">
-                                        <div class="text-center">
-                                            <i class="fas fa-water text-white text-9xl mb-8 drop-shadow-2xl"></i>
-                                            <h2 class="text-5xl font-black text-white mb-4 font-naskh drop-shadow-xl">أكوا فيو</h2>
-                                            <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">المياه النقية بذكاء صناعي</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute top-10 right-10 text-white text-4xl animate-bounce" style="animation-delay: 0s;"><i class="fas fa-flask"></i></div>
-                            <div class="absolute bottom-20 right-20 text-white text-3xl animate-bounce" style="animation-delay: 0.5s;"><i class="fas fa-microscope"></i></div>
-                            <div class="absolute top-20 left-10 text-white text-3xl animate-bounce" style="animation-delay: 1s;"><i class="fas fa-vial"></i></div>
-                            <div class="absolute bottom-10 left-20 text-white text-4xl animate-bounce" style="animation-delay: 1.5s;"><i class="fas fa-tint"></i></div>
+                        <div class="auth-illustration relative text-center">
+                             <i class="fas fa-water text-white/80 text-9xl mb-8 drop-shadow-2xl animate-bounce"></i>
+                             <h2 class="text-6xl font-black text-white mb-4 font-naskh drop-shadow-xl">أكوا فيو</h2>
+                             <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">المياه النقية بذكاء صناعي</p>
                         </div>
                     </div>
                 </div>
@@ -376,7 +292,7 @@
     </div>
 
     <div id="registerPage" class="page">
-        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
+        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-reverse space-x-4"><div class="text-3xl font-black text-white"><i class="fas fa-water"></i> Aqua<span>Vue</span></div></div>
                 <div class="hidden md:flex items-center gap-4">
@@ -396,52 +312,29 @@
 
         <div class="auth-container pt-24">
             <div class="auth-decoration"></div><div class="auth-decoration"></div><div class="auth-decoration"></div>
-            <div class="water-droplet" style="width: 15px; height: 15px; left: 20%; animation-delay: 0s;"></div>
-            <div class="water-droplet" style="width: 10px; height: 10px; left: 40%; animation-delay: 1s;"></div>
-            <div class="water-droplet" style="width: 12px; height: 12px; left: 60%; animation-delay: 2s;"></div>
-            <div class="water-droplet" style="width: 8px; height: 8px; left: 80%; animation-delay: 1.5s;"></div>
-
             <div class="container mx-auto px-4 py-12 relative z-10">
                 <div class="grid md:grid-cols-2 gap-12 items-center min-h-screen">
-                    <div class="order-1 slide-in-right">
-                        <div class="auth-illustration relative">
-                            <div class="illustration-glow"></div>
-                            <div class="relative">
-                                <div class="w-full aspect-square flex items-center justify-center">
-                                    <div class="relative w-full h-full">
-                                        <svg viewBox="0 0 400 400" class="w-full h-full">
-                                            <polygon points="200,20 350,110 350,290 200,380 50,290 50,110" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                                            <polygon points="200,60 310,130 310,270 200,340 90,270 90,130" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                                            <polygon points="200,100 270,150 270,250 200,300 130,250 130,150" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                                        </svg>
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <div class="text-center">
-                                                <i class="fas fa-user-plus text-white text-9xl mb-8 drop-shadow-2xl"></i>
-                                                <h2 class="text-5xl font-black text-white mb-4 font-naskh drop-shadow-xl">انضم إلينا</h2>
-                                                <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">ابدأ رحلتك مع أكوا فيو</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="order-1 slide-in-right text-center">
+                        <i class="fas fa-user-plus text-white/80 text-9xl mb-8 drop-shadow-2xl animate-pulse"></i>
+                        <h2 class="text-5xl font-black text-white mb-4 font-naskh drop-shadow-xl">انضم إلينا</h2>
+                        <p class="text-2xl text-cyan-100 font-bold drop-shadow-lg">ابدأ رحلتك مع أكوا فيو</p>
                     </div>
                     <div class="order-2 slide-in-left">
-                        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-12 border-2 border-white/50">
-                            <div class="text-center mb-8"><h1 class="text-4xl font-black gradient-text font-amiri mb-2">إنشاء حساب جديد</h1><p class="text-slate-600 text-lg font-tajawal">انضم لمجتمع أكوا فيو الذكي</p></div>
+                        <div class="glass-card rounded-3xl shadow-2xl p-10 md:p-12">
+                            <div class="text-center mb-8"><h1 class="text-4xl font-black text-white font-amiri mb-2">إنشاء حساب جديد</h1><p class="text-cyan-100 text-lg font-tajawal">انضم لمجتمع أكوا فيو الذكي</p></div>
                             <form id="registerForm" class="space-y-5">
                                 <div class="grid md:grid-cols-2 gap-4">
-                                    <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-user ml-2 text-teal-600"></i> الاسم الأول</label><input type="text" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="أحمد"></div>
-                                    <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-user ml-2 text-teal-600"></i> الاسم الأخير</label><input type="text" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="محمد"></div>
+                                    <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-user ml-2 text-teal-400"></i> الاسم الأول</label><input type="text" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="أحمد"></div>
+                                    <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-user ml-2 text-teal-400"></i> الاسم الأخير</label><input type="text" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="محمد"></div>
                                 </div>
-                                <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-envelope ml-2 text-teal-600"></i> البريد الإلكتروني</label><input type="email" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="example@aquavue.ye"></div>
-                                <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-phone ml-2 text-teal-600"></i> رقم الهاتف</label><input type="tel" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="+967 770 000 000" dir="ltr"></div>
-                                <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-lock ml-2 text-teal-600"></i> كلمة المرور</label><div class="relative"><input type="password" id="registerPassword" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="••••••••"><button type="button" onclick="togglePassword('registerPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-teal-600 transition text-xl"><i class="fas fa-eye"></i></button></div></div>
-                                <div><label class="block text-slate-700 font-bold mb-2 text-base"><i class="fas fa-lock ml-2 text-teal-600"></i> تأكيد كلمة المرور</label><div class="relative"><input type="password" id="confirmPassword" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-base" placeholder="••••••••"><button type="button" onclick="togglePassword('confirmPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-teal-600 transition text-xl"><i class="fas fa-eye"></i></button></div></div>
-                                <div class="flex items-start gap-3"><input type="checkbox" required class="custom-checkbox mt-1"><label class="text-slate-600 text-base">أوافق على <a href="#" class="text-teal-600 hover:text-teal-700 font-bold">الشروط والأحكام</a></label></div>
+                                <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-envelope ml-2 text-teal-400"></i> البريد الإلكتروني</label><input type="email" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="example@aquavue.ye"></div>
+                                <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-phone ml-2 text-teal-400"></i> رقم الهاتف</label><input type="tel" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="+967 770 000 000" dir="ltr"></div>
+                                <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-lock ml-2 text-teal-400"></i> كلمة المرور</label><div class="relative"><input type="password" id="registerPassword" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="••••••••"><button type="button" onclick="togglePassword('registerPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white transition text-xl"><i class="fas fa-eye"></i></button></div></div>
+                                <div><label class="block text-white font-bold mb-2 text-base"><i class="fas fa-lock ml-2 text-teal-400"></i> تأكيد كلمة المرور</label><div class="relative"><input type="password" id="confirmPassword" required class="auth-input w-full px-4 py-3 rounded-xl border-2 border-white/30 bg-white/10 focus:border-teal-500 focus:outline-none text-base text-white" placeholder="••••••••"><button type="button" onclick="togglePassword('confirmPassword', this)" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white transition text-xl"><i class="fas fa-eye"></i></button></div></div>
+                                <div class="flex items-start gap-3"><input type="checkbox" required class="custom-checkbox mt-1"><label class="text-white text-base">أوافق على <a href="#" class="text-teal-400 hover:text-teal-200 font-bold">الشروط والأحكام</a></label></div>
                                 <button type="submit" class="btn-ripple w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-4 rounded-xl text-xl font-black shadow-xl hover:shadow-2xl transition-all hover:scale-105"><i class="fas fa-user-plus ml-2"></i> إنشاء الحساب</button>
                             </form>
-                            <div class="text-center mt-6"><p class="text-slate-600 text-base">لديك حساب بالفعل؟ <button onclick="showPage('loginPage')" class="text-teal-600 hover:text-teal-700 font-black transition">تسجيل الدخول</button></p></div>
+                            <div class="text-center mt-6"><p class="text-white text-base">لديك حساب بالفعل؟ <button onclick="showPage('loginPage')" class="text-teal-400 hover:text-teal-200 font-black transition">تسجيل الدخول</button></p></div>
                         </div>
                     </div>
                 </div>
@@ -450,7 +343,7 @@
     </div>
 
     <div id="homePage" class="page">
-        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-gradient" id="navbar">
+        <nav class="fixed top-0 w-full z-50 py-4 px-6 navbar-glass" id="navbar">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-reverse space-x-4"><div class="text-3xl font-black text-white"><i class="fas fa-water"></i> Aqua<span>Vue</span></div></div>
                 <ul class="hidden md:flex space-x-reverse space-x-8 text-white font-bold px-10 py-4 rounded-full">
@@ -480,7 +373,7 @@
             </div>
         </nav>
 
-        <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden pt-24">
+        <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-24" id="home-hero">
             <div class="floating-element"><i class="fas fa-flask text-white/20 text-6xl"></i></div>
             <div class="floating-element"><i class="fas fa-microscope text-white/20 text-5xl"></i></div>
             <div class="floating-element"><i class="fas fa-vial text-white/20 text-7xl"></i></div>
@@ -617,21 +510,19 @@
     </div>
 
     <script>
-        // ==================== 3D INTRO ANIMATION LOGIC ====================
-        // هذا الكود مسؤول عن تشغيل شاشة الترحيب ثلاثية الأبعاد عند بداية تحميل الموقع
+        // ==================== 3D BACKGROUND ANIMATION ====================
         document.addEventListener('DOMContentLoaded', function() {
+            // دمج شاشة التحميل والخلفية الدائمة في عنصر واحد
             const introLayer = document.getElementById('intro-layer');
             const canvas = document.getElementById('intro-canvas');
-
-            // التأكد من وجود المكتبة
+            
             if (typeof THREE === 'undefined') {
-                console.error("Three.js library not loaded");
-                introLayer.style.display = 'none';
+                introLayer.style.display = 'none'; // إخفاء إذا لم تعمل المكتبة
                 showPage('loginPage');
                 return;
             }
 
-            // إعداد المشهد
+            // إعداد المشهد (Three.js)
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
@@ -639,89 +530,89 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
 
-            // إنشاء الشكل الدائري السداسي (Icosahedron)
-            const geometry = new THREE.IcosahedronGeometry(10, 1); // نصف القطر 10، التفاصيل 1 (لإعطاء الشكل السداسي)
+            // إنشاء الكرة السداسية (الشكل الرئيسي)
+            const geometry = new THREE.IcosahedronGeometry(10, 1);
             const material = new THREE.MeshBasicMaterial({ 
-                color: 0x22d3ee, // لون سماوي (Cyan)
-                wireframe: true, // وضع الشبكة لإظهار الخطوط
+                color: 0x0891b2, // لون سماوي متناسق مع الهوية
+                wireframe: true,
                 transparent: true,
-                opacity: 0.8
+                opacity: 0.3
             });
             const sphere = new THREE.Mesh(geometry, material);
             scene.add(sphere);
 
-            // إضافة نجوم/جسيمات حول الشكل لتعزيز التأثير الدائري
+            // إنشاء الجسيمات المحيطة
             const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 500;
+            const particlesCount = 700;
             const posArray = new Float32Array(particlesCount * 3);
 
             for(let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 40; // توزيع الجسيمات في مساحة أوسع
+                posArray[i] = (Math.random() - 0.5) * 50; // انتشار واسع
             }
             particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.1,
-                color: 0xffffff,
+                size: 0.15,
+                color: 0x14b8a6, // لون أفتح للجسيمات
+                transparent: true,
+                opacity: 0.8
             });
             const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
             scene.add(particlesMesh);
 
-            camera.position.z = 25;
+            camera.position.z = 30;
 
-            // حلقة التحريك (Animation Loop)
+            // حلقة التحريك المستمرة
             function animate() {
-                if (introLayer.style.display === 'none') return; // توقف إذا اختفت الشاشة لتوفير الموارد
-
                 requestAnimationFrame(animate);
                 
-                // تدوير الشكل الأساسي
-                sphere.rotation.x += 0.005;
-                sphere.rotation.y += 0.005;
+                // دوران هادئ ومستمر
+                sphere.rotation.x += 0.002;
+                sphere.rotation.y += 0.002;
                 
-                // تدوير الجسيمات باتجاه معاكس
-                particlesMesh.rotation.y -= 0.002;
+                particlesMesh.rotation.y -= 0.001;
+                particlesMesh.rotation.x += 0.0005;
 
                 renderer.render(scene, camera);
             }
             animate();
 
-            // التعامل مع تغيير حجم النافذة
+            // تعديل الحجم عند تغيير النافذة
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
 
-            // الانتقال إلى الموقع الرئيسي بعد 4 ثوانٍ
-            // هذا يضمن أن المستخدم يرى الأنميشن ثم يدخل للموقع
+            // منطق الانتقال من شاشة التحميل إلى الموقع
             setTimeout(() => {
-                introLayer.classList.add('fade-out');
+                // تلاشي الخلفية الزرقاء الغامقة فقط، مع بقاء الكانفاس
+                introLayer.style.background = 'transparent'; 
                 
-                // بعد انتهاء تأثير الاختفاء (1 ثانية)، قم بإخفاء الطبقة تماماً وتشغيل الصفحة الأولى
-                setTimeout(() => {
-                    introLayer.style.display = 'none';
-                    // هنا يبدأ منطق الموقع الأصلي
-                    showPage('loginPage'); 
-                }, 1000);
-            }, 4000); // مدة عرض الشاشة الافتتاحية (4000 ملي ثانية = 4 ثوانٍ)
+                // إخفاء نص "جاري التحميل"
+                const loadingText = document.querySelector('.intro-text');
+                if(loadingText) loadingText.style.display = 'none';
+
+                // جعل الطبقة تسمح بالنقرات للمحتوى تحتها
+                introLayer.style.pointerEvents = 'none';
+                introLayer.style.zIndex = '-1'; // إرسالها للخلفية
+
+                // إظهار صفحة الدخول
+                showPage('loginPage');
+            }, 3000); // الانتظار 3 ثوانٍ
         });
 
-        // ==================== ORIGINAL SITE LOGIC (ALL FUNCTIONS RESTORED) ====================
-        
+        // ==================== ORIGINAL SITE LOGIC ====================
         let currentPage = 'loginPage';
 
         function showPage(pageId) {
-            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
 
-            // Show requested page
             setTimeout(() => {
                 document.getElementById(pageId).classList.add('active');
                 currentPage = pageId;
 
-                // Start typing animation on home page
                 if(pageId === 'homePage') {
                     setTimeout(startTyping, 300);
                     window.scrollTo(0, 0);
@@ -733,7 +624,6 @@
         function togglePassword(inputId, button) {
             const input = document.getElementById(inputId);
             const icon = button.querySelector('i');
-
             if(input.type === 'password') {
                 input.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -745,10 +635,8 @@
             }
         }
 
-        // Event Listeners Setup
         document.addEventListener('DOMContentLoaded', function() {
-            // Note: Initial showPage is handled by the Intro logic above now.
-
+            // Login Form
             const loginForm = document.getElementById('loginForm');
             if(loginForm) {
                 loginForm.addEventListener('submit', function(e) {
@@ -767,6 +655,7 @@
                 });
             }
 
+            // Register Form
             const registerForm = document.getElementById('registerForm');
             if(registerForm) {
                 registerForm.addEventListener('submit', function(e) {
@@ -803,7 +692,7 @@
                 });
             }
 
-            // Menu Buttons
+            // Mobile Menus Logic
             const menuBtn = document.getElementById('menuBtn');
             const closeMenuBtn = document.getElementById('closeMenuBtn');
             if(menuBtn) menuBtn.addEventListener('click', toggleMenu);
@@ -824,19 +713,16 @@
             });
         });
 
-        // Mobile Menu Logic
         function toggleMenu() {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('hidden');
             setTimeout(() => { mobileMenu.classList.toggle('opacity-0'); mobileMenu.classList.toggle('scale-95'); }, 10);
         }
-
         function toggleLoginMenu() {
             const mobileMenu = document.getElementById('loginMobileMenu');
             mobileMenu.classList.toggle('hidden');
             setTimeout(() => { mobileMenu.classList.toggle('opacity-0'); mobileMenu.classList.toggle('scale-95'); }, 10);
         }
-
         function toggleRegisterMenu() {
             const mobileMenu = document.getElementById('registerMobileMenu');
             mobileMenu.classList.toggle('hidden');
@@ -847,7 +733,6 @@
             const text = "أكوا فيو.. تكنولوجيا الحياة";
             const titleElement = document.getElementById('mainTitle');
             const penElement = document.getElementById('writingPen');
-
             if(!titleElement || !penElement) return;
 
             titleElement.innerHTML = '';
@@ -873,12 +758,10 @@
 
         window.addEventListener('scroll', () => {
             if(currentPage !== 'homePage') return;
-
             const scrollProgress = document.getElementById('scrollProgress');
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.scrollY / windowHeight) * 100;
             scrollProgress.style.width = scrolled + '%';
-
             const scrollTop = document.getElementById('scrollTop');
             if (window.scrollY > 500) {
                 scrollTop.classList.remove('opacity-0', 'pointer-events-none');
@@ -889,9 +772,7 @@
 
         const scrollTopBtn = document.getElementById('scrollTop');
         if(scrollTopBtn) {
-            scrollTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         }
 
         function initializeRevealAnimations() {
@@ -933,13 +814,11 @@
         function updateMainImage(src) {
             const mainImage = document.getElementById('mainGalleryImage');
             if(!mainImage) return;
-
             mainImage.style.opacity = '0';
             setTimeout(() => {
                 mainImage.src = src;
                 mainImage.style.opacity = '1';
             }, 300);
-
             document.querySelectorAll('.gallery-thumb').forEach(img => img.classList.remove('active'));
             event.target.classList.add('active');
         }
@@ -947,19 +826,6 @@
         document.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', function() {
                 this.classList.toggle('flipped');
-            });
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if(target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
             });
         });
 
